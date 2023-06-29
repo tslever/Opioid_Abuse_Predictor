@@ -1,9 +1,36 @@
-<mxfile host="app.diagrams.net" modified="2023-06-29T21:14:32.509Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" version="21.5.0" etag="jRyESz4cqsYw29QUbo3L" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-29T22:00:31.935Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="t0tAgEpuY4nczPXcApUP" version="21.5.0" type="github">
   <diagram name="Page-1" id="bPAhkjNUzkpyi0J7G6j3">
-    <mxGraphModel>
+    <mxGraphModel dx="2262" dy="732" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="170" y="90" width="490" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-3" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="vKs9p2N3G4hvFBJP7lqV-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-40" y="335" as="sourcePoint" />
+            <mxPoint x="670" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-5" value="Opioid-Abuse Binary Classifier" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="300" y="40" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-6" value="A_Patient&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;A_Patient_ID&lt;br&gt;A_Gender&lt;br&gt;Height&lt;br&gt;Weight&lt;br&gt;Race&lt;br&gt;Genetic&lt;br&gt;Survey Data&lt;br&gt;&lt;br&gt;A_Collection_Of_Events&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;An_Event&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;Conditions&lt;br&gt;Medications&lt;br&gt;Procedures&lt;br&gt;Observations" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-10" y="160" width="160" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-7" value="An_Opioid_Risk&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;Probability That Patient Will Abuse Opioids After Starting Prescription&lt;br&gt;&lt;br&gt;followed in order by&lt;br&gt;&lt;br&gt;Indicator Of Whether Or Not Patient Will Abuse Opioids After Starting Prescription&lt;br&gt;&lt;br&gt;Probability That Patient Will Be Dependent On Opioids After Starting Prescription&lt;br&gt;Indicator Of Whether Or Not Patient Will Be Dependent On Opioids After Starting Prescription&lt;br&gt;&lt;br&gt;Duration That Patient Will Likely Use Opioids&lt;br&gt;&lt;br&gt;This object will not contain attributes&lt;br&gt;&lt;br&gt;Probability That Patient Will Restart Abusing Opioids (Recidivism)&lt;br&gt;Indicator That Patient Will Restart Abusing Opioids (Recidivism)&lt;br&gt;&lt;br&gt;Probability That Patient Will Abuse Opioids Before Starting Prescription&lt;br&gt;Indicator That Patient Will Abuse Opioids Before Starting Prescription" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="731" y="172.5" width="519" height="325" as="geometry" />
+        </mxCell>
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-10" value="Requester" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="-90" y="305" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-12" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKs9p2N3G4hvFBJP7lqV-1" target="vKs9p2N3G4hvFBJP7lqV-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="380" as="sourcePoint" />
+            <mxPoint x="560" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
