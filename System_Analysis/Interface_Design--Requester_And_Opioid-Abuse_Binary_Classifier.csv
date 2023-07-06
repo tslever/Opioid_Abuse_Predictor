@@ -1,0 +1,59 @@
+﻿Interface Design: Requester And Opioid-Abuse Binary Classifier,,
+,,
+Created: 06/23/2023 by Tom Lever,,
+Updated: 07/06/2023 by Tom Lever,,
+,,
+,,
+Inputs from Requester,,
+,Name,Attributes
+,A_Patient,"A matrix of events corresponding to a medical subject who does not exhibit chronic malignant pain.
+Each event is a column vector."
+,,
+Outputs to Requester,,
+,Name,Attributes
+,Probability of whether or not patient will abuse opioids,Number between 0 and 1
+,,
+Definitions,,
+,Term,Definition
+,An_Event,An occurrence prior to Requester's request
+,,"An event is also a vector constructed by concatenating a Diagnosis_Vector, a Medication_Vector, A_Procedure_Vector, A_Condition_Vector, A_Clinical_Results_Vector, and A_Persona_Characteristics_Vector"
+,A_Diagnosis_Vector,"A vector of 0's and 1's where each binary digit represents absence or presence of a specific Diagnosis.
+All of and only those of the Diagnoses below will be included in A_Diagnosis_Vector."
+,A_Medication_Vector,"A vector of numbers where each binary digit represents absence or presence of a specific Medication.
+All of and only those of the Medications below will be included in A_Medication_Vector."
+,A_Procedure_Vector,"A vector of 0's and 1's where each binary digit represents absence or presence of a specific Procedure.
+All of and only those of the Procedures below will be included in A_Procedure_Vector."
+,An_Observation_Vector,"A vector of 0's and 1's where each binary digit represents absence or presence of a specific Observation.
+All of and only those of the Observations below will be included in An_Observation_Vector."
+,A_Clinical_Results_Vector,"A vector of 0's and 1's where each binary digit represents absence or presence of a specific Clinical Result.
+All of and only those of the Clinical Results below will be included in A_Clinical_Results_Vector."
+,A_Personal_Characteristics_Vector,"A vector of 0's and 1's where:
+The first 5 binary digits will correspond to a patient's annual income being in the corresponding quintiles of income for citizens of the United States.
+The sixth and seventh binary digits will correspond to a patient being of Female, Male, and Non-Binary Gender. Non-Binary Gender will be the reference class indicated by both digits being 0.
+The eighth binary digit will be 0 if the patient's biological parents do not abuse drugs and 1 if the patient's biological parents do abuse drugs.
+The ninth binary digit will be 0 if the patient is not homeless and 1 if the patient is homeless.
+The tenth binary digit will be 0 if the patient is single and 1 if the patient is partnered.
+The eleventh binary digit will be 0 if the patient does not have a history of substance abuse and 1 if the patient has a history of substance abuse.
+The twelfth binary digit will be 0 if the patient does not have a history of pre-adolescent sexual abuse and 1 if the patient has a history of pre-adolescent sexual abuse.
+The thirteenth binary digit will be 0 if the patient is not obese and 1 if the patient is obese."
+,Diagnosis,A medical diagnosis. One of:
+,,"Binary digit where 0 represents no presence of Current Depression and 1 represents presence of Current Depression.
+Binary digit where 0 represents no presence of Historical Depression and 1 represents presence of Historical Depression."
+,,Binary digit where 0 represents no presence of Current Substance Abuse and 1 represents presence of Current Substance Abuse.
+,,Binary digit where 0 represents no presence of Historical Substance Abuse and 1 represents presence of Historical Substance Abuse.
+,Medication,A drug used for medical treatment. One of:
+,,Drug- and recency-weighted running sum of prescriptions of ibuprofen across events
+,,Binary digit where 0 represents that ibuprofen has not been prescribed during this event and 1 represents that ibuprofen has been prescribed during this event
+,,Binary digit where 0 represents that ibuprofen has not been prescribed ever and 1 represents that ibuprofen has been prescribed ever
+,,Number of days that ibuprofen is prescribed for this event
+,,Drug and recency-weighted running sum of prescriptions of acetaminophen across events
+,,Binary digit where 0 represents that ibuprofen has not been prescribed during this event and 1 represents that acetaminophen has been prescribed during this event
+,,Binary digit where 0 represents that acetaminophen has not been prescribed ever and 1 represents that acetaminophen has been prescribed ever
+,,Number of days that acetaminophen is prescribed for this event
+,Procedure,"A specific action or series of actions undertaken by healthcare professionals to diagnose, treat, manage, or prevent a medical condition or illness. One of:"
+,,Binary digit where 0 represents that this event does not relate to tonsillectomy and 1 represents that this event relates to tonsillectomy
+,,Binary digit where 0 represents that this event does not relate to appendectomy and 1 represents that this event relates to appendectomy
+,,Binary digit where 0 represents that this event does not relate to hip replacement and 1 represents that this event relates to hip replacement
+,A_Clinical_Result,"A measurable change in symptoms, overall health, ability to function, quality of life, or survival outcomes that result from giving care to patients. One of:"
+,,"Binary digit where 0 represents Creatinine Test Result ""kidneys are filtering waste from blood"" and 1 represents Creatinine Test Result ""kidneys are not filtering waste from blood""."
+,,"Binary digit where 0 represents Urine Analysis Test Result ""no illegal drugs are present"" and 1 represents Urine Test Result ""illegal drugs are present""."
