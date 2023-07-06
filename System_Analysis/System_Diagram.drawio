@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-05T23:21:52.083Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="e14MX-l7pgc6XTOmfC6O" version="21.5.2" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-06T18:15:50.478Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="nbN13CM2_9flnWh0-gNh" version="21.6.1" type="github">
   <diagram name="Page-1" id="bPAhkjNUzkpyi0J7G6j3">
-    <mxGraphModel dx="1897" dy="521" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1418" dy="739" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -9,21 +9,21 @@
         </mxCell>
         <mxCell id="vKs9p2N3G4hvFBJP7lqV-3" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="vKs9p2N3G4hvFBJP7lqV-1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-40" y="335" as="sourcePoint" />
+            <mxPoint x="80" y="335" as="sourcePoint" />
             <mxPoint x="670" y="350" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="vKs9p2N3G4hvFBJP7lqV-5" value="Opioid-Abuse Binary Classifier" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="300" y="40" width="220" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="vKs9p2N3G4hvFBJP7lqV-6" value="A_Patient&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;A_Patient_ID&lt;br&gt;A_Gender&lt;br&gt;Height&lt;br&gt;Weight&lt;br&gt;Race&lt;br&gt;Genetic&lt;br&gt;Survey Data&lt;br&gt;&lt;br&gt;A_Collection_Of_Events&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;An_Event&lt;br&gt;&lt;br&gt;An Event is an occurrence prior to what you as a physician are doing right now.&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;Conditions&lt;br&gt;Medications&lt;br&gt;Procedures&lt;br&gt;Observations" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry y="110" width="160" height="430" as="geometry" />
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-6" value="A_Patient" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="90" y="305" width="70" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="vKs9p2N3G4hvFBJP7lqV-7" value="An_Opioid_Risk&lt;br&gt;&lt;br&gt;Attributes&lt;br&gt;&lt;br&gt;Probability That Patient Will Abuse Opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="731" y="170" width="519" height="327.5" as="geometry" />
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-7" value="Probability That Patient Will Abuse Opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="720" y="321.25" width="240" height="27.5" as="geometry" />
         </mxCell>
         <mxCell id="vKs9p2N3G4hvFBJP7lqV-10" value="Requester" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
-          <mxGeometry x="-90" y="305" width="30" height="60" as="geometry" />
+          <mxGeometry x="50" y="303.75" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="vKs9p2N3G4hvFBJP7lqV-12" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="vKs9p2N3G4hvFBJP7lqV-1" target="vKs9p2N3G4hvFBJP7lqV-7" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
