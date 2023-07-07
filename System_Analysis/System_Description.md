@@ -1,5 +1,5 @@
 System Description
-Opioid-Abuse Binary Classifier
+Opioid-Abuse Predictor
 
 THIS IS AN UPDATE
 
@@ -23,20 +23,20 @@ The term ADRB encompasses several adverse drug reactions, the most commonly of w
 Due to the similar natures of different opioid-related ADRB’s, their risk factors and predictors are also generally consistent. The ORT consist of 10-questions regarding history of substance abuse, age, sexual abuse, and presence of psychiatric disease. Other screening assessment tools such as the SOAPP also share these criterions, mainly substance abuse history, medication-related behaviors, and psychiatric behaviors. Similarly, some machine learning applications have focused on a fewer number of features for prediction, commonly examining depression, alcoholism, immunization history, and medications such as natural Opium Alkaloids and phenylpiperidine derivatives. (Beaver, Burek, & Shakeria, 2022). The vast majority, however, have taken a more encompassing approach with over hundred features. In spite of this, they commonly share the features listed above, primarily pain, opioid prescriptions, dependence, and other analgesic medications.
 
 
-Opportunity Opioid-Abuse Binary Classifier Will Address
+Opportunity Opioid-Abuse Predictor Will Address
 
 In this paper, we aim to improve upon the general objective of the ORT of predicting the probability that a patient will exhibit an opioid-related ADRB (opioid abuse, specifically prior to any prescription of opioids. This prediction of prior to prescription is especially relevant as it prevents the need for opioid tapering after an individual has begun an opioid medication. Opioid tapering, while a logical intervention, can paradoxically worsen pain, function, and psychiatric symptoms due to protracted abstinence syndrome. Importantly, however, we will specifically focus on the predicting of opioid abuse due to its capability of initiating dependence and the complexity of opioid dependency diagnoses. Furthermore, this project will expand our focus to all individuals who may be prescribed opioids. Accordingly, we will predict the probability of opioid abuse in individuals with severe constipation, respiratory distress, and chronic non-malignant pain, unlike the ORT, which only examines individuals with CNMP.
 
-We intend Opioid-Abuse Binary Classifier to mobilize NIH researcher workbench EHR data. We intend Opioid-Abuse Binary Classifier to serve as a modern, easy-to-use building block for further research. Such research includes relating essential, temporal dependencies between medication, procedure, lab result, and diagnosis histories to accurate predictions of probabilities of opioid abuse. Such research includes applying cutting-edge technologies like LSTM RNN’s and factor analysis to predicting probabilities of opioid abuse.
+We intend Opioid-Abuse Predictor to mobilize NIH researcher workbench EHR data. We intend Opioid-Abuse Predictor to serve as a modern, easy-to-use building block for further research. Such research includes relating essential, temporal dependencies between medication, procedure, lab result, and diagnosis histories to accurate predictions of probabilities of opioid abuse. Such research includes applying cutting-edge technologies like LSTM RNN’s and factor analysis to predicting probabilities of opioid abuse.
 
-Ultimately, Opioid-Abuse Binary Classifier will serve as a clinical decision making support system for providers so that they can more safely prescribe opioids to patients.
+Ultimately, Opioid-Abuse Predictor will serve as a clinical decision making support system for providers so that they can more safely prescribe opioids to patients.
 
 
-What Opioid-Abuse Binary Classifier Will Do
+What Opioid-Abuse Predictor Will Do
 
-Opioid-Abuse Binary Classifier will be a system that a Requester may use to submit a Patient and receive a prediction of the probability that a patient will exhibit an opioid-related ADRB prior to any prescription of opioids.
+Opioid-Abuse Predictor will be a system that a Requester may use to submit a Patient and receive a prediction of the probability that a patient will exhibit an opioid-related ADRB prior to any prescription of opioids.
 
 
 Iterations Of Development
 At the end of Iteration…
-Opioid-Abuse Binary Classifier will be as described in “What Opioid-Abuse Binary Classifier Will Do”.
+Opioid-Abuse Predictor will be as described in “What Opioid-Abuse Predictor Will Do”.

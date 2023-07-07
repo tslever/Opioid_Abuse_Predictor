@@ -7,7 +7,7 @@ Updated: 07/05/2023 by Tom Lever,,,
 ,,,
 Field,Value,Description of Value,
 Use-Case Name,Request Probability Of Whether Or Not Patient Will Abuse Opioids,An active verb phrase that describes a particular task.,
-Subject Area,Opioid-Abuse Binary Classifier,A use role or other grouping mechanism that can be used to group use cases.,
+Subject Area,Opioid-Abuse Predictor,A use role or other grouping mechanism that can be used to group use cases.,
 Triggering Business Event,A Requester signals a desire to request a probability of whether or not a patient will abuse opioids.,"A trigger that stimulates activity within the business.
 Many business events occur at the interface point between the business and one of the external entities with which it interacts.
 Business events must be observable.
@@ -30,7 +30,7 @@ This use case terminates.","A brief description of events for the most likely te
 List the actions the actor does and how the system responds.",
 Alternate Flow(s),None,,
 Associations,None,A list of other use cases that are associated with this use case.,
-Traceability To,Interface Design: Requester And Opioid-Abuse Binary Classifier,"A list of other related documents, models, and products that are associated with this use case.",
+Traceability To,Interface Design: Requester And Opioid-Abuse Predictor,"A list of other related documents, models, and products that are associated with this use case.",
 Input Summary,Requester: (1) Patient,A brief summary that lists the data input by the actor.,
 Output Summary,"(2) Mechanism to request a probability of whether or not a patient will abuse opioids
 (6) A probability of whether or not a patient will abuse opioids",A brief summary that lists the data output by the system.,

@@ -13,7 +13,7 @@
             <mxPoint x="670" y="350" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="vKs9p2N3G4hvFBJP7lqV-5" value="Opioid-Abuse Binary Classifier" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="vKs9p2N3G4hvFBJP7lqV-5" value="Opioid-Abuse Predictor" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="300" y="40" width="220" height="30" as="geometry" />
         </mxCell>
         <mxCell id="vKs9p2N3G4hvFBJP7lqV-6" value="A_Patient" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
