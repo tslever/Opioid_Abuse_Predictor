@@ -9,13 +9,13 @@ Change directory with cd .ssh.
 Copy the contents of the attached Key_To_Opioid_Abuse_Predictor to clipboard.
 Create file Key_To_Opioid_Abuse_Predictor with nano Key_To_Opioid_Abuse_Predictor.
 Paste the contents of Key_To_Opioid_Abuse_Predictor in nano using Right Click and Paste.
-Write Key_To_Opioid_Predictor and close nano with Control + X, Y, and Enter.
-Give read and write permissions with chmod 600 Key_To_Opioid_Predictor.
+Write Key_To_Opioid_Abuse_Predictor and close nano with Control + X, Y, and Enter.
+Give read and write permissions with chmod 600 Key_To_Opioid_Abuse_Predictor.
 Copy the contents of the attached Key_To_Opioid_Abuse_Predictor.pub to clipboard.
 Create file Key_To_Opioid_Abuse_Predictor.pub with nano Key_To_Opioid_Abuse_Predictor.pub.
 Paste the contents of Key_To_Opioid_Abuse_Predictor.pub in nano using Right Click and Paste.
-Write Key_To_Opioid_Predictor.pub and close nano with Control + X, Y, and Enter.
-Give read and write permissions with chmod 600 Key_To_Opioid_Predictor.pub.
+Write Key_To_Opioid_Abuse_Predictor.pub and close nano with Control + X, Y, and Enter.
+Give read and write permissions with chmod 600 Key_To_Opioid_Abuse_Predictor.pub.
 Start SSH agent with eval "$(ssh-agent -s)".
 Add SSH private key to SSH agent with ssh-add Key_To_Opioid_Abuse_Predictor.
 Change directory with cd /home/jupyter/workspaces.
