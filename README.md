@@ -1,2 +1,2 @@
-# Opioid_Abuse_Binary_Classifier
-Contains project Opioid-Abuse Binary Classifier
+# Opioid_Abuse_Predictor
+Contains project Opioid-Abuse Predictor
