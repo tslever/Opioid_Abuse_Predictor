@@ -1,12 +1,12 @@
-﻿Interface Design: Requester And Opioid-Abuse Predictor,,,
+Interface Design: Requester And Opioid-Abuse Predictor,,,
 ,,,
 Created: 06/23/2023 by Tom Lever,,,
 Updated: 07/06/2023 by Tom Lever,,,
-,,,
+Updated: 07/11/2023 by Morgan Durham,,,
 ,,,
 Inputs from Requester,,,
 ,Name,Attributes,Notes
-,A_Patient,"A matrix of events corresponding to a medical subject who does not exhibit cancer.
+,A_Patient,"A matrix of events corresponding to a medical subject who does not exhibit cancer and has at least one opioid prescription in their medical history.
 Each event is a column vector.","We justify a patient being a matrix of events corresponding to a medical subject who does not exhibit cancer following
 ""Identifying risk of opioid use disorder for patients taking opioid medications with deep learning"", which reads:
 ""Because opioid medications have proven successful in treatment of cancer pain,
@@ -37,14 +37,13 @@ The sixth and seventh binary digits will correspond to a patient being of Female
 The eighth binary digit will be 0 if the patient's biological parents do not abuse drugs and 1 if the patient's biological parents do abuse drugs.
 The ninth binary digit will be 0 if the patient is not homeless and 1 if the patient is homeless.
 The tenth binary digit will be 0 if the patient is single and 1 if the patient is partnered.
-The eleventh binary digit will be 0 if the patient does not have a history of substance abuse and 1 if the patient has a history of substance abuse.
-The twelfth binary digit will be 0 if the patient does not have a history of pre-adolescent sexual abuse and 1 if the patient has a history of pre-adolescent sexual abuse.
+The eleventh binary digit will be 0 if this event is not associated with substance abuse and 1 if this event has indicated an assocation with substance abuse.
+The twelfth binary digit will be 0 if this event is not associated with pre-adolescent sexual abuse and 1 if this event is associated with pre-adolescent sexual abuse. 
 The thirteenth binary digit will be 0 if the patient is not obese and 1 if the patient is obese.",
 ,Diagnosis,A medical diagnosis. One of:,
-,,"Binary digit where 0 represents no presence of Current Depression and 1 represents presence of Current Depression.
-Binary digit where 0 represents no presence of Historical Depression and 1 represents presence of Historical Depression.",
+,,Binary digit where 0 represents that this event is not associated with Depression and 1 indicates that this event is associated with Depression. ,
 ,,Binary digit where 0 represents no presence of Current Substance Abuse and 1 represents presence of Current Substance Abuse.,
-,,Binary digit where 0 represents no presence of Historical Substance Abuse and 1 represents presence of Historical Substance Abuse.,
+,,Binary digit where 0 represents that this event is not associated with Substance Abuse and 1 represents that this event is associated with Substance Abuse. ,
 ,Medication,A drug used for medical treatment. One of:,
 ,,Drug- and recency-weighted running sum of prescriptions of ibuprofen across events,
 ,,Binary digit where 0 represents that ibuprofen has not been prescribed during this event and 1 represents that ibuprofen has been prescribed during this event,
