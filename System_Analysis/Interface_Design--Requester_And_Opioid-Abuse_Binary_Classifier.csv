@@ -43,7 +43,7 @@ The eleventh binary digit will be 0 if this event is not associated with substan
 The twelth binary digit will be 0 if this event is not associated with obesity and 1 if this event is associated with obesity.",
 ,Diagnosis,A medical diagnosis. One of:,
 ,,Binary digit where 0 represents that this event is not associated with Depression and 1 indicates that this event is associated with Depression. ,
-,,Binary digit where 0 represents that this event is not associated with General Pain and 1 indicates that this event is associated with General Pain . ,
+,,Binary digit where 0 represents that this event is not associated with Pain and 1 indicates that this event is associated with Pain . ,
 ,,Binary digit where 0 represents that this event is not associated with Anxiety and 1 indicates that this event is associated with Anxiety. ,
 ,,Binary digit where 0 represents that this event is not associated with Hypertension and 1 indicates that this event is associated with Hypertension. ,
 ,,Binary digit where 0 represents that this event is not associated with Bipolar Disorder and 1 indicates that this event is associated with Bipolar Disorder. ,
