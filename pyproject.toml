@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "opioidabusepredictor"
+version = "0.0.1"
+authors = [
+    { name="Tom Lever", email="thomas.lever.business@gmail.com" },
+]
+description = "Contains Python utilities for Opioid_Abuse_Predictor"
+readme = "README.md"
+requires-python = ">=3.7.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/tslever/Opioid_Abuse_Predictor"
+"Bug Tracker" = "https://github.com/tslever/Opioid_Abuse_Predictor/issues"
