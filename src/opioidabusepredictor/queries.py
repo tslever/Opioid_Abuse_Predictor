@@ -137,7 +137,7 @@ query_that_results_in_table_of_person_IDs_from_table_of_events_where_concept_IDs
 
 # 10
 query_that_results_in_distinct_IDs_of_patients_with_at_least_one_prescription_of_opioids_and_without_cancer = """
-    SELECT DISTINCT person_id  
+    SELECT DISTINCT person_id
     FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
     WHERE
         cb_search_person.person_id IN (""" + query_that_results_in_table_of_person_IDs_from_table_of_events_where_concept_IDs_correspond_to_opioids + """) 
@@ -152,59 +152,69 @@ query_that_results_in_table_of_occurrences_relating_to_patients_in_cohort = """
 """
 
 # 12
-query_that_results_in_table_of_patients_conditions_and_start_datetimes = """
-    SELECT
-        c_occurrence.person_id,
-        c_standard_concept.concept_name as standard_concept_name,
-        c_occurrence.condition_start_datetime
-    FROM (""" + query_that_results_in_table_of_occurrences_relating_to_patients_in_cohort + """) c_occurrence 
-    LEFT JOIN
-        `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept 
-            ON c_occurrence.condition_concept_id = c_standard_concept.concept_id
+query_that_results_in_table_of_concept_IDs_and_codes = """
+    SELECT concept_id, code
+    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
+    WHERE full_text LIKE '%_rank1]%'
 """
 
 # 13
+query_that_results_in_table_of_patients_conditions_and_start_datetimes = """
+    SELECT
+        c_occurrence.person_id,
+        code,
+        c_standard_concept.concept_name as standard_concept_name,
+        c_occurrence.condition_start_datetime
+    FROM (""" + query_that_results_in_table_of_occurrences_relating_to_patients_in_cohort + """) c_occurrence
+    LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept
+        ON c_occurrence.condition_concept_id = c_standard_concept.concept_id
+    LEFT JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
+        ON c_occurrence.condition_concept_id = table_of_concept_IDs_and_codes.concept_id
+"""
+
+# 14
 query_that_results_in_table_of_IDs_of_patients_in_cohort = """
     SELECT DISTINCT person_id
     FROM (""" + query_that_results_in_table_of_patients_conditions_and_start_datetimes + """)
 """
 
-# 14
+# 15
 query_that_results_in_table_of_random_IDs_of_patients_in_cohort = """
     SELECT *
     FROM (""" + query_that_results_in_table_of_IDs_of_patients_in_cohort + """)
     ORDER BY RAND()
 """
 
-# 15
+# 16
 query_that_results_in_table_of_3790_random_IDs_of_patients_in_cohort = """
     SELECT person_id
     FROM (""" + query_that_results_in_table_of_random_IDs_of_patients_in_cohort + """)
     LIMIT 3790
 """
 
-# 16
+# 17
 query_that_results_in_table_of_opioid_abusers_conditions_and_start_datetimes = """
     SELECT *
     FROM (""" + query_that_results_in_table_of_patients_conditions_and_start_datetimes + """)
     WHERE standard_concept_name = "Opioid abuse"
 """
 
-# 17
+# 18
 query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort = """
     SELECT person_id
     FROM (""" + query_that_results_in_table_of_opioid_abusers_conditions_and_start_datetimes + """)
 """
 
-# 18
+# 19
 query_that_results_in_table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort = """(""" + query_that_results_in_table_of_3790_random_IDs_of_patients_in_cohort + """)
 UNION ALL
 (""" + query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort + """)"""
 
-# 19
+# 20
 query_that_results_in_table_of_half_opioid_abusers_conditions_and_start_datetimes = """
     SELECT
         table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id,
+        code,
         standard_concept_name,
         condition_start_datetime
     FROM (""" + query_that_results_in_table_of_patients_conditions_and_start_datetimes + """) table_of_patients_conditions_and_start_and_end_datetimes
