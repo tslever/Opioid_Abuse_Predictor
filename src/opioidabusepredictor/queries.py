@@ -159,12 +159,11 @@ query_that_results_in_table_of_concept_IDs_and_codes = """
 """
 
 # 13 for conditions
-query_that_results_in_table_of_patients_conditions_and_start_datetimes = """
+query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids = """
     SELECT
         c_occurrence.person_id,
         code,
         c_standard_concept.concept_name as standard_concept_name,
-        c_occurrence.condition_start_datetime,
         visit_occurrence_id
     FROM (""" + query_that_results_in_table_of_occurrences_relating_to_patients_in_cohort + """) c_occurrence
     LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept
@@ -176,7 +175,7 @@ query_that_results_in_table_of_patients_conditions_and_start_datetimes = """
 # 14 for conditions
 query_that_results_in_table_of_IDs_of_patients_in_cohort = """
     SELECT DISTINCT person_id
-    FROM (""" + query_that_results_in_table_of_patients_conditions_and_start_datetimes + """)
+    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids + """)
 """
 
 # 15 for conditions
