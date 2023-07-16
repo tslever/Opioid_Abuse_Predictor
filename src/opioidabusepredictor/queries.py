@@ -164,7 +164,8 @@ query_that_results_in_table_of_patients_conditions_and_start_datetimes = """
         c_occurrence.person_id,
         code,
         c_standard_concept.concept_name as standard_concept_name,
-        c_occurrence.condition_start_datetime
+        c_occurrence.condition_start_datetime,
+        visit_occurrence_id
     FROM (""" + query_that_results_in_table_of_occurrences_relating_to_patients_in_cohort + """) c_occurrence
     LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept
         ON c_occurrence.condition_concept_id = c_standard_concept.concept_id
@@ -211,42 +212,49 @@ UNION ALL
 (""" + query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort + """)"""
 
 # 20
-query_that_results_in_table_of_half_opioid_abusers_conditions_and_start_datetimes = """
+query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids = """
     SELECT
         table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id,
         code,
         standard_concept_name,
-        condition_start_datetime
+        visit_occurrence_id
     FROM (""" + query_that_results_in_table_of_patients_conditions_and_start_datetimes + """) table_of_patients_conditions_and_start_and_end_datetimes
     JOIN (""" + query_that_results_in_table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort + """) table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort
     ON table_of_patients_conditions_and_start_and_end_datetimes.person_id = table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id
 """
 
 # 21
-query_that_results_in_table_of_person_IDs_condition_start_datetimes_and_indicators_of_whether_patient_has_Anxiety = """
+query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_Anxiety = """
 SELECT
     person_id,
-    CAST(condition_start_datetime AS DATE) AS condition_start_datetime,
+    visit_occurrence_id,
 
-    CASE WHEN cast(code as INT64) IN (48694002, 35429005, 247808006, 431432003, 225635005, 300895004, 197480006, 67195008, 192038005, 192041001, 192044009, 22621000119103, 50026000, 34938008, 762331007, 51493001, 1686006, 52910006, 109006, 37868008, 53467004, 11806006, 69479009, 426174008, 111487009, 428687006, 21897009, 231504006, 191736004, 17496003, 50026000, 34938008, 762331007, 51493001, 1686006, 371631005, 35607004, 8185002, 5509004, 61212007, 56576003, 72861004, 65064003, 82494000, 43150009, 386810004, 70691001, 191722009, 61569007, 82415003, 35607004, 8185002, 5509004, 61212007, 54587008, 25501002, 62351001, 191725006, 58535001, 47505003, 16265301000119106, 16264901000119109, 16264821000119108, 126943008, 198288003, 70997004, 61387006, 79823003, 279622009)
+    CASE WHEN code IN (
+        "48694002", "35429005", "247808006", "431432003", "225635005", "300895004", "197480006", "67195008", "192038005", "192041001",
+        "192044009", "22621000119103", "50026000", "34938008", "762331007", "51493001", "1686006", "52910006", "109006", "37868008",
+        "53467004", "11806006", "69479009", "426174008", "111487009", "428687006", "21897009", "231504006", "191736004", "17496003",
+        "50026000", "34938008", "762331007", "51493001", "1686006", "371631005", "35607004", "8185002", "5509004", "61212007",
+        "56576003", "72861004", "65064003", "82494000", "43150009", "386810004", "70691001", "191722009", "61569007", "82415003",
+        "35607004", "8185002", "5509004", "61212007", "54587008", "25501002", "62351001", "191725006", "58535001", "47505003",
+        "16265301000119106", "16264901000119109", "16264821000119108", "126943008", "198288003", "70997004", "61387006", "79823003", "279622009"
+    )
     THEN 1
     ELSE 0 END AS has_Anxiety
 
     
 
-FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_start_datetimes + """)
-LIMIT 3
+FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
 """
 
 # 22
 query_that_results_in_conditions_feature_matrix = """
 SELECT
     person_id,
-    condition_start_datetime,
+    visit_occurrence_id,
     MAX(has_Anxiety) as has_Anxiety
-FROM (""" + query_that_results_in_table_of_person_IDs_condition_start_datetimes_and_indicators_of_whether_patient_has_Anxiety + """)
-GROUP BY person_id, condition_start_datetime
-ORDER BY person_id, condition_start_datetime
+FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_Anxiety + """)
+GROUP BY person_id, visit_occurrence_id
+ORDER BY person_id, visit_occurrence_id
 """
 
 # 11 for drugs
@@ -292,12 +300,12 @@ query_that_results_in_table_of_drugs_for_cohort = """
 """
 
 # 15 for drugs
-query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_drug_exposure_start_datetimes = """
+query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids = """
     SELECT
         d_exposure.person_id,
         d_standard_concept.concept_code as standard_concept_code,
         d_standard_concept.concept_name as standard_concept_name,
-        d_exposure.drug_exposure_start_datetime
+        visit_occurrence_id
     FROM (""" + query_that_results_in_table_of_drugs_for_cohort + """) d_exposure 
     LEFT JOIN
         `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept 
@@ -305,10 +313,10 @@ query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_drug_
 """
 
 # 16 for drugs
-query_that_results_in_table_of_person_IDs_drug_exposure_start_datetimes_and_indicators_of_whether_patient_is_exposed_to_ibuprofen = """
+query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_ibuprofen = """
 SELECT
     person_id,
-    CAST(drug_exposure_start_datetime AS DATE) AS drug_exposure_start_datetime,
+    visit_occurrence_id,
 
     CASE WHEN standard_concept_code IN ("5640")
     THEN 1
@@ -316,16 +324,16 @@ SELECT
 
     
 
-FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_drug_exposure_start_datetimes + """)
+FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids + """)
 """
 
 # 17 for drugs
 query_that_results_in_medications_feature_matrix = """
 SELECT
     person_id,
-    drug_exposure_start_datetime,
+    visit_occurrence_id,
     MAX(is_exposed_to_ibuprofen) as is_exposed_to_ibuprofen
-FROM (""" + query_that_results_in_table_of_person_IDs_drug_exposure_start_datetimes_and_indicators_of_whether_patient_is_exposed_to_ibuprofen + """)
-GROUP BY person_id, drug_exposure_start_datetime
-ORDER BY person_id, drug_exposure_start_datetime
+FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_ibuprofen + """)
+GROUP BY person_id, visit_occurrence_id
+ORDER BY person_id, visit_occurrence_id
 """
