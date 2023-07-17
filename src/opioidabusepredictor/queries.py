@@ -336,3 +336,11 @@ FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_i
 GROUP BY person_id, visit_occurrence_id
 ORDER BY person_id, visit_occurrence_id
 """
+
+# 18 for visits
+query_that_results_in_table_of_visit_occurrences_for_cohort = """
+    SELECT COUNT(*)
+    FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence 
+    INNER JOIN (""" + queries.query_that_results_in_distinct_IDs_of_patients_with_at_least_one_prescription_of_opioids_and_without_cancer + """) cohort
+    ON visit_occurrence.person_id = cohort.person_id
+"""
