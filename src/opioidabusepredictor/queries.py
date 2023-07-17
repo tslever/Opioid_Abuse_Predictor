@@ -252,7 +252,7 @@ SELECT
     visit_occurrence_id,
     MAX(has_Anxiety) as has_Anxiety
 FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_Anxiety + """)
-GROUP BY person_id, visit_occurrence_id
+GROUP BY visit_occurrence_id
 ORDER BY person_id, visit_occurrence_id
 """
 
