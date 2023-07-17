@@ -193,16 +193,16 @@ query_that_results_in_table_of_3790_random_IDs_of_patients_in_cohort = """
 """
 
 # 17 for conditions
-query_that_results_in_table_of_opioid_abusers_conditions_and_visit_occurence_ids = """
+query_that_results_in_table_of_opioid_abusers_conditions_and_visit_occurrence_ids = """
     SELECT *
-    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurence_ids + """)
+    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids + """)
     WHERE standard_concept_name = "Opioid abuse"
 """
 
 # 18
 query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort = """
     SELECT person_id
-    FROM (""" + query_that_results_in_table_of_opioid_abusers_conditions_and_visit_occurence_ids + """)
+    FROM (""" + query_that_results_in_table_of_opioid_abusers_conditions_and_visit_occurrence_ids + """)
 """
 
 # 19
@@ -217,9 +217,9 @@ query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurren
         code,
         standard_concept_name,
         visit_occurrence_id
-    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurence_ids + """) table_of_patients_conditions_and_visit_occurence_ids
+    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids + """) table_of_patients_conditions_and_visit_occurrence_ids
     JOIN (""" + query_that_results_in_table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort + """) table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort
-    ON table_of_patients_conditions_and_visit_occurence_ids.person_id = table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id
+    ON table_of_patients_conditions_and_visit_occurrence_ids.person_id = table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id
 """
 
 # 21
