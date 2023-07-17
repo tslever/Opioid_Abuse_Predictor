@@ -337,7 +337,7 @@ GROUP BY person_id, visit_occurrence_id
 ORDER BY person_id, visit_occurrence_id
 """
 
-# 18 for visits
+# 11 for visits
 query_that_results_in_table_of_visit_occurrences_for_cohort = """
     SELECT COUNT(*)
     FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence 
