@@ -248,12 +248,11 @@ FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_vi
 # 22
 query_that_results_in_conditions_feature_matrix = """
 SELECT
-    person_id,
     visit_occurrence_id,
     MAX(has_Anxiety) as has_Anxiety
 FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_Anxiety + """)
 GROUP BY visit_occurrence_id
-ORDER BY person_id, visit_occurrence_id
+ORDER BY visit_occurrence_id
 """
 
 # 11 for drugs
