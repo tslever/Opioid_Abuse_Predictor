@@ -328,7 +328,6 @@ FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_nam
 # 17 for drugs
 query_that_results_in_medications_feature_matrix = """
 SELECT
-    person_id,
     visit_occurrence_id,
     MAX(is_exposed_to_ibuprofen) as is_exposed_to_ibuprofen
 FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_ibuprofen + """)
@@ -338,7 +337,7 @@ ORDER BY person_id, visit_occurrence_id
 
 # 11 for visits
 query_that_results_in_table_of_visit_occurrences_for_cohort = """
-    SELECT *
+    SELECT visit_occurrence.person_id, visit_occurrence.visit_occurrence_id
     FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence 
     INNER JOIN (""" + query_that_results_in_distinct_IDs_of_patients_with_at_least_one_prescription_of_opioids_and_without_cancer + """) cohort
     ON visit_occurrence.person_id = cohort.person_id
