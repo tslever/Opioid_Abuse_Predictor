@@ -311,16 +311,66 @@ query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit
 """
 
 # 16 for drugs
-query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_ibuprofen = """
+query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = """
 SELECT
     person_id,
     visit_occurrence_id,
 
     CASE WHEN standard_concept_code IN ("5640")
     THEN 1
-    ELSE 0 END AS is_exposed_to_ibuprofen
+    ELSE 0 END AS is_exposed_to_ibuprofen,
 
-    
+    CASE WHEN standard_concept_code IN ("1819")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_buprenorphine,
+
+    CASE WHEN standard_concept_code IN ("2193")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_nelaxone,
+
+    CASE WHEN standard_concept_code IN ("4337")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_fentanyl,
+
+    CASE WHEN standard_concept_code IN ("7052")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_morphine,
+
+    CASE WHEN standard_concept_code IN ("7804")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_oxycodone,
+
+    CASE WHEN standard_concept_code IN ("3423")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_hydromorphone,
+
+    CASE WHEN standard_concept_code IN ("1191")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_aspirin,
+
+    CASE WHEN standard_concept_code IN ("2670")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_codeine,
+
+    CASE WHEN standard_concept_code IN ("10689")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_tramadol,
+
+    CASE WHEN standard_concept_code IN ("7238")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_nalbuphine,
+
+    CASE WHEN standard_concept_code IN ("6754")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_meperidine,
+
+    CASE WHEN standard_concept_code IN ("7243")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_naltrexone,
+
+    CASE WHEN standard_concept_code IN ("161")
+    THEN 1
+    ELSE 0 END AS is_exposed_to_acetaminophen
 
 FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids + """)
 """
@@ -329,8 +379,21 @@ FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_nam
 query_that_results_in_medications_feature_matrix = """
 SELECT
     visit_occurrence_id,
-    MAX(is_exposed_to_ibuprofen) as is_exposed_to_ibuprofen
-FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_ibuprofen + """)
+    MAX(is_exposed_to_ibuprofen) as is_exposed_to_ibuprofen,
+    MAX(is_exposed_to_buprenorphine) as is_exposed_to_buprenorphine,
+    MAX(is_exposed_to_nelaxone) as is_exposed_to_nelaxone,
+    MAX(is_exposed_to_fentanyl) as is_exposed_to_fentanyl,
+    MAX(is_exposed_to_morphine) as is_exposed_to_morphine,
+    MAX(is_exposed_to_oxycodone) as is_exposed_to_oxycodone,
+    MAX(is_exposed_to_hydromorphone) as is_exposed_to_hydromorphone,
+    MAX(is_exposed_to_aspirin) as is_exposed_to_aspirin,
+    MAX(is_exposed_to_codeine) as is_exposed_to_codeine,
+    MAX(is_exposed_to_tramadol) as is_exposed_to_tramadol,
+    MAX(is_exposed_to_nalbuphine) as is_exposed_to_nalbuphine,
+    MAX(is_exposed_to_meperidine) as is_exposed_to_meperidine,
+    MAX(is_exposed_to_naltrexone) as is_exposed_to_naltrexone,
+    MAX(is_exposed_to_acetaminophen) as is_exposed_to_acetaminophen
+FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs + """)
 GROUP BY person_id, visit_occurrence_id
 ORDER BY person_id, visit_occurrence_id
 """
