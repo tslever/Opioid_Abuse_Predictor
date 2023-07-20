@@ -15,7 +15,6 @@ def get_data_frame(query):
 def generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names, query_that_results_in_source_table):
     query = """
 SELECT
-    person_id,
     visit_occurrence_id,
 """
     for code, column_name in dictionary_of_codes_and_column_names.items():
@@ -400,8 +399,8 @@ SELECT
     MAX(is_exposed_to_naltrexone) as is_exposed_to_naltrexone,
     MAX(is_exposed_to_acetaminophen) as is_exposed_to_acetaminophen
 FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs + """)
-GROUP BY person_id, visit_occurrence_id
-ORDER BY person_id, visit_occurrence_id
+GROUP BY visit_occurrence_id
+ORDER BY visit_occurrence_id
 """
 
 # 11 for visits
