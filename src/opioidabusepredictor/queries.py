@@ -22,7 +22,7 @@ def generate_domain_feature_matrix(condition_code, name_of_column):
         SELECT cast(cr.id as string) as id
         FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
         WHERE
-            code IN (""" + condition_code + """)
+            code IN (CAST(""" + condition_code + """ AS STRING))
             AND full_text LIKE '%_rank1]%'
     """
 
@@ -58,7 +58,7 @@ def generate_domain_feature_matrix(condition_code, name_of_column):
 
         CASE WHEN code IN (""" + query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition + """)
         THEN 1
-        ELSE 0 END AS """ + name_of_column + """"
+        ELSE 0 END AS """ + name_of_column + """
 
     FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
     """
@@ -277,66 +277,12 @@ query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurren
     ON table_of_patients_conditions_and_visit_occurrence_ids.person_id = table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id
 """
 
-# 21
-query_that_results_in_table_with_ID_of_condition_Anxiety = """
-    SELECT cast(cr.id as string) as id
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
-    WHERE
-        code IN ("48694002")
-        AND full_text LIKE '%_rank1]%'
-"""
-
-# 22
-query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_Anxiety = """
-    SELECT DISTINCT c.concept_id
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
-    JOIN (""" + query_that_results_in_table_with_ID_of_condition_Anxiety + """) a
-    ON (
-        c.path LIKE CONCAT('%.', a.id, '.%')
-        OR c.path LIKE CONCAT('%.', a.id)
-        OR c.path LIKE CONCAT(a.id, '.%')
-        OR c.path = a.id
-    )
-    WHERE
-        is_standard = 1
-        AND is_selectable = 1
-"""
-
-# 23
-query_that_results_in_table_of_codes_of_conditions_that_are_children_of_Anxiety = """
-SELECT code
-FROM (""" + query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_Anxiety + """) table_of_concept_IDs
-JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_ids_and_codes
-ON table_of_concept_IDs.concept_id = table_of_concept_ids_and_codes.concept_id
-"""
-
-# 24
-query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_Anxiety = """
-SELECT
-    person_id,
-    visit_occurrence_id,
-
-    CASE WHEN code IN (""" + query_that_results_in_table_of_codes_of_conditions_that_are_children_of_Anxiety + """
-        --"48694002", "35429005", "247808006", "431432003", "225635005", "300895004", "197480006", "67195008", "192038005", "192041001",
-        --"192044009", "22621000119103", "50026000", "34938008", "762331007", "51493001", "1686006", "52910006", "109006", "37868008",
-        --"53467004", "11806006", "69479009", "426174008", "111487009", "428687006", "21897009", "231504006", "191736004", "17496003",
-        --"50026000", "34938008", "762331007", "51493001", "1686006", "371631005", "35607004", "8185002", "5509004", "61212007",
-        --"56576003", "72861004", "65064003", "82494000", "43150009", "386810004", "70691001", "191722009", "61569007", "82415003",
-        --"35607004", "8185002", "5509004", "61212007", "54587008", "25501002", "62351001", "191725006", "58535001", "47505003",
-        --"16265301000119106", "16264901000119109", "16264821000119108", "126943008", "198288003", "70997004", "61387006", "79823003", "279622009"
-    )
-    THEN 1
-    ELSE 0 END AS has_Anxiety
-
-FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
-"""
-
 # 25
 query_that_results_in_conditions_feature_matrix = """
 SELECT
     visit_occurrence_id,
     MAX(has_Anxiety) as has_Anxiety
-FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_Anxiety + """)
+FROM (""" + generate_domain_feature_matrix("48694002", "has_Anxiety") + """)
 GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
 """
