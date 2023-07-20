@@ -12,10 +12,9 @@ def get_data_frame(query):
 
 def generate_domain_feature_matrix(condition_code, name_of_column):
 
-    # BELOW QUERIES ARE NOT NEEDED BECAUSE ITS GLOBAL VARIABLES AND CAN BE ACCESSED OUTSIDE OF FUNCTION
+    # BELOW QUERIES ARE NOT NEEDED BECAUSE THEY ARE GLOBAL VARIABLES THAT LIVE OUTSIDE THIS FUNCTION
     # query_that_results_in_table_of_concept_IDs_and_codes
     # query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids
-
 
     # QUERY 21 or #1
     query_that_results_in_table_with_ID_of_parent_condition= """
@@ -342,6 +341,24 @@ query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit
             ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
 """
 
+def generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names):
+    query = """
+SELECT
+    person_id,
+    visit_occurrence_id,
+"""
+    for code, column_name in dictionary_of_codes_and_column_names.items():
+        case_block = """
+    CASE WHEN standard_concept_code IN (CAST(""" + code + """ AS STRING))
+    THEN 1
+    ELSE 0 END AS """ + column_name + """,
+        """
+        query += case_block
+    query += """
+    FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids + """)
+    """
+    return query
+
 # 16 for drugs
 query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = """
 SELECT
@@ -406,6 +423,25 @@ SELECT
 
 FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids + """)
 """
+
+dictionary_of_codes_and_column_names = {
+    "5640": "is_exposed_to_ibuprofen",
+    "1819": "is_exposed_to_buprenorphine",
+    "2193": "is_exposed_to_nelaxone",
+    "4337": "is_exposed_to_fentanyl",
+    "7052": "is_exposed_to_morphine",
+    "7804": "is_exposed_to_oxycodone",
+    "3423": "is_exposed_to_hydromorphone",
+    "1191": "is_exposed_to_aspirin",
+    "2670": "is_exposed_to_codeine",
+    "10689": "is_exposed_to_tramadol",
+    "7238": "is_exposed_to_nalbuphine",
+    "6754": "is_exposed_to_meperidine",
+    "7243": "is_exposed_to_naltrexone",
+    "161": "is_exposed_to_acetaminophen"
+}
+
+query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names)
 
 # 17 for drugs
 query_that_results_in_medications_feature_matrix = """
