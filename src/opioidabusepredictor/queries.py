@@ -1,6 +1,7 @@
 import os
 import pandas
 
+# Function 1
 def get_data_frame(query):
     data_frame = pandas.read_gbq(
         query = query,
@@ -10,6 +11,26 @@ def get_data_frame(query):
     )
     return data_frame
 
+# Function 2
+def generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names, query_that_results_in_source_table):
+    query = """
+SELECT
+    person_id,
+    visit_occurrence_id,
+"""
+    for code, column_name in dictionary_of_codes_and_column_names.items():
+        case_block = """
+    CASE WHEN standard_concept_code IN (CAST(""" + code + """ AS STRING))
+    THEN 1
+    ELSE 0 END AS """ + column_name + """,
+        """
+        query += case_block
+    query += """
+    FROM (""" + query_that_results_in_source_table + """)
+    """
+    return query
+
+# Function 3
 def generate_domain_feature_matrix(condition_code, name_of_column):
 
     # BELOW QUERIES ARE NOT NEEDED BECAUSE THEY ARE GLOBAL VARIABLES THAT LIVE OUTSIDE THIS FUNCTION
@@ -341,24 +362,6 @@ query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit
             ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
 """
 
-def generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names):
-    query = """
-SELECT
-    person_id,
-    visit_occurrence_id,
-"""
-    for code, column_name in dictionary_of_codes_and_column_names.items():
-        case_block = """
-    CASE WHEN standard_concept_code IN (CAST(""" + code + """ AS STRING))
-    THEN 1
-    ELSE 0 END AS """ + column_name + """,
-        """
-        query += case_block
-    query += """
-    FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids + """)
-    """
-    return query
-
 # 16 for drugs
 dictionary_of_codes_and_column_names = {
     "5640": "is_exposed_to_ibuprofen",
@@ -376,7 +379,7 @@ dictionary_of_codes_and_column_names = {
     "7243": "is_exposed_to_naltrexone",
     "161": "is_exposed_to_acetaminophen"
 }
-query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names)
+query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names, query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids)
 
 # 17 for drugs
 query_that_results_in_medications_feature_matrix = """
