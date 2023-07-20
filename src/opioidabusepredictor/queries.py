@@ -360,70 +360,6 @@ SELECT
     return query
 
 # 16 for drugs
-query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = """
-SELECT
-    person_id,
-    visit_occurrence_id,
-
-    CASE WHEN standard_concept_code IN ("5640")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_ibuprofen,
-
-    CASE WHEN standard_concept_code IN ("1819")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_buprenorphine,
-
-    CASE WHEN standard_concept_code IN ("2193")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_nelaxone,
-
-    CASE WHEN standard_concept_code IN ("4337")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_fentanyl,
-
-    CASE WHEN standard_concept_code IN ("7052")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_morphine,
-
-    CASE WHEN standard_concept_code IN ("7804")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_oxycodone,
-
-    CASE WHEN standard_concept_code IN ("3423")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_hydromorphone,
-
-    CASE WHEN standard_concept_code IN ("1191")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_aspirin,
-
-    CASE WHEN standard_concept_code IN ("2670")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_codeine,
-
-    CASE WHEN standard_concept_code IN ("10689")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_tramadol,
-
-    CASE WHEN standard_concept_code IN ("7238")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_nalbuphine,
-
-    CASE WHEN standard_concept_code IN ("6754")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_meperidine,
-
-    CASE WHEN standard_concept_code IN ("7243")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_naltrexone,
-
-    CASE WHEN standard_concept_code IN ("161")
-    THEN 1
-    ELSE 0 END AS is_exposed_to_acetaminophen
-
-FROM (""" + query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids + """)
-"""
-
 dictionary_of_codes_and_column_names = {
     "5640": "is_exposed_to_ibuprofen",
     "1819": "is_exposed_to_buprenorphine",
@@ -440,7 +376,6 @@ dictionary_of_codes_and_column_names = {
     "7243": "is_exposed_to_naltrexone",
     "161": "is_exposed_to_acetaminophen"
 }
-
 query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs = generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names)
 
 # 17 for drugs
