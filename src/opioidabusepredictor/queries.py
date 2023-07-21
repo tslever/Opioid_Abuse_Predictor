@@ -304,6 +304,7 @@ query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurren
 """
 
 # 25
+"""
 query_that_results_in_conditions_feature_matrix = """
 SELECT
     visit_occurrence_id,
@@ -311,6 +312,7 @@ SELECT
 FROM (""" + generate_domain_feature_matrix("48694002", "has_Anxiety") + """)
 GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
+"""
 """
 
 # 11 for drugs
