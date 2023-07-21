@@ -108,7 +108,6 @@ def generate_query_that_results_in_condition_feature_matrix(column_names, source
 	GROUP BY visit_occurrence_id
 	ORDER BY visit_occurrence_id
    	"""
-	"""
 	return query_that_results_in_condition_feature_matrix
 
 
