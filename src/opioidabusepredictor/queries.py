@@ -30,7 +30,7 @@ SELECT
     return query
 
 # Function 3
-def generate_domain_feature_matrix(condition_code, name_of_column):
+def generate_query_that_results_in_table_of_codes_of_conditions_that_are_children_of_given_condition(condition_code, name_of_column):
 
     # BELOW QUERIES ARE NOT NEEDED BECAUSE THEY ARE GLOBAL VARIABLES THAT LIVE OUTSIDE THIS FUNCTION
     # query_that_results_in_table_of_concept_IDs_and_codes
@@ -60,7 +60,7 @@ def generate_domain_feature_matrix(condition_code, name_of_column):
             is_standard = 1
             AND is_selectable = 1
     """
-
+    
     # QUERY 23 or #3
     query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition = """
     SELECT code
@@ -69,19 +69,26 @@ def generate_domain_feature_matrix(condition_code, name_of_column):
     ON table_of_concept_IDs.concept_id = table_of_concept_ids_and_codes.concept_id
     """
 
+    return query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition
+
+def generate_domain_feature_matrix(dict_with_key_as_column_value_as_query): # dictionary with key: name_of_column, value: query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition
     # QUERY 24 or #4
     query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition = """
     SELECT
         person_id,
         visit_occurrence_id,
-
-        CASE WHEN code IN (""" + query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition + """)
-        THEN 1
-        ELSE 0 END AS """ + name_of_column + """
-
-    FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
     """
 
+    for column_name, query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition in dict_with_key_as_column_value_as_query.items():
+        case_block = """
+        CASE WHEN code IN (""" + query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition + """)
+        THEN 1
+        ELSE 0 END AS """ + column_name + """,
+        """
+        query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition += case_block
+    query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition += """
+    FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
+    """
     return query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition
 
 # 1
