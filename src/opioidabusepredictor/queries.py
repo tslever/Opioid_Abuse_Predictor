@@ -71,7 +71,7 @@ def generate_query_that_results_in_table_of_codes_of_conditions_that_are_childre
 
     return query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition
 
-def generate_domain_feature_matrix(dict_with_key_as_column_value_as_query): # dictionary with key: name_of_column, value: query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition
+def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators(dict_with_key_as_column_value_as_query): # dictionary with key: name_of_column, value: query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition
     # QUERY 24 or #4
     query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition = """
     SELECT
@@ -90,6 +90,27 @@ def generate_domain_feature_matrix(dict_with_key_as_column_value_as_query): # di
     FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
     """
     return query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition
+
+
+# 5 for conditions / general
+def generate_query_that_results_in_condition_feature_matrix(column_names, source_table):
+	query_that_results_in_condition_feature_matrix = """
+	SELECT
+    	visit_occurrence_id,
+	"""
+	for name in column_names:
+		max_block = """
+		MAX(""" + name + """) as is """ + name + """,
+		"""
+		query_that_results_in_condition_feature_matrix += max_block
+	query_that_results_in_condition_feature_matrix += """
+    	FROM (""" + source_table  + """)
+	GROUP BY visit_occurrence_id
+	ORDER BY visit_occurrence_id
+   	"""
+	"""
+	return query_that_results_in_condition_feature_matrix
+
 
 # 1
 query_that_results_in_table_of_IDs_from_table_of_cancerous_conditions = """
