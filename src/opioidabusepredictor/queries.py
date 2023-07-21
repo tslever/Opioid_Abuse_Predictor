@@ -100,7 +100,7 @@ def generate_query_that_results_in_condition_feature_matrix(column_names, source
 	"""
 	for name in column_names:
 		max_block = """
-		MAX(""" + name + """) as is """ + name + """,
+		MAX(""" + name + """) as """ + name + """,
 		"""
 		query_that_results_in_condition_feature_matrix += max_block
 	query_that_results_in_condition_feature_matrix += """
