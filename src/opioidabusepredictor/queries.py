@@ -71,7 +71,11 @@ def generate_query_that_results_in_table_of_codes_of_conditions_that_are_childre
 
     return query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition
 
-def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators(dict_with_key_as_column_value_as_query): # dictionary with key: name_of_column, value: query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition
+# Allow for several indicator columns to be created for conditions
+# For example, a call to this function will look like:
+# query = generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators({"has_Anxiety": <a query that results in table of codes of children conditions of Anxiety>})
+
+def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators(dictionary_of_column_names_and_queries): # dictionary with key: name_of_column, value: query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition
     # QUERY 24 or #4
     query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition = """
     SELECT
@@ -79,7 +83,7 @@ def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicator
         visit_occurrence_id,
     """
 
-    for column_name, query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition in dict_with_key_as_column_value_as_query.items():
+    for column_name, query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition in dictionary_of_column_names_and_queries.items():
         case_block = """
         CASE WHEN code IN (""" + query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition + """)
         THEN 1
@@ -93,7 +97,7 @@ def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicator
 
 
 # 5 for conditions / general
-def generate_query_that_results_in_condition_feature_matrix(column_names, source_table):
+def generate_query_that_results_in_conditions_feature_matrix(column_names, source_table):
 	query_that_results_in_condition_feature_matrix = """
 	SELECT
     	visit_occurrence_id,
@@ -109,7 +113,6 @@ def generate_query_that_results_in_condition_feature_matrix(column_names, source
 	ORDER BY visit_occurrence_id
    	"""
 	return query_that_results_in_condition_feature_matrix
-
 
 # 1
 query_that_results_in_table_of_IDs_from_table_of_cancerous_conditions = """
@@ -323,8 +326,23 @@ query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurren
     ON table_of_patients_conditions_and_visit_occurrence_ids.person_id = table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id
 """
 
-# 25
-
+dict_of_codes_and_columns = {
+    "48694002": "has_Anxiety",
+    "13746004": "has_Bipolar_disorder",
+    "35489007": "has_Depressive_disorder",
+    "38341003": "has_Hypertensive_disorder",
+    "5602001": "has_Opioid_abuse",
+    "75544000": "has_Opioid_dependence",
+    "22253000": "has_Pain",
+    "70076002": "has_Rhinitis",
+    "66214007": "has_Non_Opioid_Substance_abuse"
+}
+dict_of_columns_and_queries = {}
+for code in list(dict_of_codes_and_columns.keys()):
+    query_for_code = generate_query_that_results_in_table_of_codes_of_conditions_that_are_children_of_given_condition(code)
+    dict_of_columns_and_queries[dict_of_codes_and_columns[code]] = query_for_code
+query_that_results_in_final_conditions_matrix_of_ungrouped_indicators = generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators(dict_of_columns_and_queries)
+query_that_results_in_conditions_feature_matrix = generate_query_that_results_in_conditions_feature_matrix(list(dict_of_codes_and_columns.values()), query_that_results_in_final_conditions_matrix_of_ungrouped_indicators)
 
 # 11 for drugs
 query_that_results_in_table_of_IDs_of_drugs = """
