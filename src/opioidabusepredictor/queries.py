@@ -30,7 +30,7 @@ SELECT
     return query
 
 # Function 3
-def generate_query_that_results_in_table_of_codes_of_conditions_that_are_children_of_given_condition(condition_code, name_of_column):
+def generate_query_that_results_in_table_of_codes_of_conditions_that_are_children_of_given_condition(condition_code):
 
     # BELOW QUERIES ARE NOT NEEDED BECAUSE THEY ARE GLOBAL VARIABLES THAT LIVE OUTSIDE THIS FUNCTION
     # query_that_results_in_table_of_concept_IDs_and_codes
