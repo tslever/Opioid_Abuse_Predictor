@@ -1,2 +1,5 @@
+Che et al. 2018: Deep Learning Solutions for Classifying Patients on Opioid Use
+    This paper sets precedence for using deep and recurrent neural network models to predict opioid abuse. This paper sets precedence for patients with at least 1 opioid prescription.
+
 Ciesielski 2016: A Tool To Assess Risk Of De Novo Opioid Abuse Or Dependence
     This paper sets precedence for patients with at least 1 opioid prescription, which the paper calls an index claim. This paper suggests that predictor data be data between an index claim and 12 months before an index claim. This paper suggests that responses be the presence of opioid abuse between the index claim and 12 months after the index claim. This paper suggested predictors. This paper defines opioid abuse and dependence.
