@@ -493,12 +493,17 @@ ORDER BY person_id
 """
 
 if __name__ == '__main__':
-    message = "\nPass interpreter 'python' the name of this script and the number of distinct person ID's to include in slice of feature matrix, which is a number between 0 and 116501."
-    if len(sys.argv) != 2:
-        print(message)
-        assert(False)
-    number_of_rows_in_feature_matrix = sys.argv[1]
-    query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix = query_that_results_in_table_of_distinct_person_ids_in_feature_matrix + "LIMIT " + str(number_of_rows_in_feature_matrix)
+    message = """
+"generate_slice_of_feature_matrix.py" generates a slice of our feature matrix.
+Our feature matrix has 13,100,235 rows corresponding to 116,501 patients.
+The rows of our slice are constrained such that at least one cell in each row is greater than 0.
+Our slice has about 106,735 rows corresponding to about 18,022 patients.
+How many patients would you like to include in our slice?
+You might consider numbers of patients between 0 and 116,501 as a safe upper limit."""
+    print(message)
+    number_of_patients = input()
+    print("You would like to enter " + number_of_patients + " patients.")
+    query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix = query_that_results_in_table_of_distinct_person_ids_in_feature_matrix + "LIMIT " + number_of_patients
     query_that_results_in_slice_of_feature_matrix = """
     SELECT *
     FROM (""" + query_that_results_in_feature_matrix + """)
@@ -508,5 +513,5 @@ if __name__ == '__main__':
     ORDER BY person_id, visit_occurrence_id
     """
     data_frame = get_data_frame(query_that_results_in_slice_of_feature_matrix)
-    data_frame.to_csv("Slice_Of_Feature_Matrix.csv")
     print(data_frame)
+    data_frame.to_csv("Slice_Of_Feature_Matrix.csv")
