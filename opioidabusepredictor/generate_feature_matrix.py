@@ -1,5 +1,6 @@
 import os
 import pandas
+import sys
 
 # Function 1
 def get_data_frame(query):
@@ -482,9 +483,28 @@ LEFT JOIN (""" + query_that_results_in_conditions_feature_matrix + """) conditio
 ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = conditions_feature_matrix.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_medications_feature_matrix + """) medications_feature_matrix
 ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = medications_feature_matrix.visit_occurrence_id
+ORDER BY person_id, visit_occurrence_id
+"""
+
+query_that_results_in_table_of_distinct_person_ids_in_feature_matrix = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_feature_matrix + """)
+ORDER BY person_id
 """
 
 if __name__ == '__main__':
-    data_frame = get_data_frame(query_that_results_in_feature_matrix)
+    message = "\nPass interpreter 'python' the name of this script and the number of distinct person ID's to include in slice of feature matrix, which is a number between 0 and 116501."
+    if len(sys.argv) != 2:
+        print(message)
+        assert(False)
+    number_of_rows_in_feature_matrix = sys.argv[1]
+    query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix = query_that_results_in_table_of_distinct_person_ids_in_feature_matrix + "LIMIT " + str(number_of_rows_in_feature_matrix)
+    query_that_results_in_slice_of_feature_matrix = """
+    SELECT *
+    FROM (""" + query_that_results_in_feature_matrix + """)
+    WHERE person_id IN (""" + query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix + """)
+    ORDER BY person_id, visit_occurrence_id
+    """
+    data_frame = get_data_frame(query_that_results_in_slice_of_feature_matrix)
+    data_frame.to_csv("Slice_Of_Feature_Matrix.csv")
     print(data_frame)
-    data_frame.to_csv("Feature_Matrix.csv")
