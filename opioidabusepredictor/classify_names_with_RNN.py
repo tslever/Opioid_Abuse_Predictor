@@ -268,24 +268,92 @@ def calculate_time_interval_between_now_and_start_time(start_time):
     time_interval_during_this_minute = time_interval_in_seconds - time_interval_in_whole_minutes * 60
     return '%dtime_interval_in_whole_minutes %dtime_interval_during_this_minute' % (time_interval_in_whole_minutes, time_interval_during_this_minute)
 
-start_time = time.time()
-
-for iteration in range(1, number_of_iterations + 1):
-    random_language, random_name, tensor_of_index_of_random_language, tensor_of_random_name = get_tuple_of_random_language_random_name_tensor_of_index_of_random_language_and_tensor_of_index_of_random_name()
-    tuple_of_most_likely_language_and_its_index_in_list_of_all_languages, loss = train(tensor_of_index_of_random_language, tensor_of_random_name)
-    sum_of_losses += loss
-    if iteration % number_of_iterations_after_which_to_print == 0:
-        predicted_language, index_of_predicted_language = get_tuple_of_most_likely_language_and_its_index_in_list_of_all_languages(tuple_of_most_likely_language_and_its_index_in_list_of_all_languages)
-        indicator_of_whether_prediction_is_correct = '✓' if predicted_language == random_language else '✗ (%s)' % random_language
-        print('%d %d%% (%s) %.4f %s / %s %s' % (iteration, iteration / number_of_iterations * 100, calculate_time_interval_between_now_and_start_time(start_time), loss, random_name, predicted_language, indicator_of_whether_prediction_is_correct))
-    if iteration % number_of_iterations_after_which_to_plot == 0:
-        list_of_average_losses.append(sum_of_losses / number_of_iterations_after_which_to_plot)
-        sum_of_losses = 0
-
-print(list_of_average_losses)
-
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-plt.figure()
-plt.plot(list_of_average_losses)
+should_train = False
+if (should_train):
+    start_time = time.time()
+    for iteration in range(1, number_of_iterations + 1):
+        random_language, random_name, tensor_of_index_of_random_language, tensor_of_random_name = get_tuple_of_random_language_random_name_tensor_of_index_of_random_language_and_tensor_of_index_of_random_name()
+        tuple_of_most_likely_language_and_its_index_in_list_of_all_languages, loss = train(tensor_of_index_of_random_language, tensor_of_random_name)
+        sum_of_losses += loss
+        if iteration % number_of_iterations_after_which_to_print == 0:
+            predicted_language, index_of_predicted_language = get_tuple_of_most_likely_language_and_its_index_in_list_of_all_languages(tuple_of_most_likely_language_and_its_index_in_list_of_all_languages)
+            indicator_of_whether_prediction_is_correct = '✓' if predicted_language == random_language else '✗ (%s)' % random_language
+            print('%d %d%% (%s) %.4f %s / %s %s' % (iteration, iteration / number_of_iterations * 100, calculate_time_interval_between_now_and_start_time(start_time), loss, random_name, predicted_language, indicator_of_whether_prediction_is_correct))
+        if iteration % number_of_iterations_after_which_to_plot == 0:
+            list_of_average_losses.append(sum_of_losses / number_of_iterations_after_which_to_plot)
+            sum_of_losses = 0
+    torch.save(rnn.state_dict(), 'Opioid_Abuse_Predictor.pt')
+    plt.figure()
+    plt.plot(list_of_average_losses)
+    plt.show()
+else:
+    rnn.load_state_dict(torch.load('Opioid_Abuse_Predictor.pt'))
+
+# Evaluating The Results
+#
+# To see how well the network performs on different languages,
+# we will create a confusion matrix, indicating for every actual language (rows)
+# which language the network guesses (columns). To calculate the confusion matrix
+# a bunch of samples are run through the network with `evaluate()`,
+# which is the same as `train()` minus the backprop.
+
+# Keep track of correct guesses in a confusion matrix
+confusion_matrix = torch.zeros(number_of_languages, number_of_languages)
+number_of_iterations = 10000
+
+# Just return an output given a line
+def evaluate(tensor_of_random_name):
+    hidden_state = rnn.initialize_hidden_state()
+    for i in range(tensor_of_random_name.size()[0]):
+        tensor_of_likelihoods_that_name_corresponds_to_language, hidden_state = rnn(tensor_of_random_name[i], hidden_state)
+    return tensor_of_likelihoods_that_name_corresponds_to_language
+
+# Go through a bunch of examples and record which are correctly guessed
+for i in range(number_of_iterations):
+    random_language, random_name, tensor_of_index_of_random_language, tensor_of_random_name = get_tuple_of_random_language_random_name_tensor_of_index_of_random_language_and_tensor_of_index_of_random_name()
+    tensor_of_likelihoods_that_name_corresponds_to_language = evaluate(tensor_of_random_name)
+    predicted_language, index_of_predicted_language = get_tuple_of_most_likely_language_and_its_index_in_list_of_all_languages(tensor_of_likelihoods_that_name_corresponds_to_language)
+    index_of_random_language = list_of_all_languages.index(random_language)
+    confusion_matrix[index_of_random_language][index_of_predicted_language] += 1
+
+# Normalize by dividing every row by its sum
+for i in range(number_of_languages):
+    confusion_matrix[i] = confusion_matrix[i] / confusion_matrix[i].sum()
+
+# Set up plot
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cax = ax.matshow(confusion_matrix.numpy())
+fig.colorbar(cax)
+
+# Set up axes
+ax.set_xticklabels([''] + list_of_all_languages, rotation=90)
+ax.set_yticklabels([''] + list_of_all_languages)
+
+# Force label at every tick
+ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
+
+# sphinx_gallery_thumbnail_number = 2
 plt.show()
+
+def predict(input_line, n_predictions=3):
+    print('\n> %s' % input_line)
+    with torch.no_grad():
+        output = evaluate(convert_name_to_tensor(input_line))
+
+        # Get top N categories
+        topv, topi = output.topk(n_predictions, 1, True)
+        predictions = []
+
+        for i in range(n_predictions):
+            value = topv[0][i].item()
+            category_index = topi[0][i].item()
+            print('(%.2f) %s' % (value, list_of_all_languages[category_index]))
+            predictions.append([value, list_of_all_languages[category_index]])
+
+predict('Dovesky')
+predict('Jackson')
+predict('Satoshi')
