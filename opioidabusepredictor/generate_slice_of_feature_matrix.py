@@ -513,7 +513,7 @@ if __name__ == '__main__':
     data_frame = get_data_frame(query_that_results_in_slice_of_feature_matrix)
     number_of_rows_in_slice_of_feature_matrix = data_frame.shape[0]
     data_frame = get_data_frame(query_that_results_in_table_of_distinct_person_IDs_in_slice_of_feature_matrix)
-    number_of_distinct_person_IDs_in_slice_of_feature_matrix)
+    number_of_distinct_person_IDs_in_slice_of_feature_matrix = data_frame.shape[0]
     message = """
 "generate_slice_of_feature_matrix.py" generates a slice of our feature matrix.
 There are """ + str(number_of_rows_in_feature_matrix) + """ visit occurrences corresponding to the """ + str(number_of_distinct_person_IDs_in_feature_matrix) + """ patients in our cohort.
