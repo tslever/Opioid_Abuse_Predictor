@@ -541,4 +541,3 @@ You might consider numbers of patients between 0 and 116,501 (the number of pati
     print("There are " + str(number_of_rows_in_slice_of_feature_matrix) + " visit occurrences corresponding to the " + str(number_of_distinct_person_IDs_in_slice_of_feature_matrix) + " patients in slice of feature matrix.")
     print(data_frame)
     data_frame.to_csv("Slice_Of_Feature_Matrix.csv")
-v
