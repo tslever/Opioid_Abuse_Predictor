@@ -283,14 +283,14 @@ query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids = ""
 
 # 17 for conditions
 query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort = """
-    SELECT person_id
+    SELECT DISTINCT person_id
     FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids + """)
     WHERE standard_concept_name = "Opioid abuse"
 """
 
 # 15 for conditions
 query_that_results_in_table_of_3790_random_IDs_of_non_opioid_abusers_in_cohort = """
-    SELECT person_id
+    SELECT DISTINCT person_id
     FROM (""" + query_that_results_in_table_of_IDs_of_patients_in_cohort + """)
     WHERE person_id NOT IN (""" + query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort + """)
     ORDER BY RAND()
