@@ -344,7 +344,7 @@ query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit
     LEFT JOIN
             `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept 
             ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
-    WHERE d_exposure.person_id IN query_that_results_in_table_of_IDs_of_sample_of_cohort
+    WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_IDs_of_sample_of_cohort + """)
 """
 
 # 16 for drugs
