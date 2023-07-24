@@ -486,7 +486,7 @@ ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = medications_featu
 ORDER BY person_id, visit_occurrence_id
 """
 
-query_that_results_in_table_of_distinct_person_ids_in_feature_matrix = """
+query_that_results_in_table_of_distinct_person_IDs_in_feature_matrix = """
 SELECT DISTINCT person_id
 FROM (""" + query_that_results_in_feature_matrix + """)
 ORDER BY person_id
