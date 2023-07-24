@@ -494,6 +494,7 @@ FROM (""" + query_that_results_in_feature_matrix + """)
 ORDER BY person_id
 """
 
+import pandas as pd
 if __name__ == '__main__':
     message = """
 "generate_slice_of_feature_matrix.py" generates a slice of our feature matrix.
@@ -506,21 +507,23 @@ You might consider numbers of patients between 0 and 116,501 (the number of pati
     print(message)
     number_of_patients = input()
     print("You would like to enter " + number_of_patients + " patients.")
-    query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix = query_that_results_in_table_of_distinct_person_ids_in_feature_matrix + "LIMIT " + number_of_patients
     query_that_results_in_slice_of_feature_matrix = """
     SELECT *
     FROM (""" + query_that_results_in_feature_matrix + """)
-    WHERE
-        person_id IN (""" + query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix + """)
-        AND COALESCE(has_Anxiety, has_Bipolar_disorder, has_Depressive_disorder, has_Hypertensive_disorder, has_Opioid_abuse, has_Opioid_dependence, has_Pain, has_Rhinitis, has_Non_Opioid_Substance_abuse, is_exposed_to_ibuprofen, is_exposed_to_buprenorphine, is_exposed_to_nelaxone, is_exposed_to_fentanyl, is_exposed_to_morphine, is_exposed_to_oxycodone, is_exposed_to_hydromorphone, is_exposed_to_aspirin, is_exposed_to_codeine, is_exposed_to_tramadol, is_exposed_to_nalbuphine, is_exposed_to_meperidine, is_exposed_to_naltrexone, is_exposed_to_acetaminophen) > 0
+    WHERE COALESCE(has_Anxiety, has_Bipolar_disorder, has_Depressive_disorder, has_Hypertensive_disorder, has_Opioid_abuse, has_Opioid_dependence, has_Pain, has_Rhinitis, has_Non_Opioid_Substance_abuse, is_exposed_to_ibuprofen, is_exposed_to_buprenorphine, is_exposed_to_nelaxone, is_exposed_to_fentanyl, is_exposed_to_morphine, is_exposed_to_oxycodone, is_exposed_to_hydromorphone, is_exposed_to_aspirin, is_exposed_to_codeine, is_exposed_to_tramadol, is_exposed_to_nalbuphine, is_exposed_to_meperidine, is_exposed_to_naltrexone, is_exposed_to_acetaminophen) > 0
     ORDER BY person_id, visit_occurrence_id
     """
     query_that_results_in_table_of_distinct_person_IDs_in_slice_of_feature_matrix = """
     SELECT DISTINCT person_id
     FROM (""" + query_that_results_in_slice_of_feature_matrix + """)
     """
-    data_frame = get_data_frame(query_that_results_in_table_of_distinct_person_IDs_in_slice_of_feature_matrix)
-    print("There are " + str(data_frame.shape[0]) + " patients in slice of feature matrix.")
+    query_that_results_in_table_of_lowest_person_IDs_in_slice_of_feature_matrix = query_that_results_in_table_of_distinct_person_IDs_in_slice_of_feature_matrix + "LIMIT " + number_of_patients
+    query_that_results_in_slice_of_feature_matrix = """
+    SELECT *
+    FROM (""" + query_that_results_in_slice_of_feature_matrix + """)
+    WHERE person_id IN (""" + query_that_results_in_table_of_lowest_person_IDs_in_slice_of_feature_matrix + """)
+    """
     data_frame = get_data_frame(query_that_results_in_slice_of_feature_matrix)
+    print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " patients in slice of feature matrix.")
     print(data_frame)
     data_frame.to_csv("Slice_Of_Feature_Matrix.csv")
