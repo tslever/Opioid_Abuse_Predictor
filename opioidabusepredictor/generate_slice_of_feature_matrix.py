@@ -452,7 +452,7 @@ query_that_results_in_table_of_visit_occurrences_for_cohort = """
 
 query_that_results_in_feature_matrix = """
 SELECT
-    person_id,
+    table_of_IDs.person_id,
     table_of_visit_occurrences_for_cohort.visit_occurrence_id,
     table_of_visit_occurrences_for_cohort.visit_start_date,
     has_Anxiety,
@@ -483,6 +483,8 @@ LEFT JOIN (""" + query_that_results_in_conditions_feature_matrix + """) conditio
 ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = conditions_feature_matrix.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_medications_feature_matrix + """) medications_feature_matrix
 ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = medications_feature_matrix.visit_occurrence_id
+RIGHT JOIN (""" + query_that_results_in_table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort + """) table_of_IDs
+ON table_of_visit_occurrences_for_cohort.person_id = table_of_IDs.person_id
 ORDER BY person_id, visit_occurrence_id
 """
 
@@ -495,15 +497,16 @@ ORDER BY person_id
 if __name__ == '__main__':
     message = """
 "generate_slice_of_feature_matrix.py" generates a slice of our feature matrix.
-Our feature matrix has 13,100,235 rows corresponding to 116,501 patients.
+There are 13,100,235 visit occurrences corresponding to the 116,501 patients in our cohort.
+Our feature matrix has about 7,606,823 rows corresponding to 3,914 patients.
 The rows of our slice are constrained such that at least one cell in each row is greater than 0.
-Our slice has about 106,735 rows corresponding to about 18,022 patients.
+Our slice has about 830,553 rows corresponding to about 1,981 patients.
 How many patients would you like to include in our slice?
-You might consider numbers of patients between 0 and 116,501 as a safe upper limit."""
+You might consider numbers of patients between 0 and 116,501 (the number of patients as a safe upper limit."""
     print(message)
     number_of_patients = input()
     print("You would like to enter " + number_of_patients + " patients.")
-    query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix = query_that_results_in_table_of_distinct_person_ids_in_feature_matrix + "LIMIT " + number_of_patients
+    query_that_results_in_table_of_lowest_person_IDs_in_feature_matrix = query_that_results_in_table_of_distinct_person_ids_in_feature_matrix# + "LIMIT " + number_of_patients
     query_that_results_in_slice_of_feature_matrix = """
     SELECT *
     FROM (""" + query_that_results_in_feature_matrix + """)
@@ -513,5 +516,10 @@ You might consider numbers of patients between 0 and 116,501 as a safe upper lim
     ORDER BY person_id, visit_occurrence_id
     """
     data_frame = get_data_frame(query_that_results_in_slice_of_feature_matrix)
+    print(data_frame)
+    query = """
+    SELECT DISTINCT person_id FROM (""" + query_that_results_in_slice_of_feature_matrix + """)
+    """
+    data_frame = get_data_frame(query)
     print(data_frame)
     data_frame.to_csv("Slice_Of_Feature_Matrix.csv")
