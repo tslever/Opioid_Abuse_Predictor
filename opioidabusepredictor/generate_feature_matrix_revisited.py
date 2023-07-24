@@ -92,7 +92,7 @@ def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicator
         """
         query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition += case_block
     query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition += """
-    FROM (""" + query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids + """)
+    FROM (""" + query_that_results_in_table_of_conditions_and_visit_occurrence_ids_for_sample + """)
     """
     return query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition
 
