@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-25T20:40:47.577Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="0kPox__qxma6lHht1Qn2" version="21.6.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-25T23:38:48.899Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="9BXnNYOmmYnbXp49W9Ox" version="21.6.5" type="github">
   <diagram name="Page-1" id="g_CQs1NWIx2WSFLsqrLt">
     <mxGraphModel dx="2756" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -219,6 +219,63 @@
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-62" value="cb_criteria" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-547.5" y="840" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-65" value="18) query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs&lt;br&gt;_as_in_query_13_but_for_undersample" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="760" y="120" width="620" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-66" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="800" y="200" as="sourcePoint" />
+            <mxPoint x="800" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-67" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.886;exitY=0.067;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="960" y="200" as="sourcePoint" />
+            <mxPoint x="960" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-68" value="19) query_that_results_in_table_with_ID_of_provided_condition" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="280" width="350" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-69" value="20) query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="200" width="570" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-71" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1720" y="360" as="sourcePoint" />
+            <mxPoint x="1720" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-72" value="cb_criteria" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="360" width="70" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-73" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1684.5" y="280" as="sourcePoint" />
+            <mxPoint x="1684.5" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-75" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-72">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1660" y="490" as="sourcePoint" />
+            <mxPoint x="1780" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-76" value="21) query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="120" width="510" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-77" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1684.5" y="200" as="sourcePoint" />
+            <mxPoint x="1684.5" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-78" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-33" target="DglnRcJ5g5Zxvro3vOS6-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1230" y="490" as="sourcePoint" />
+            <mxPoint x="1280" y="440" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
