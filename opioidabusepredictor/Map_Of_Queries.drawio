@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-25T19:02:05.550Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="9UbVuj8J9aZwoSk0If7z" version="21.6.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-25T19:27:09.208Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="orCPjWCcB45QX9igZoaj" version="21.6.5" type="github">
   <diagram name="Page-1" id="g_CQs1NWIx2WSFLsqrLt">
     <mxGraphModel dx="2516" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -142,7 +142,7 @@
             <mxPoint x="-360" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-40" value="8) query_that_results_in_table_of_person_IDs&lt;br&gt;_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-40" value="10) query_that_results_in_table_of_person_IDs&lt;br&gt;_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-770" y="440" width="450" height="50" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-41" value="3) query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_cancer" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
@@ -160,8 +160,8 @@
             <mxPoint x="-560" y="490" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-45" value="query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-850" y="520" width="530" height="40" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-45" value="8) query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-870" y="520" width="550" height="40" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-46" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -183,38 +183,38 @@
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-50" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-560.5" y="760" as="sourcePoint" />
-            <mxPoint x="-560.5" y="720" as="targetPoint" />
+            <mxPoint x="-513" y="760" as="sourcePoint" />
+            <mxPoint x="-513" y="720" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-51" value="5) query_that_results_in_table_of_ID_of_concept_Opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-750" y="760" width="380" height="30" as="geometry" />
+          <mxGeometry x="-705" y="760" width="380" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-52" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-560.5" y="680" as="sourcePoint" />
-            <mxPoint x="-560.5" y="640" as="targetPoint" />
+            <mxPoint x="-513" y="680" as="sourcePoint" />
+            <mxPoint x="-513" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-53" value="6) query_that_results_in_table_of_distinct_concept_IDs_of_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-745" y="680" width="370" height="30" as="geometry" />
+          <mxGeometry x="-697.5" y="680" width="370" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-54" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-560.5" y="600" as="sourcePoint" />
-            <mxPoint x="-560.5" y="560" as="targetPoint" />
+            <mxPoint x="-513" y="600" as="sourcePoint" />
+            <mxPoint x="-513" y="560" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-55" value="7) query_that_results_in_table_of_distinct_descendant_IDs_of_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-752.5" y="600" width="385" height="30" as="geometry" />
+          <mxGeometry x="-705" y="600" width="385" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-56" value="cb_search_all_events" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-1010" y="520" width="130" height="30" as="geometry" />
+          <mxGeometry x="-860" y="600" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-57" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-945.5" y="520" as="sourcePoint" />
-            <mxPoint x="-945.5" y="490" as="targetPoint" />
+            <mxPoint x="-800" y="600" as="sourcePoint" />
+            <mxPoint x="-800" y="570" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
