@@ -433,13 +433,44 @@ ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = medications_featu
 ORDER BY person_id, visit_occurrence_id
 """
 
+query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed = """
+SELECT *
+FROM (""" + query_that_results_in_feature_matrix + """)
+WHERE COALESCE(has_Anxiety, has_Bipolar_disorder, has_Depressive_disorder, has_Hypertensive_disorder, has_Opioid_abuse, has_Opioid_dependence, has_Pain, has_Rhinitis, has_Non_Opioid_Substance_abuse, is_exposed_to_ibuprofen, is_exposed_to_buprenorphine, is_exposed_to_nelaxone, is_exposed_to_fentanyl, is_exposed_to_morphine, is_exposed_to_oxycodone, is_exposed_to_hydromorphone, is_exposed_to_aspirin, is_exposed_to_codeine, is_exposed_to_tramadol, is_exposed_to_nalbuphine, is_exposed_to_meperidine, is_exposed_to_naltrexone, is_exposed_to_acetaminophen) > 0
+ORDER BY person_id, visit_occurrence_id
+"""
+
 if __name__ == "__main__":
-    print("Starting generating feature matrix")
-    data_frame = get_data_frame(query_that_results_in_feature_matrix)
-    print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " distinct patients in our feature matrix.")
+    print("Started generating slice of feature matrix")
+    answer = None
+    while answer != "Y" and answer != "N":
+        print("Would you like to remove rows where every indicator is 0 from slice of feature matrix (Y/N)?")
+        answer = input()
+    print("Answer: " + answer)
+    query = None
+    if answer == "N":
+        query = query_that_results_in_feature_matrix
+    elif answer == "Y":
+        query = query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed
+    else:
+        raise Exception("Answer is not 'Y' or 'N'")
+    data_frame = get_data_frame(query)
+    answer = None
+    while not isinstance(answer, int) or answer < 0:
+        print("How many distinct person ID's would you like there to be in slice of feature matrix (0 to 7,580)?")
+        answer = input()
+        try:
+            answer = int(answer)
+        except:
+            continue
+    print("Answer: " + str(answer))
+    IntegerArray_of_distinct_person_IDs = pd.unique(data_frame["person_id"])
+    IntegerArray_with_number_of_distinct_person_IDs_equal_to_answer = IntegerArray_of_distinct_person_IDs[:answer]
+    data_frame = data_frame[data_frame["person_id"].isin(IntegerArray_with_number_of_distinct_person_IDs_equal_to_answer)]
+    print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " distinct patients in slice of feature matrix.")
     print("There are " + str(data_frame.shape[0]) + " visit occurrences and rows corresponding to those patients.")
     print(data_frame)
-    path_of_Feature_Matrix = "Feature_Matrix.csv"
+    path_of_Feature_Matrix = "Slice_Of_Feature_Matrix.csv"
     data_frame.to_csv(path_of_Feature_Matrix)
-    print("Saved Feature Matrix to " + path_of_Feature_Matrix)
-    print("Finished generating feature matrix")
+    print("Saved slice of feature matrix to " + path_of_Feature_Matrix)
+    print("Finished generating slice of feature matrix")
