@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-25T19:52:50.646Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="7d6sXHnMwLcmhMIiETGy" version="21.6.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-25T20:05:32.448Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="-7d7z0IgMDuLQx9JfsTQ" version="21.6.5" type="github">
   <diagram name="Page-1" id="g_CQs1NWIx2WSFLsqrLt">
     <mxGraphModel dx="2756" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -88,8 +88,8 @@
             <mxPoint x="880" y="320" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-24" value="query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs&lt;br&gt;_from_table_of_condition_occurrences_relating_to_cohort_table_concept_and_table_of_concept_IDs_and_codes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="130" y="440" width="1180" height="40" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-24" value="13) query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs&lt;br&gt;_from_table_of_condition_occurrences_relating_to_cohort_table_concept_and_table_of_concept_IDs_and_codes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="410" y="440" width="620" height="40" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-28" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -115,8 +115,8 @@
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-32" value="concept" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="690" y="520" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-33" value="query_that_results_in_table_of_concept_IDs_and_codes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="800" y="520" width="320" height="30" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-33" value="12) query_that_results_in_table_of_concept_IDs_and_codes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="800" y="520" width="340" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-35" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
