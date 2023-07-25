@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-25T20:25:58.714Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="dQm5CRVwpOFJwkm1UMFi" version="21.6.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-25T20:40:47.577Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="0kPox__qxma6lHht1Qn2" version="21.6.5" type="github">
   <diagram name="Page-1" id="g_CQs1NWIx2WSFLsqrLt">
     <mxGraphModel dx="2756" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -7,14 +7,8 @@
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-1" value="query_that_results_in_feature_matrix" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="317" y="40" width="210" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-2" target="DglnRcJ5g5Zxvro3vOS6-1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-2" target="DglnRcJ5g5Zxvro3vOS6-1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-2" value="query_that_results_in_table_of_distinct_person_IDs_visit_occurrence_IDs_and_visit_start_dates_for_undersample" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="120" width="625" height="40" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-2" value="17) query_that_results_in_table_of_distinct_person_IDs_visit_occurrence_IDs_and_visit_start_dates_for_undersample" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="99.5" y="120" width="645" height="40" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-3" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -37,11 +31,11 @@
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-7" value="visit_occurrence" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="150" y="200" width="100" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-9" value="16) query_that_results_in_table_of_distinct_IDs_of_undersample" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="450" y="200" width="360" height="30" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-9" value="16) query_that_results_in_table_of_distinct_person_IDs_of_undersample" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="440" y="200" width="400" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-11" value="15) query_that_results_in_table_of_3790_distinct_random_IDs_of_non_opioid_abusers_in_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="280" width="530" height="30" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-11" value="15) query_that_results_in_table_of_3790_distinct_random_person_IDs_of_non_opioid_abusers_in_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="280" width="580" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-14" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -49,7 +43,7 @@
             <mxPoint x="560" y="240" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-15" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.806;exitY=-0.133;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-20">
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-15" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.678;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-20">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="720" y="350" as="sourcePoint" />
             <mxPoint x="720" y="240" as="targetPoint" />
@@ -70,8 +64,8 @@
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-19" value="10) query_that_results_in_table_of_distinct_person_IDs_of_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-265" y="360" width="370" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-20" value="14) query_that_results_in_table_of_distinct_IDs_of_opioid_abusers_in_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="380" y="360" width="420" height="30" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-20" value="14) query_that_results_in_table_of_distinct_person_IDs_of_opioid_abusers_in_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="400" y="360" width="470" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-22" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.242;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="DglnRcJ5g5Zxvro3vOS6-24">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
