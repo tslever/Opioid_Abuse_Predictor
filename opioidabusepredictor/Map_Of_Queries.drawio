@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-25T19:27:09.208Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="orCPjWCcB45QX9igZoaj" version="21.6.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-25T19:34:27.394Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="h7ZftAv2gPIEhMggui1V" version="21.6.5" type="github">
   <diagram name="Page-1" id="g_CQs1NWIx2WSFLsqrLt">
     <mxGraphModel dx="2516" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -142,7 +142,7 @@
             <mxPoint x="-360" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-40" value="10) query_that_results_in_table_of_person_IDs&lt;br&gt;_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-40" value="9) query_that_results_in_table_of_person_IDs&lt;br&gt;_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-770" y="440" width="450" height="50" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-41" value="3) query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_cancer" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
