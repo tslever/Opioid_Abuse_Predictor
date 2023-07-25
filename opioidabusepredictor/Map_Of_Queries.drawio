@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-25T19:36:55.584Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="PWO69RqjLGPy_qrnKpzJ" version="21.6.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-07-25T19:52:50.646Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="7d6sXHnMwLcmhMIiETGy" version="21.6.5" type="github">
   <diagram name="Page-1" id="g_CQs1NWIx2WSFLsqrLt">
-    <mxGraphModel dx="2516" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2756" dy="1099" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -66,12 +66,12 @@
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-18" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="199.5" y="360" as="sourcePoint" />
-            <mxPoint x="199.5" y="320" as="targetPoint" />
+            <mxPoint x="-80.5" y="360" as="sourcePoint" />
+            <mxPoint x="-80.5" y="320" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-19" value="10) query_that_results_in_table_of_distinct_person_IDs_for_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-50" y="360" width="370" height="30" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-19" value="10) query_that_results_in_table_of_distinct_person_IDs_of_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-265" y="360" width="370" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-20" value="query_that_results_in_table_of_distinct_IDs_of_opioid_abusers_in_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="400" y="360" width="400" height="30" as="geometry" />
@@ -97,8 +97,8 @@
             <mxPoint x="480" y="480" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DglnRcJ5g5Zxvro3vOS6-29" value="query_that_results_in_table_of_condition_occurrences_relating_to_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="280" y="520" width="400" height="30" as="geometry" />
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-29" value="11) query_that_results_in_table_of_condition_occurrences_relating_to_cohort" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="260" y="520" width="420" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-30" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -129,8 +129,8 @@
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-37" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="40" y="440" as="sourcePoint" />
-            <mxPoint x="40" y="400" as="targetPoint" />
+            <mxPoint x="-80.5" y="440" as="sourcePoint" />
+            <mxPoint x="-80.5" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-38" value="4) query_that_results_in_table_of_person_IDs&lt;br&gt;_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_cancer" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
@@ -138,8 +138,8 @@
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-39" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-360" y="440" as="sourcePoint" />
-            <mxPoint x="-360" y="400" as="targetPoint" />
+            <mxPoint x="-400" y="440" as="sourcePoint" />
+            <mxPoint x="-400" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="DglnRcJ5g5Zxvro3vOS6-40" value="9) query_that_results_in_table_of_person_IDs&lt;br&gt;_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID&lt;br&gt;_from_table_of_events_where_concept_IDs_correspond_to_opioids" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
@@ -216,6 +216,24 @@
             <mxPoint x="-800" y="600" as="sourcePoint" />
             <mxPoint x="-800" y="570" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-59" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-80.5" y="760" as="sourcePoint" />
+            <mxPoint x="-80.5" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-60" value="cb_criteria" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-115" y="760" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-61" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-513" y="840" as="sourcePoint" />
+            <mxPoint x="-513" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DglnRcJ5g5Zxvro3vOS6-62" value="cb_criteria" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-547.5" y="840" width="70" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
