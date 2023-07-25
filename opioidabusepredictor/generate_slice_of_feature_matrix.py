@@ -214,7 +214,7 @@ query_that_results_in_table_of_distinct_IDs_of_opioids = """
         AND is_selectable = 1
 """
 
-# 7
+# 7, THIS IS THE FINAL QUERY THAT RESULTS IN ALL CONCEPT IDS OF CHILDREN OF OPIOIDS, NEEDS TO BE IMPLEMENTED INTO FEATURE MATRIX
 query_that_results_in_table_of_distinct_IDs_of_descendants_of_opioids = """
     SELECT DISTINCT ca.descendant_id 
     FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
