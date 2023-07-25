@@ -225,7 +225,6 @@ dictionary_of_codes_of_condition_and_names_of_column = {
     "70076002": "has_Rhinitis",
     "66214007": "has_Non_Opioid_Substance_abuse"
 }
-dictionary_of_names_of_column_and_queries_that_result_in_table_of_codes_of_condition = {}
 
 def generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_provided_condition):
     query_that_results_in_table_with_ID_of_provided_condition = """
@@ -257,21 +256,16 @@ WHERE
     """
     return query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition
 
-for code_of_condition in dictionary_of_codes_of_condition_and_names_of_column.keys():
-    name_of_column = dictionary_of_codes_of_condition_and_names_of_column[code_of_condition]
-    query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition = generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_condition)
-    dictionary_of_names_of_column_and_queries_that_result_in_table_of_codes_of_condition[name_of_column] = query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition
-
 query_that_results_in_ungrouped_conditions_feature_matrix = """
 SELECT
     person_id,
     visit_occurrence_id,
 """
-for name_of_column, query_that_results_in_table_of_codes_of_condition in dictionary_of_names_of_column_and_queries_that_result_in_table_of_codes_of_condition.items():
+for code_of_condition in dictionary_of_codes_of_condition_and_names_of_column.keys():
     case_block = """
-CASE WHEN code IN (""" + query_that_results_in_table_of_codes_of_condition + """)
+CASE WHEN code IN (""" + generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_condition) + """)
 THEN 1
-ELSE 0 END AS """ + name_of_column + """,
+ELSE 0 END AS """ + dictionary_of_codes_of_condition_and_names_of_column[code_of_condition] + """,
     """
     query_that_results_in_ungrouped_conditions_feature_matrix += case_block
 query_that_results_in_ungrouped_conditions_feature_matrix += """
