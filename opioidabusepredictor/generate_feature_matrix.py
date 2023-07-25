@@ -1,10 +1,10 @@
 import os
-import pandas
+import pandas as pd
 import sys
 
 # Function 1
 def get_data_frame(query):
-    data_frame = pandas.read_gbq(
+    data_frame = pd.read_gbq(
         query = query,
         dialect = "standard",
         use_bqstorage_api = ("BIGQUERY_STORAGE_API_ENABLED" in os.environ),
@@ -432,3 +432,14 @@ LEFT JOIN (""" + query_that_results_in_medications_feature_matrix + """) medicat
 ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = medications_feature_matrix.visit_occurrence_id
 ORDER BY person_id, visit_occurrence_id
 """
+
+if __name__ == "__main__":
+    print("Starting generating feature matrix")
+    data_frame = get_data_frame(query_that_results_in_feature_matrix)
+    print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " distinct patients in our feature matrix.")
+    print("There are " + str(data_frame.shape[0]) + " visit occurrences and rows corresponding to those patients.")
+    print(data_frame)
+    path_of_Feature_Matrix = "Feature_Matrix.csv"
+    data_frame.to_csv(path_of_Feature_Matrix)
+    print("Saved Feature Matrix to " + path_of_Feature_Matrix)
+    print("Finished generating feature matrix")
