@@ -1,124 +1,18 @@
 import os
 import pandas as pd
-import sys
 
-# Function 1
 def get_data_frame(query):
     data_frame = pd.read_gbq(
         query = query,
         dialect = "standard",
         use_bqstorage_api = ("BIGQUERY_STORAGE_API_ENABLED" in os.environ),
-        progress_bar_type="tqdm_notebook"
+        progress_bar_type = "tqdm_notebook"
     )
     return data_frame
 
-# Function 2
-def generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names, query_that_results_in_source_table):
-    query = """
-SELECT
-    visit_occurrence_id,
-"""
-    for code, column_name in dictionary_of_codes_and_column_names.items():
-        case_block = """
-    CASE WHEN standard_concept_code IN (CAST(""" + code + """ AS STRING))
-    THEN 1
-    ELSE 0 END AS """ + column_name + """,
-        """
-        query += case_block
-    query += """
-    FROM (""" + query_that_results_in_source_table + """)
-    """
-    return query
-
-# Function 3
-def generate_query_that_results_in_table_of_codes_of_conditions_that_are_children_of_given_condition(condition_code):
-
-    # BELOW QUERIES ARE NOT NEEDED BECAUSE THEY ARE GLOBAL VARIABLES THAT LIVE OUTSIDE THIS FUNCTION
-    # query_that_results_in_table_of_concept_IDs_and_codes
-    # query_that_results_in_table_of_half_opioid_abusers_conditions_and_visit_occurrence_ids
-
-    # QUERY 21 or #1
-    query_that_results_in_table_with_ID_of_parent_condition= """
-        SELECT cast(cr.id as string) as id
-        FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
-        WHERE
-            code IN (CAST(""" + condition_code + """ AS STRING))
-            AND full_text LIKE '%_rank1]%'
-    """
-
-    # QUERY 22 or #2
-    query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_parent_condition = """
-        SELECT DISTINCT c.concept_id
-        FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
-        JOIN (""" + query_that_results_in_table_with_ID_of_parent_condition + """) a
-        ON (
-            c.path LIKE CONCAT('%.', a.id, '.%')
-            OR c.path LIKE CONCAT('%.', a.id)
-            OR c.path LIKE CONCAT(a.id, '.%')
-            OR c.path = a.id
-        )
-        WHERE
-            is_standard = 1
-            AND is_selectable = 1
-    """
-    
-    # QUERY 23 or #3
-    query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition = """
-    SELECT code
-    FROM (""" + query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_parent_condition + """) table_of_concept_IDs
-    JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_ids_and_codes
-    ON table_of_concept_IDs.concept_id = table_of_concept_ids_and_codes.concept_id
-    """
-
-    return query_that_results_in_table_of_codes_of_conditions_that_are_children_of_parent_condition
-
-# Allow for several indicator columns to be created for conditions
-# For example, a call to this function will look like:
-# query = generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators({"has_Anxiety": <a query that results in table of codes of children conditions of Anxiety>})
-
-def generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators(dictionary_of_column_names_and_queries): # dictionary with key: name_of_column, value: query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition
-    # QUERY 24 or #4
-    query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition = """
-    SELECT
-        person_id,
-        visit_occurrence_id,
-    """
-
-    for column_name, query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition in dictionary_of_column_names_and_queries.items():
-        case_block = """
-        CASE WHEN code IN (""" + query_that_results_in_table_with_conditions_of_codes_for_children_of_parent_condition + """)
-        THEN 1
-        ELSE 0 END AS """ + column_name + """,
-        """
-        query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition += case_block
-    query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition += """
-    FROM (""" + query_that_results_in_table_of_conditions_and_visit_occurrence_ids_for_sample + """)
-    """
-    return query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_has_condition
-
-
-# 5 for conditions / general
-def generate_query_that_results_in_conditions_feature_matrix(column_names, source_table):
-	query_that_results_in_condition_feature_matrix = """
-	SELECT
-    	visit_occurrence_id,
-	"""
-	for name in column_names:
-		max_block = """
-		MAX(""" + name + """) as """ + name + """,
-		"""
-		query_that_results_in_condition_feature_matrix += max_block
-	query_that_results_in_condition_feature_matrix += """
-    	FROM (""" + source_table  + """)
-	GROUP BY visit_occurrence_id
-	ORDER BY visit_occurrence_id
-   	"""
-	return query_that_results_in_condition_feature_matrix
-
-
 # 1
-query_that_results_in_table_of_IDs_from_table_of_cancerous_conditions = """
-SELECT cast(cr.id as string) as id
+query_that_results_in_table_of_IDs_of_criteria_relating_to_cancer = """
+SELECT CAST(cr.id as string) as id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
 WHERE
     concept_id IN (
@@ -156,10 +50,10 @@ WHERE
 """
 
 # 2
-query_that_results_in_table_of_distinct_concept_IDs_from_joined_tables_of_conditions_and_cancerous_conditions = """
-SELECT DISTINCT c.concept_id
+query_that_results_in_table_of_distinct_concept_IDs_from_table_cb_criteria_and_table_of_IDs_of_criteria_relating_to_cancer = """
+SELECT distinct concept_id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
-JOIN (""" + query_that_results_in_table_of_IDs_from_table_of_cancerous_conditions + """) a
+JOIN (""" + query_that_results_in_table_of_IDs_of_criteria_relating_to_cancer + """) a
 ON (
        c.path LIKE CONCAT('%.', a.id, '.%')
        OR c.path LIKE CONCAT('%.', a.id)
@@ -172,150 +66,155 @@ WHERE
 """
 
 # 3
-query_that_results_in_table_of_distinct_combinations_of_person_IDs_entry_dates_and_concept_IDs_from_table_of_events_where_concept_IDs_correspond_to_cancer = """
-    SELECT
-        DISTINCT person_id,
-        entry_date,
-        concept_id 
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events`
-    WHERE
-        concept_id IN (""" + query_that_results_in_table_of_distinct_concept_IDs_from_joined_tables_of_conditions_and_cancerous_conditions + """)
-        AND is_standard = 1
+query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_cancer = """
+SELECT DISTINCT person_id, entry_date, concept_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events`
+WHERE
+    concept_id IN (""" + query_that_results_in_table_of_distinct_concept_IDs_from_table_cb_criteria_and_table_of_IDs_of_criteria_relating_to_cancer + """)
+    AND is_standard = 1
 """
 
 # 4
-query_that_results_in_table_of_person_IDs_from_table_of_events_where_concept_IDs_correspond_to_cancer = """
-    SELECT criteria.person_id 
-    FROM (""" + query_that_results_in_table_of_distinct_combinations_of_person_IDs_entry_dates_and_concept_IDs_from_table_of_events_where_concept_IDs_correspond_to_cancer + """) criteria
+query_that_results_in_table_of_person_IDs_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_cancer = """
+SELECT person_id
+FROM (""" + query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_cancer + """)
 """
 
 # 5
 query_that_results_in_table_of_ID_of_concept_Opioids = """
-    SELECT cast(cr.id as string) as id 
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-    WHERE
-        concept_id IN (21604254) 
-        AND full_text LIKE '%_rank1]%'
+SELECT CAST(cr.id as string) as id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
+WHERE
+    concept_id IN (21604254)
+    AND full_text LIKE '%_rank1]%'
 """
 
 # 6
-query_that_results_in_table_of_distinct_IDs_of_opioids = """
-    SELECT DISTINCT c.concept_id 
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-    JOIN (""" + query_that_results_in_table_of_ID_of_concept_Opioids + """) a 
-    ON (
-        c.path LIKE CONCAT('%.', a.id, '.%') 
-        OR c.path LIKE CONCAT('%.', a.id) 
-        OR c.path LIKE CONCAT(a.id, '.%') 
-        OR c.path = a.id
-    ) 
-    WHERE
-        is_standard = 1 
-        AND is_selectable = 1
+query_that_results_in_table_of_distinct_concept_IDs_of_opioids = """
+SELECT DISTINCT c.concept_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
+JOIN (""" + query_that_results_in_table_of_ID_of_concept_Opioids + """) a
+ON (
+    c.path LIKE CONCAT('%.', a.id, '.%')
+    OR c.path LIKE CONCAT('%.', a.id)
+    OR c.path LIKE CONCAT(a.id, '.%')
+    OR c.path = a.id
+)
+WHERE
+    is_standard = 1
+    AND is_selectable = 1
 """
 
-# 7, THIS IS THE FINAL QUERY THAT RESULTS IN ALL CONCEPT IDS OF CHILDREN OF OPIOIDS, NEEDS TO BE IMPLEMENTED INTO FEATURE MATRIX
-query_that_results_in_table_of_distinct_IDs_of_descendants_of_opioids = """
-    SELECT DISTINCT ca.descendant_id 
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
-    JOIN (""" + query_that_results_in_table_of_distinct_IDs_of_opioids + """) b 
-    ON (ca.ancestor_id = b.concept_id)
+# 7
+query_that_results_in_table_of_distinct_descendant_IDs_of_opioids = """
+SELECT DISTINCT ca.descendant_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca
+JOIN (""" + query_that_results_in_table_of_distinct_concept_IDs_of_opioids + """) b
+ON ca.ancestor_id = b.concept_id
 """
-
 
 # 8
-query_that_results_in_table_of_distinct_combinations_of_person_IDs_entry_dates_and_concept_IDs_from_table_of_events_where_concept_IDs_correspond_to_opioids = """
-    SELECT
-        DISTINCT person_id,
-        entry_date,
-        concept_id 
-    FROM
-        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
-    WHERE
-        concept_id IN (""" + query_that_results_in_table_of_distinct_IDs_of_descendants_of_opioids + """) 
-        AND is_standard = 1
+query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_opioids = """
+SELECT DISTINCT person_id, entry_date, concept_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events`
+WHERE
+    concept_id IN (""" + query_that_results_in_table_of_distinct_descendant_IDs_of_opioids + """)
+    AND is_standard = 1
 """
 
 # 9
-query_that_results_in_table_of_person_IDs_from_table_of_events_where_concept_IDs_correspond_to_opioids = """
-    SELECT criteria.person_id
-    FROM (""" + query_that_results_in_table_of_distinct_combinations_of_person_IDs_entry_dates_and_concept_IDs_from_table_of_events_where_concept_IDs_correspond_to_opioids + """) criteria
+query_that_results_in_table_of_person_IDs_from_table_of_distinct_combinations_of_person_IDs_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_opioids = """
+SELECT person_id
+FROM (""" + query_that_results_in_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_opioids + """)
 """
 
-# 10, COHORT DEFINITION, CONTAINS ALL INDIVIDUALS WITHIN COHORT
-query_that_results_in_table_of_IDs_of_patients_in_cohort = """
-    SELECT DISTINCT person_id
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
-    WHERE
-        cb_search_person.person_id IN (""" + query_that_results_in_table_of_person_IDs_from_table_of_events_where_concept_IDs_correspond_to_opioids + """) 
-        AND cb_search_person.person_id NOT IN (""" + query_that_results_in_table_of_person_IDs_from_table_of_events_where_concept_IDs_correspond_to_cancer + """)
+# 10
+query_that_results_in_table_of_distinct_person_IDs_of_cohort = """
+SELECT DISTINCT person_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person
+WHERE
+    person_id IN (""" + query_that_results_in_table_of_person_IDs_from_table_of_distinct_combinations_of_person_IDs_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_opioids + """)
+    AND person_id NOT IN (""" + query_that_results_in_table_of_person_IDs_from_table_of_distinct_combinations_of_person_ID_entry_date_and_concept_ID_from_table_of_events_where_concept_IDs_correspond_to_cancer + """)
 """
 
-############################ QUERIES 11, 12, 13, 17 ARE USED FOR IDENTIFICAITON OF OPIOID ABUSERS
-
-# 11 for conditions
-query_that_results_in_table_of_condition_occurrences_relating_to_patients_in_cohort = """
-    SELECT *
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence 
-    WHERE c_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_IDs_of_patients_in_cohort + """)
+# 11
+query_that_results_in_table_of_condition_occurrences_relating_to_cohort = """
+SELECT *
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence
+WHERE PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort + """)
 """
 
-# 12 for conditions
+# 12
 query_that_results_in_table_of_concept_IDs_and_codes = """
-    SELECT concept_id, code
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
-    WHERE full_text LIKE '%_rank1]%'
+SELECT
+    concept_id,
+    code
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
+WHERE full_text LIKE '%_rank1]%'
 """
 
-# 13 for conditions
-query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids = """
-    SELECT
-        c_occurrence.person_id,
-        code,
-        c_standard_concept.concept_name as standard_concept_name,
-        visit_occurrence_id
-    FROM (""" + query_that_results_in_table_of_condition_occurrences_relating_to_patients_in_cohort + """) c_occurrence
-    LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept
-        ON c_occurrence.condition_concept_id = c_standard_concept.concept_id
-    LEFT JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
-        ON c_occurrence.condition_concept_id = table_of_concept_IDs_and_codes.concept_id
+# 13
+query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs_from_table_of_condition_occurrences_relating_to_cohort_table_concept_and_table_of_concept_IDs_and_codes = """
+SELECT
+    person_id,
+    code,
+    concept_name,
+    visit_occurrence_id
+FROM (""" + query_that_results_in_table_of_condition_occurrences_relating_to_cohort + """) c_occurrence
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept
+ON c_occurrence.condition_concept_id = c_standard_concept.concept_id
+LEFT JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
+ON c_occurrence.condition_concept_id = table_of_concept_IDs_and_codes.concept_id
+"""
+query_13 = query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs_from_table_of_condition_occurrences_relating_to_cohort_table_concept_and_table_of_concept_IDs_and_codes
+
+# 14
+query_that_results_in_table_of_distinct_person_IDs_of_opioid_abusers_in_cohort = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs_from_table_of_condition_occurrences_relating_to_cohort_table_concept_and_table_of_concept_IDs_and_codes + """)
+WHERE concept_name = "Opioid abuse"
 """
 
-# 17 for conditions
-query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort = """
-    SELECT DISTINCT person_id
-    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids + """)
-    WHERE standard_concept_name = "Opioid abuse"
+# 15
+query_that_results_in_table_of_3790_distinct_random_person_IDs_of_non_opioid_abusers_in_cohort = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort + """)
+WHERE person_id NOT IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_opioid_abusers_in_cohort + """)
+ORDER BY RAND()
+LIMIT 3790
 """
 
-# 15 for conditions
-query_that_results_in_table_of_3790_random_IDs_of_non_opioid_abusers_in_cohort = """
-    SELECT DISTINCT person_id
-    FROM (""" + query_that_results_in_table_of_IDs_of_patients_in_cohort + """)
-    WHERE person_id NOT IN (""" + query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort + """)
-    ORDER BY RAND()
-    LIMIT 3790
-"""
-
-# 19
-query_that_results_in_table_of_IDs_of_sample_of_cohort = """(""" + query_that_results_in_table_of_3790_random_IDs_of_non_opioid_abusers_in_cohort + """)
+# 16
+query_that_results_in_table_of_distinct_person_IDs_of_undersample = (
+"""(""" + query_that_results_in_table_of_3790_distinct_random_person_IDs_of_non_opioid_abusers_in_cohort + """)
 UNION ALL
-(""" + query_that_results_in_table_of_IDs_of_opioid_abusers_in_cohort + """)"""
+(""" + query_that_results_in_table_of_distinct_person_IDs_of_opioid_abusers_in_cohort + """)"""
+)
 
-
-# 20, Take our sample and just get their associated conditions, personids, codes, visit occurrence ids
-query_that_results_in_table_of_conditions_and_visit_occurrence_ids_for_sample = """
-    SELECT
-        table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id,
-        code,
-        standard_concept_name,
-        visit_occurrence_id
-    FROM (""" + query_that_results_in_table_of_patients_conditions_and_visit_occurrence_ids + """) table_of_patients_conditions_and_visit_occurrence_ids
-    JOIN (""" + query_that_results_in_table_of_IDs_of_sample_of_cohort + """) table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort
-    ON table_of_patients_conditions_and_visit_occurrence_ids.person_id = table_of_IDs_of_3790_random_patients_in_cohort_and_all_opioid_abusers_in_cohort.person_id
+# 17
+query_that_results_in_table_of_distint_person_IDs_visit_occurrence_IDs_and_visit_start_dates_for_undersample = """
+SELECT
+    visit_occurrence.person_id,
+    visit_occurrence_id,
+    visit_start_date
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence
+INNER JOIN (""" + query_that_results_in_table_of_distinct_person_IDs_of_undersample + """) table_of_IDs_of_undersample
+ON visit_occurrence.person_id = table_of_IDs_of_undersample.person_id
 """
 
-dict_of_codes_and_columns = {
+# 18
+query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs_as_in_query_13_but_for_undersample = """
+SELECT
+    table_of_distinct_person_IDs_of_undersample.person_id,
+    code,
+    concept_name,
+    visit_occurrence_id
+FROM (""" + query_13 + """) table_from_query_13
+JOIN (""" + query_that_results_in_table_of_distinct_person_IDs_of_undersample + """) table_of_distinct_person_IDs_of_undersample
+ON table_from_query_13.person_id = table_of_distinct_person_IDs_of_undersample.person_id
+"""
+
+dictionary_of_codes_of_condition_and_names_of_column = {
     "48694002": "has_Anxiety",
     "13746004": "has_Bipolar_disorder",
     "35489007": "has_Depressive_disorder",
@@ -326,29 +225,90 @@ dict_of_codes_and_columns = {
     "70076002": "has_Rhinitis",
     "66214007": "has_Non_Opioid_Substance_abuse"
 }
-dict_of_columns_and_queries = {}
-for code in list(dict_of_codes_and_columns.keys()):
-    query_for_code = generate_query_that_results_in_table_of_codes_of_conditions_that_are_children_of_given_condition(code)
-    dict_of_columns_and_queries[dict_of_codes_and_columns[code]] = query_for_code
-query_that_results_in_final_conditions_matrix_of_ungrouped_indicators = generate_query_that_results_in_person_IDs_visit_occurrence_ids_and_indicators(dict_of_columns_and_queries)
-query_that_results_in_conditions_feature_matrix = generate_query_that_results_in_conditions_feature_matrix(list(dict_of_codes_and_columns.values()), query_that_results_in_final_conditions_matrix_of_ungrouped_indicators)
 
-query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids_from_medications_table_for_sample = """
-    SELECT
-    d_exposure.person_id,
-    d_standard_concept.concept_code as standard_concept_code,
-    d_standard_concept.concept_name as standard_concept_name,
-    visit_occurrence_id
+def generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_provided_condition):
 
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.drug_exposure` d_exposure 
-    LEFT JOIN
-            `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept 
-            ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
-    WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_IDs_of_sample_of_cohort + """)
+    # 19
+    query_that_results_in_table_with_ID_of_provided_condition = """
+SELECT CAST(cr.id as string) as id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
+WHERE
+    code = CAST(""" + code_of_provided_condition + """ AS STRING)
+    AND full_text LIKE '%_rank1]%'
+    """
+
+    # 20
+    query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition = """
+SELECT DISTINCT c.concept_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
+JOIN (""" + query_that_results_in_table_with_ID_of_provided_condition + """) a
+ON (
+    c.path LIKE CONCAT('%.', a.id, '.%')
+    OR c.path LIKE CONCAT('%.', a.id)
+    OR c.path LIKE CONCAT(a.id, '.%')
+    OR c.path = a.id
+)
+WHERE
+    is_standard = 1
+    AND is_selectable = 1
+    """
+
+    # 21
+    query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition = """
+    SELECT code
+    FROM (""" + query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition + """) table_of_concept_IDs
+    JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
+    ON table_of_concept_IDs.concept_id = table_of_concept_ids_and_codes.concept_id
+    """
+    return query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition
+
+# 22
+query_that_results_in_ungrouped_conditions_feature_matrix = """
+SELECT
+    person_id,
+    visit_occurrence_id,
+"""
+for code_of_condition in dictionary_of_codes_of_condition_and_names_of_column.keys():
+    case_block = """
+CASE WHEN code IN (""" + generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_condition) + """)
+THEN 1
+ELSE 0 END AS """ + dictionary_of_codes_of_condition_and_names_of_column[code_of_condition] + """,
+    """
+    query_that_results_in_ungrouped_conditions_feature_matrix += case_block
+query_that_results_in_ungrouped_conditions_feature_matrix += """
+FROM (""" + query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs_as_in_query_13_but_for_undersample + """)
 """
 
-# 16 for drugs
-dictionary_of_codes_and_column_names = {
+# 23
+query_that_results_in_conditions_feature_matrix = """
+SELECT
+    visit_occurrence_id,
+"""
+for name_of_column in dictionary_of_codes_of_condition_and_names_of_column.values():
+    max_block = """
+    MAX(""" + name_of_column + """) as """ + name_of_column + """,
+    """
+    query_that_results_in_conditions_feature_matrix += max_block
+query_that_results_in_conditions_feature_matrix += """
+FROM (""" + query_that_results_in_ungrouped_conditions_feature_matrix + """)
+GROUP BY visit_occurrence_id
+ORDER BY visit_occurrence_id
+"""
+
+# 24
+query_that_results_in_table_of_person_IDs_concept_codes_concept_names_and_visit_occurrence_IDs_from_table_d_exposure_and_table_d_standard_concept_for_undersample = """
+SELECT
+    person_id,
+    concept_code,
+    concept_name,
+    visit_occurrence_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.drug_exposure` d_exposure
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept
+ON d_exposure.drug_concept_id = d_standard_concept.concept_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_undersample + """)
+"""
+
+dictionary_of_codes_of_drug_and_names_of_column = {
     "5640": "is_exposed_to_ibuprofen",
     "1819": "is_exposed_to_buprenorphine",
     "2193": "is_exposed_to_nelaxone",
@@ -364,113 +324,41 @@ dictionary_of_codes_and_column_names = {
     "7243": "is_exposed_to_naltrexone",
     "161": "is_exposed_to_acetaminophen"
 }
-query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs_for_sample = generate_query_that_results_in_table_of_person_IDs_visit_occurrence_IDs_and_indicators(dictionary_of_codes_and_column_names, query_that_results_in_table_of_patient_IDs_concept_codes_concept_names_and_visit_occurrence_ids_from_medications_table_for_sample)
 
-# 17 for drugs, THIS medication feature matrix is only for the chosen sample
-query_that_results_in_medications_feature_matrix = """
+# 25
+query_that_results_in_ungrouped_drugs_feature_matrix = """
 SELECT
     visit_occurrence_id,
-    MAX(is_exposed_to_ibuprofen) as is_exposed_to_ibuprofen,
-    MAX(is_exposed_to_buprenorphine) as is_exposed_to_buprenorphine,
-    MAX(is_exposed_to_nelaxone) as is_exposed_to_nelaxone,
-    MAX(is_exposed_to_fentanyl) as is_exposed_to_fentanyl,
-    MAX(is_exposed_to_morphine) as is_exposed_to_morphine,
-    MAX(is_exposed_to_oxycodone) as is_exposed_to_oxycodone,
-    MAX(is_exposed_to_hydromorphone) as is_exposed_to_hydromorphone,
-    MAX(is_exposed_to_aspirin) as is_exposed_to_aspirin,
-    MAX(is_exposed_to_codeine) as is_exposed_to_codeine,
-    MAX(is_exposed_to_tramadol) as is_exposed_to_tramadol,
-    MAX(is_exposed_to_nalbuphine) as is_exposed_to_nalbuphine,
-    MAX(is_exposed_to_meperidine) as is_exposed_to_meperidine,
-    MAX(is_exposed_to_naltrexone) as is_exposed_to_naltrexone,
-    MAX(is_exposed_to_acetaminophen) as is_exposed_to_acetaminophen
-FROM (""" + query_that_results_in_table_of_person_IDs_visit_occurrence_ids_and_indicators_of_whether_patient_is_exposed_to_drugs_for_sample + """)
+"""
+for code_of_drug, name_of_column in dictionary_of_codes_of_drug_and_names_of_column.items():
+    case_block = """
+CASE WHEN concept_code = CAST(""" + code_of_drug + """ AS STRING)
+THEN 1
+ELSE 0 END AS """ + name_of_column + """,
+    """
+    query_that_results_in_ungrouped_drugs_feature_matrix += case_block
+query_that_results_in_ungrouped_drugs_feature_matrix += """
+FROM (""" + query_that_results_in_table_of_person_IDs_concept_codes_concept_names_and_visit_occurrence_IDs_from_table_d_exposure_and_table_d_standard_concept_for_undersample + """)
+"""
+
+# 26
+query_that_results_in_drugs_feature_matrix = """
+SELECT
+    visit_occurrence_id,
+"""
+for name_of_column in dictionary_of_codes_of_drug_and_names_of_column.values():
+    max_block = """
+    MAX(""" + name_of_column + """) as """ + name_of_column + """,
+    """
+    query_that_results_in_drugs_feature_matrix += max_block
+query_that_results_in_drugs_feature_matrix += """
+FROM (""" + query_that_results_in_ungrouped_drugs_feature_matrix + """)
 GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
 """
 
-# 11 for visits
-query_that_results_in_table_of_visit_occurrences_for_sample = """
-    SELECT visit_occurrence.person_id, visit_occurrence.visit_occurrence_id, visit_start_date
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence
-    INNER JOIN (""" + query_that_results_in_table_of_IDs_of_sample_of_cohort + """) cohort
-    ON visit_occurrence.person_id = cohort.person_id
-"""
-
-query_that_results_in_feature_matrix = """
-SELECT
-    person_id,
-    table_of_visit_occurrences_for_cohort.visit_occurrence_id,
-    table_of_visit_occurrences_for_cohort.visit_start_date,
-    has_Anxiety,
-    has_Bipolar_disorder,
-    has_Depressive_disorder,
-    has_Hypertensive_disorder,
-    has_Opioid_abuse,
-    has_Opioid_dependence,
-    has_Pain,
-    has_Rhinitis,
-    has_Non_Opioid_Substance_abuse,
-    is_exposed_to_ibuprofen,
-    is_exposed_to_buprenorphine,
-    is_exposed_to_nelaxone,
-    is_exposed_to_fentanyl,
-    is_exposed_to_morphine,
-    is_exposed_to_oxycodone,
-    is_exposed_to_hydromorphone,
-    is_exposed_to_aspirin,
-    is_exposed_to_codeine,
-    is_exposed_to_tramadol,
-    is_exposed_to_nalbuphine,
-    is_exposed_to_meperidine,
-    is_exposed_to_naltrexone,
-    is_exposed_to_acetaminophen
-FROM (""" + query_that_results_in_table_of_visit_occurrences_for_sample + """) table_of_visit_occurrences_for_cohort
-LEFT JOIN (""" + query_that_results_in_conditions_feature_matrix + """) conditions_feature_matrix
-ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = conditions_feature_matrix.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_medications_feature_matrix + """) medications_feature_matrix
-ON table_of_visit_occurrences_for_cohort.visit_occurrence_id = medications_feature_matrix.visit_occurrence_id
-ORDER BY person_id, visit_occurrence_id
-"""
-
-query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed = """
-SELECT *
-FROM (""" + query_that_results_in_feature_matrix + """)
-WHERE COALESCE(has_Anxiety, has_Bipolar_disorder, has_Depressive_disorder, has_Hypertensive_disorder, has_Opioid_abuse, has_Opioid_dependence, has_Pain, has_Rhinitis, has_Non_Opioid_Substance_abuse, is_exposed_to_ibuprofen, is_exposed_to_buprenorphine, is_exposed_to_nelaxone, is_exposed_to_fentanyl, is_exposed_to_morphine, is_exposed_to_oxycodone, is_exposed_to_hydromorphone, is_exposed_to_aspirin, is_exposed_to_codeine, is_exposed_to_tramadol, is_exposed_to_nalbuphine, is_exposed_to_meperidine, is_exposed_to_naltrexone, is_exposed_to_acetaminophen) > 0
-ORDER BY person_id, visit_occurrence_id
-"""
-
 if __name__ == "__main__":
-    print("Started generating slice of feature matrix")
-    answer = None
-    while answer != "Y" and answer != "N":
-        print("Would you like to remove rows where every indicator is 0 from slice of feature matrix (Y/N)?")
-        answer = input()
-    print("Answer: " + answer)
-    query = None
-    if answer == "N":
-        query = query_that_results_in_feature_matrix
-    elif answer == "Y":
-        query = query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed
-    else:
-        raise Exception("Answer is not 'Y' or 'N'")
-    data_frame = get_data_frame(query)
-    answer = None
-    while not isinstance(answer, int) or answer < 0:
-        print("How many distinct person ID's would you like there to be in slice of feature matrix (0 to 7,580)?")
-        answer = input()
-        try:
-            answer = int(answer)
-        except:
-            continue
-    print("Answer: " + str(answer))
-    IntegerArray_of_distinct_person_IDs = pd.unique(data_frame["person_id"])
-    IntegerArray_with_number_of_distinct_person_IDs_equal_to_answer = IntegerArray_of_distinct_person_IDs[:answer]
-    data_frame = data_frame[data_frame["person_id"].isin(IntegerArray_with_number_of_distinct_person_IDs_equal_to_answer)]
-    print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " distinct patients in slice of feature matrix.")
-    print("There are " + str(data_frame.shape[0]) + " visit occurrences and rows corresponding to those patients.")
+    data_frame = get_data_frame(
+query_that_results_in_drugs_feature_matrix
+    )
     print(data_frame)
-    path_of_Feature_Matrix = "Slice_Of_Feature_Matrix.csv"
-    data_frame.to_csv(path_of_Feature_Matrix)
-    print("Saved slice of feature matrix to " + path_of_Feature_Matrix)
-    print("Finished generating slice of feature matrix")
