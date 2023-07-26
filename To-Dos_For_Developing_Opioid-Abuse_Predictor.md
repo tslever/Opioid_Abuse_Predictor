@@ -2,7 +2,7 @@
 
 Created: 06/23/2023 by Tom Lever
 
-Updated: 07/23/2023 by Tom Lever
+Updated: 07/26/2023 by Tom Lever
 
 
 ## Tasks For Tom That Morgan And Srimann Have Completed
@@ -29,10 +29,7 @@ Non-Italics: Does Not Require Coordination
 13. ~~*A: Complete Interface Design: Requester And Opioid-Abuse Predictor.*~~
 14. ~~*A: Define Cohort_Without_Cancer.*~~
 15. *A: Define feature matrix.*
-    - Resolve discrepancies between numbers of rows in feature submatrices.
-    - Modify `generate_slice_of_feature_matrix.py` such that a feature matrix has 0 instead of values that not numbers.
     - Modify `generate_slice_of_feature_matrix.py` to set seed of pseudorandom number generator so that the 3,790 patients chosen "at random" are the same for every generation of feature matrix.
-    - Modify `generate_slice_of_feature_matrix.py` to impute 1's for chronic conditions.
     - Modify `generate_slice_of_feature_matrix.py` to impute "tails" for 1's to compensate for sparseness of 1's.
     - Ensure that each patient in feature matrix has a visit with a prescription of opioids.
 17. M/T: Understand principal-component analysis, factor analysis, and partial least-squares regression for modeling, dimension reduction, data preprocessing, and determining the importance of features.
