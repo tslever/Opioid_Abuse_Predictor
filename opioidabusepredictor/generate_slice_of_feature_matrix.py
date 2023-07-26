@@ -105,20 +105,6 @@ WHERE
     AND is_selectable = 1
 """
 
-# 6.25
-query_that_results_in_table_of_criteria_ancestor = """
-SELECT *
-FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca
-"""
-
-# 6.50
-query_that_results_in_table_of_criteria_ancestor_and_codes = """
-SELECT *
-FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca
-LEFT JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) ba
-ON ca.ancestor_id = b.concept_id
-"""
-
 # 7
 query_that_results_in_table_of_distinct_descendant_IDs_of_opioids = """
 SELECT DISTINCT ca.descendant_id
@@ -273,6 +259,7 @@ SELECT code
 FROM (""" + query_that_results_in_table_of_concept_IDs_of_feature_that_is_child_of_provided_feature + """) table_of_concept_IDs
 JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
 ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
+WHERE code NOT IN (191912005, 191909007, 191914006, 191912005, 5602001)
     """
 
     return query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature
