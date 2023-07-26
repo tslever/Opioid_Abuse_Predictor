@@ -227,6 +227,8 @@ dictionary_of_codes_of_condition_and_names_of_column = {
 }
 
 def generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_provided_condition):
+
+    # 19
     query_that_results_in_table_with_ID_of_provided_condition = """
 SELECT CAST(cr.id as string) as id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
@@ -234,6 +236,8 @@ WHERE
     code = CAST(""" + code_of_provided_condition + """ AS STRING)
     AND full_text LIKE '%_rank1]%'
     """
+
+    # 20
     query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition = """
 SELECT DISTINCT c.concept_id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
@@ -248,6 +252,8 @@ WHERE
     is_standard = 1
     AND is_selectable = 1
     """
+
+    # 21
     query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition = """
     SELECT code
     FROM (""" + query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition + """) table_of_concept_IDs
@@ -256,6 +262,7 @@ WHERE
     """
     return query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition
 
+# 22
 query_that_results_in_ungrouped_conditions_feature_matrix = """
 SELECT
     person_id,
@@ -272,6 +279,7 @@ query_that_results_in_ungrouped_conditions_feature_matrix += """
 FROM (""" + query_that_results_in_table_of_person_IDs_codes_standard_concept_names_and_visit_occurrence_IDs_as_in_query_13_but_for_undersample + """)
 """
 
+# 23
 query_that_results_in_conditions_feature_matrix = """
 SELECT
     visit_occurrence_id,
@@ -287,8 +295,70 @@ GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
 """
 
+# 24
+query_that_results_in_table_of_person_IDs_concept_codes_concept_names_and_visit_occurrence_IDs_from_table_d_exposure_and_table_d_standard_concept_for_undersample = """
+SELECT
+    person_id,
+    concept_code,
+    concept_name,
+    visit_occurrence_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.drug_exposure` d_exposure
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept
+ON d_exposure.drug_concept_id = d_standard_concept.concept_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_undersample + """)
+"""
+
+dictionary_of_codes_of_drug_and_names_of_column = {
+    "5640": "is_exposed_to_ibuprofen",
+    "1819": "is_exposed_to_buprenorphine",
+    "2193": "is_exposed_to_nelaxone",
+    "4337": "is_exposed_to_fentanyl",
+    "7052": "is_exposed_to_morphine",
+    "7804": "is_exposed_to_oxycodone",
+    "3423": "is_exposed_to_hydromorphone",
+    "1191": "is_exposed_to_aspirin",
+    "2670": "is_exposed_to_codeine",
+    "10689": "is_exposed_to_tramadol",
+    "7238": "is_exposed_to_nalbuphine",
+    "6754": "is_exposed_to_meperidine",
+    "7243": "is_exposed_to_naltrexone",
+    "161": "is_exposed_to_acetaminophen"
+}
+
+# 25
+query_that_results_in_ungrouped_drugs_feature_matrix = """
+SELECT
+    visit_occurrence_id,
+"""
+for code_of_drug, name_of_column in dictionary_of_codes_of_drug_and_names_of_column.items():
+    case_block = """
+CASE WHEN concept_code = CAST(""" + code_of_drug + """ AS STRING)
+THEN 1
+ELSE 0 END AS """ + name_of_column + """,
+    """
+    query_that_results_in_ungrouped_drugs_feature_matrix += case_block
+query_that_results_in_ungrouped_drugs_feature_matrix += """
+FROM (""" + query_that_results_in_table_of_person_IDs_concept_codes_concept_names_and_visit_occurrence_IDs_from_table_d_exposure_and_table_d_standard_concept_for_undersample + """)
+"""
+
+# 26
+query_that_results_in_drugs_feature_matrix = """
+SELECT
+    visit_occurrence_id,
+"""
+for name_of_column in dictionary_of_codes_of_drug_and_names_of_column.values():
+    max_block = """
+    MAX(""" + name_of_column + """) as """ + name_of_column + """,
+    """
+    query_that_results_in_drugs_feature_matrix += max_block
+query_that_results_in_drugs_feature_matrix += """
+FROM (""" + query_that_results_in_ungrouped_drugs_feature_matrix + """)
+GROUP BY visit_occurrence_id
+ORDER BY visit_occurrence_id
+"""
+
 if __name__ == "__main__":
     data_frame = get_data_frame(
-query_that_results_in_conditions_feature_matrix
+query_that_results_in_drugs_feature_matrix
     )
     print(data_frame)
