@@ -196,7 +196,7 @@ query_that_results_in_table_of_distint_person_IDs_visit_occurrence_IDs_and_visit
 SELECT
     visit_occurrence.person_id,
     visit_occurrence_id,
-    visit_start_date
+    visit_start_datetime
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence
 INNER JOIN (""" + query_that_results_in_table_of_distinct_person_IDs_of_undersample + """) table_of_IDs_of_undersample
 ON visit_occurrence.person_id = table_of_IDs_of_undersample.person_id
@@ -471,7 +471,7 @@ query_that_results_in_feature_matrix = """
 SELECT
    person_id,
    table_of_visit_occurrences_for_undersample.visit_occurrence_id,
-   visit_start_date,
+   visit_start_datetime,
 """
 for name_of_column in list_of_column_names:
     query_that_results_in_feature_matrix += """
