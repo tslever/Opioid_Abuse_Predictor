@@ -233,7 +233,7 @@ def generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_
 SELECT CAST(cr.id as string) as id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
 WHERE
-    code = CAST(""" + code_of_provided_condition + """ AS STRING)
+    code = '""" + code_of_provided_condition + """'
     AND full_text LIKE '%_rank1]%'
     """
 
@@ -258,9 +258,43 @@ WHERE
     SELECT code
     FROM (""" + query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition + """) table_of_concept_IDs
     JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
-    ON table_of_concept_IDs.concept_id = table_of_concept_ids_and_codes.concept_id
+    ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
     """
     return query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition
+
+def generate_query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug(code_of_provided_drug):
+
+    query_that_results_in_table_with_ID_of_provided_drug = """
+SELECT CAST(cr.id as string) as id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
+WHERE
+    code = '""" + code_of_provided_drug + """'
+    AND full_text LIKE '%_rank1]%'
+    """
+
+    query_that_results_in_table_of_concept_IDs_of_drug_that_is_child_of_provided_drug = """
+SELECT DISTINCT c.concept_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
+JOIN (""" + query_that_results_in_table_with_ID_of_provided_drug + """) a
+ON (
+    c.path LIKE CONCAT('%.', a.id, '.%')
+    OR c.path LIKE CONCAT('%.', a.id)
+    OR c.path LIKE CONCAT(a.id, '.%')
+    OR c.path = a.id
+)
+WHERE
+    is_standard = 1
+    AND is_selectable = 1
+    """
+
+    query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug = """
+    SELECT code
+    FROM (""" + query_that_results_in_table_of_concept_IDs_of_drug_that_is_child_of_provided_drug + """) table_of_concept_IDs
+    JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
+    ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
+    """
+
+    return query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug
 
 # 22
 query_that_results_in_ungrouped_conditions_feature_matrix = """
@@ -268,11 +302,11 @@ SELECT
     person_id,
     visit_occurrence_id,
 """
-for code_of_condition in dictionary_of_codes_of_condition_and_names_of_column.keys():
+for code_of_condition, name_of_column in dictionary_of_codes_of_condition_and_names_of_column.items():
     case_block = """
 CASE WHEN code IN (""" + generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_condition) + """)
 THEN 1
-ELSE 0 END AS """ + dictionary_of_codes_of_condition_and_names_of_column[code_of_condition] + """,
+ELSE 0 END AS """ + name_of_column + """,
     """
     query_that_results_in_ungrouped_conditions_feature_matrix += case_block
 query_that_results_in_ungrouped_conditions_feature_matrix += """
@@ -322,7 +356,8 @@ dictionary_of_codes_of_drug_and_names_of_column = {
     "7238": "is_exposed_to_nalbuphine",
     "6754": "is_exposed_to_meperidine",
     "7243": "is_exposed_to_naltrexone",
-    "161": "is_exposed_to_acetaminophen"
+    "161": "is_exposed_to_acetaminophen",
+    "N02A": "is_exposed_to_Opioids"
 }
 
 # 25
@@ -332,7 +367,7 @@ SELECT
 """
 for code_of_drug, name_of_column in dictionary_of_codes_of_drug_and_names_of_column.items():
     case_block = """
-CASE WHEN concept_code = CAST(""" + code_of_drug + """ AS STRING)
+CASE WHEN concept_code IN (""" + generate_query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug(code_of_drug) + """)
 THEN 1
 ELSE 0 END AS """ + name_of_column + """,
     """
@@ -384,7 +419,8 @@ SELECT
     is_exposed_to_nalbuphine,
     is_exposed_to_meperidine,
     is_exposed_to_naltrexone,
-    is_exposed_to_acetaminophen
+    is_exposed_to_acetaminophen,
+    is_exposed_to_Opioids
 FROM (""" + query_that_results_in_table_of_distint_person_IDs_visit_occurrence_IDs_and_visit_start_dates_for_undersample + """) table_of_visit_occurrences_for_undersample
 LEFT JOIN (""" + query_that_results_in_conditions_feature_matrix + """) conditions_feature_matrix
 ON table_of_visit_occurrences_for_undersample.visit_occurrence_id = conditions_feature_matrix.visit_occurrence_id
@@ -393,7 +429,14 @@ ON table_of_visit_occurrences_for_undersample.visit_occurrence_id = medications_
 ORDER BY person_id, visit_occurrence_id
 """
 
-if __name__ == "__main__":
+query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed = """
+SELECT *
+FROM (""" + query_that_results_in_feature_matrix + """)
+WHERE COALESCE(has_Anxiety, has_Bipolar_disorder, has_Depressive_disorder, has_Hypertensive_disorder, has_Opioid_abuse, has_Opioid_dependence, has_Pain, has_Rhinitis, has_Non_Opioid_Substance_abuse, is_exposed_to_ibuprofen, is_exposed_to_buprenorphine, is_exposed_to_nelaxone, is_exposed_to_fentanyl, is_exposed_to_morphine, is_exposed_to_oxycodone, is_exposed_to_hydromorphone, is_exposed_to_aspirin, is_exposed_to_codeine, is_exposed_to_tramadol, is_exposed_to_nalbuphine, is_exposed_to_meperidine, is_exposed_to_naltrexone, is_exposed_to_acetaminophen, is_exposed_to_Opioids) > 0
+ORDER BY person_id, visit_occurrence_id
+"""
+
+def interact_with_user():
     print("Started generating slice of feature matrix")
     answer = None
     while answer != "Y" and answer != "N":
@@ -427,3 +470,6 @@ if __name__ == "__main__":
     data_frame.to_csv(path_of_Feature_Matrix)
     print("Saved slice of feature matrix to " + path_of_Feature_Matrix)
     print("Finished generating slice of feature matrix")
+
+if __name__ == "__main__":
+    interact_with_user()
