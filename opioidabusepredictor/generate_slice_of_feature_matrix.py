@@ -105,6 +105,20 @@ WHERE
     AND is_selectable = 1
 """
 
+# 6.25
+query_that_results_in_table_of_criteria_ancestor = """
+SELECT *
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca
+"""
+
+# 6.50
+query_that_results_in_table_of_criteria_ancestor_and_codes = """
+SELECT *
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca
+LEFT JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) ba
+ON ca.ancestor_id = b.concept_id
+"""
+
 # 7
 query_that_results_in_table_of_distinct_descendant_IDs_of_opioids = """
 SELECT DISTINCT ca.descendant_id
