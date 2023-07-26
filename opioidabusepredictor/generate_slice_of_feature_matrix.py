@@ -359,6 +359,52 @@ GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
 """
 
+query_that_results_in_table_of_person_IDs_concept_codes_concept_names_and_visit_occurrence_IDs_from_table_procedure_and_table_p_standard_concept_for_undersample = """
+SELECT
+    person_id,
+    concept_code,
+    concept_name,
+    visit_occurrence_id
+FROM `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept
+ON procedure.procedure_concept_id = p_standard_concept.concept_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_undersample + """)
+"""
+
+dictionary_of_codes_of_procedure_and_names_of_column = {
+    "71651007": "had_Mammography"
+}
+
+query_that_results_in_ungrouped_procedures_feature_matrix = """
+SELECT
+    visit_occurrence_id,
+"""
+for code_of_procedure, name_of_column in dictionary_of_codes_of_procedure_and_names_of_column.items():
+    case_block = """
+CASE WHEN concept_code IN (""" + generate_query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature(code_of_procedure) + """)
+THEN 1
+ELSE 0 END AS """ + name_of_column + """,
+    """
+    query_that_results_in_ungrouped_procedures_feature_matrix += case_block
+query_that_results_in_ungrouped_procedures_feature_matrix += """
+FROM (""" + query_that_results_in_table_of_person_IDs_concept_codes_concept_names_and_visit_occurrence_IDs_from_table_procedure_and_table_p_standard_concept_for_undersample + """)
+"""
+
+query_that_results_in_procedures_feature_matrix = """
+SELECT
+    visit_occurrence_id,
+"""
+for name_in_column in dictionary_of_codes_of_procedure_and_names_of_column.values():
+    max_block = """
+    MAX(""" + name_of_column + """) as """ + name_of_column + """,
+    """
+    query_that_results_in_procedures_feature_matrix += max_block
+query_that_results_in_procedures_feature_matrix += """
+FROM (""" + query_that_results_in_ungrouped_procedures_feature_matrix + """)
+GROUP BY visit_occurrence_id
+ORDER BY visit_occurrence_id
+"""
+
 query_that_results_in_feature_matrix = """
 SELECT
     person_id,
@@ -387,12 +433,15 @@ SELECT
     is_exposed_to_meperidine,
     is_exposed_to_naltrexone,
     is_exposed_to_acetaminophen,
-    is_exposed_to_Opioids
+    is_exposed_to_Opioids,
+    had_Mammography
 FROM (""" + query_that_results_in_table_of_distint_person_IDs_visit_occurrence_IDs_and_visit_start_dates_for_undersample + """) table_of_visit_occurrences_for_undersample
 LEFT JOIN (""" + query_that_results_in_conditions_feature_matrix + """) conditions_feature_matrix
 ON table_of_visit_occurrences_for_undersample.visit_occurrence_id = conditions_feature_matrix.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_drugs_feature_matrix + """) medications_feature_matrix
 ON table_of_visit_occurrences_for_undersample.visit_occurrence_id = medications_feature_matrix.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_procedures_feature_matrix + """) procedures_feature_matrix
+ON table_of_visit_occurrences_for_undersample.visit_occurrence_id = procedures_feature_matrix.visit_occurrence_id
 ORDER BY person_id, visit_occurrence_id
 """
 
