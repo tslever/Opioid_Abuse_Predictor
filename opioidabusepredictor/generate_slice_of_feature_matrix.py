@@ -451,37 +451,22 @@ GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
 """
 
+column_names = (
+    list(dictionary_of_codes_of_condition_and_names_of_column.values()) +
+    list(dictionary_of_codes_of_drug_and_names_of_column.values()) +
+    list(dictionary_of_codes_of_procedure_and_names_of_column.values())
+)
+
 query_that_results_in_feature_matrix = """
 SELECT
-    person_id,
-    table_of_visit_occurrences_for_undersample.visit_occurrence_id,
-    visit_start_date,
-    has_Anxiety,
-    has_Bipolar_disorder,
-    has_Depressive_disorder,
-    has_Hypertensive_disorder,
-    has_Opioid_abuse,
-    has_Opioid_dependence,
-    has_Pain,
-    has_Rhinitis,
-    has_Non_Opioid_Substance_abuse,
-    is_exposed_to_ibuprofen,
-    is_exposed_to_buprenorphine,
-    is_exposed_to_nelaxone,
-    is_exposed_to_fentanyl,
-    is_exposed_to_morphine,
-    is_exposed_to_oxycodone,
-    is_exposed_to_hydromorphone,
-    is_exposed_to_aspirin,
-    is_exposed_to_codeine,
-    is_exposed_to_tramadol,
-    is_exposed_to_nalbuphine,
-    is_exposed_to_meperidine,
-    is_exposed_to_naltrexone,
-    is_exposed_to_acetaminophen,
-    is_exposed_to_Opioids,
-    had_Mammography,
-    had_Creatinine
+   person_id,
+   table_of_visit_occurrences_for_undersample.visit_occurrence_id,
+   visit_start_date,
+"""
+for name_of_column in column_names:
+    query_that_results_in_feature_matrix += """
+    """ + name_of_column + ""","""
+query_that_results_in_feature_matrix += """
 FROM (""" + query_that_results_in_table_of_distint_person_IDs_visit_occurrence_IDs_and_visit_start_dates_for_undersample + """) table_of_visit_occurrences_for_undersample
 LEFT JOIN (""" + query_that_results_in_conditions_feature_matrix + """) conditions_feature_matrix
 ON table_of_visit_occurrences_for_undersample.visit_occurrence_id = conditions_feature_matrix.visit_occurrence_id
@@ -497,7 +482,12 @@ ORDER BY person_id, visit_occurrence_id
 query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed = """
 SELECT *
 FROM (""" + query_that_results_in_feature_matrix + """)
-WHERE COALESCE(has_Anxiety, has_Bipolar_disorder, has_Depressive_disorder, has_Hypertensive_disorder, has_Opioid_abuse, has_Opioid_dependence, has_Pain, has_Rhinitis, has_Non_Opioid_Substance_abuse, is_exposed_to_ibuprofen, is_exposed_to_buprenorphine, is_exposed_to_nelaxone, is_exposed_to_fentanyl, is_exposed_to_morphine, is_exposed_to_oxycodone, is_exposed_to_hydromorphone, is_exposed_to_aspirin, is_exposed_to_codeine, is_exposed_to_tramadol, is_exposed_to_nalbuphine, is_exposed_to_meperidine, is_exposed_to_naltrexone, is_exposed_to_acetaminophen, is_exposed_to_Opioids, had_Mammography, had_Creatinine) > 0
+WHERE
+    """ + column_names[0] + """ > 0"""
+for i in range(1, len(column_names) - 1):
+    query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed += """
+    OR """ + name_of_column + """ > 0"""
+query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed += """
 ORDER BY person_id, visit_occurrence_id
 """
 
@@ -531,7 +521,7 @@ def interact_with_user():
     print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " distinct patients in slice of feature matrix.")
     print("There are " + str(data_frame.shape[0]) + " visit occurrences and rows corresponding to those patients.")
     print(data_frame)
-    print(data_frame[data_frame["had_Creatinine"].isin([0,1])])
+    print(data_frame[data_frame["is_exposed_to_Opioids"].isin([1])])
     path_of_Feature_Matrix = "Slice_Of_Feature_Matrix.csv"
     data_frame.to_csv(path_of_Feature_Matrix)
     print("Saved slice of feature matrix to " + path_of_Feature_Matrix)
