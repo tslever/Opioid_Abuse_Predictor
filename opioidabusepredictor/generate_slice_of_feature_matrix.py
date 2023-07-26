@@ -226,22 +226,22 @@ dictionary_of_codes_of_condition_and_names_of_column = {
     "66214007": "has_Non_Opioid_Substance_abuse"
 }
 
-def generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_provided_condition):
+def generate_query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature(code_of_provided_feature):
 
     # 19
-    query_that_results_in_table_with_ID_of_provided_condition = """
+    query_that_results_in_table_with_ID_of_provided_feature = """
 SELECT CAST(cr.id as string) as id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
 WHERE
-    code = '""" + code_of_provided_condition + """'
+    code = '""" + code_of_provided_feature + """'
     AND full_text LIKE '%_rank1]%'
     """
 
     # 20
-    query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition = """
+    query_that_results_in_table_of_concept_IDs_of_feature_that_is_child_of_provided_feature = """
 SELECT DISTINCT c.concept_id
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
-JOIN (""" + query_that_results_in_table_with_ID_of_provided_condition + """) a
+JOIN (""" + query_that_results_in_table_with_ID_of_provided_feature + """) a
 ON (
     c.path LIKE CONCAT('%.', a.id, '.%')
     OR c.path LIKE CONCAT('%.', a.id)
@@ -254,47 +254,14 @@ WHERE
     """
 
     # 21
-    query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition = """
-    SELECT code
-    FROM (""" + query_that_results_in_table_of_concept_IDs_of_conditions_that_are_children_of_provided_condition + """) table_of_concept_IDs
-    JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
-    ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
-    """
-    return query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition
-
-def generate_query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug(code_of_provided_drug):
-
-    query_that_results_in_table_with_ID_of_provided_drug = """
-SELECT CAST(cr.id as string) as id
-FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
-WHERE
-    code = '""" + code_of_provided_drug + """'
-    AND full_text LIKE '%_rank1]%'
+    query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature = """
+SELECT code
+FROM (""" + query_that_results_in_table_of_concept_IDs_of_feature_that_is_child_of_provided_feature + """) table_of_concept_IDs
+JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
+ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
     """
 
-    query_that_results_in_table_of_concept_IDs_of_drug_that_is_child_of_provided_drug = """
-SELECT DISTINCT c.concept_id
-FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
-JOIN (""" + query_that_results_in_table_with_ID_of_provided_drug + """) a
-ON (
-    c.path LIKE CONCAT('%.', a.id, '.%')
-    OR c.path LIKE CONCAT('%.', a.id)
-    OR c.path LIKE CONCAT(a.id, '.%')
-    OR c.path = a.id
-)
-WHERE
-    is_standard = 1
-    AND is_selectable = 1
-    """
-
-    query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug = """
-    SELECT code
-    FROM (""" + query_that_results_in_table_of_concept_IDs_of_drug_that_is_child_of_provided_drug + """) table_of_concept_IDs
-    JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
-    ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
-    """
-
-    return query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug
+    return query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature
 
 # 22
 query_that_results_in_ungrouped_conditions_feature_matrix = """
@@ -304,7 +271,7 @@ SELECT
 """
 for code_of_condition, name_of_column in dictionary_of_codes_of_condition_and_names_of_column.items():
     case_block = """
-CASE WHEN code IN (""" + generate_query_that_results_in_table_of_codes_of_condition_that_is_child_of_provided_condition(code_of_condition) + """)
+CASE WHEN code IN (""" + generate_query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature(code_of_condition) + """)
 THEN 1
 ELSE 0 END AS """ + name_of_column + """,
     """
@@ -367,7 +334,7 @@ SELECT
 """
 for code_of_drug, name_of_column in dictionary_of_codes_of_drug_and_names_of_column.items():
     case_block = """
-CASE WHEN concept_code IN (""" + generate_query_that_results_in_table_of_codes_of_drug_that_is_child_of_provided_drug(code_of_drug) + """)
+CASE WHEN concept_code IN (""" + generate_query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature(code_of_drug) + """)
 THEN 1
 ELSE 0 END AS """ + name_of_column + """,
     """
