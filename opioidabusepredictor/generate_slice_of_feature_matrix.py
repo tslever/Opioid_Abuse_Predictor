@@ -259,7 +259,8 @@ SELECT code
 FROM (""" + query_that_results_in_table_of_concept_IDs_of_feature_that_is_child_of_provided_feature + """) table_of_concept_IDs
 JOIN (""" + query_that_results_in_table_of_concept_IDs_and_codes + """) table_of_concept_IDs_and_codes
 ON table_of_concept_IDs.concept_id = table_of_concept_IDs_and_codes.concept_id
-WHERE code NOT IN (191912005, 191909007, 191914006, 191912005, 5602001)
+WHERE code NOT IN ("191912005", "191909007", "191914006", "191912005", "5602001"
+)
     """
 
     return query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature
@@ -373,7 +374,15 @@ WHERE procedure.person_id IN (""" + query_that_results_in_table_of_distinct_pers
 """
 
 dictionary_of_codes_of_procedure_and_names_of_column = {
-    "71651007": "had_Mammography"
+    "71651007": "had_Mammography",
+    "118713006": "had_Procedure_on_knee",
+    "118818008": "had_Procedure_on_tooth",
+    "118711008": "had_Procedure_on_hip",
+    "30904006": "had_Vascular_surgery_procedure",
+    "118885003": "had_Procedure_on_brain",
+    "118797008": "had_Procedure_on_heart",
+    "99284": "had_Emergency_department_visit",
+    "118950002": "had_Procedure_on_head_and_or_neck"
 }
 
 query_that_results_in_ungrouped_procedures_feature_matrix = """
@@ -382,9 +391,9 @@ SELECT
 """
 for code_of_procedure, name_of_column in dictionary_of_codes_of_procedure_and_names_of_column.items():
     case_block = """
-CASE WHEN concept_code IN (""" + generate_query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature(code_of_procedure) + """)
-THEN 1
-ELSE 0 END AS """ + name_of_column + """,
+    CASE WHEN concept_code IN (""" + generate_query_that_results_in_table_of_codes_of_feature_that_is_child_of_provided_feature(code_of_procedure) + """)
+    THEN 1
+    ELSE 0 END AS """ + name_of_column + """,
     """
     query_that_results_in_ungrouped_procedures_feature_matrix += case_block
 query_that_results_in_ungrouped_procedures_feature_matrix += """
@@ -395,7 +404,7 @@ query_that_results_in_procedures_feature_matrix = """
 SELECT
     visit_occurrence_id,
 """
-for name_in_column in dictionary_of_codes_of_procedure_and_names_of_column.values():
+for name_of_column in dictionary_of_codes_of_procedure_and_names_of_column.values():
     max_block = """
     MAX(""" + name_of_column + """) as """ + name_of_column + """,
     """
@@ -452,7 +461,7 @@ GROUP BY visit_occurrence_id
 ORDER BY visit_occurrence_id
 """
 
-column_names = (
+list_of_column_names = (
     list(dictionary_of_codes_of_condition_and_names_of_column.values()) +
     list(dictionary_of_codes_of_drug_and_names_of_column.values()) +
     list(dictionary_of_codes_of_procedure_and_names_of_column.values())
@@ -464,7 +473,7 @@ SELECT
    table_of_visit_occurrences_for_undersample.visit_occurrence_id,
    visit_start_date,
 """
-for name_of_column in column_names:
+for name_of_column in list_of_column_names:
     query_that_results_in_feature_matrix += """
     """ + name_of_column + ""","""
 query_that_results_in_feature_matrix += """
@@ -484,10 +493,10 @@ query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_remove
 SELECT *
 FROM (""" + query_that_results_in_feature_matrix + """)
 WHERE
-    """ + column_names[0] + """ > 0"""
-for i in range(1, len(column_names) - 1):
+    """ + list_of_column_names[0] + """ > 0"""
+for i in range(1, len(list_of_column_names) - 1):
     query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed += """
-    OR """ + name_of_column + """ > 0"""
+    OR """ + list_of_column_names[i] + """ > 0"""
 query_that_results_in_feature_matrix_with_rows_where_every_indicator_is_0_removed += """
 ORDER BY person_id, visit_occurrence_id
 """
@@ -519,10 +528,10 @@ def interact_with_user():
     IntegerArray_of_distinct_person_IDs = pd.unique(data_frame["person_id"])
     IntegerArray_with_number_of_distinct_person_IDs_equal_to_answer = IntegerArray_of_distinct_person_IDs[:answer]
     data_frame = data_frame[data_frame["person_id"].isin(IntegerArray_with_number_of_distinct_person_IDs_equal_to_answer)]
+    data_frame = data_frame.astype(object).where(data_frame.notnull(), 0)
     print("There are " + str(len(pd.unique(data_frame["person_id"]))) + " distinct patients in slice of feature matrix.")
     print("There are " + str(data_frame.shape[0]) + " visit occurrences and rows corresponding to those patients.")
     print(data_frame)
-    print(data_frame[data_frame["is_exposed_to_Opioids"].isin([1])])
     path_of_Feature_Matrix = "Slice_Of_Feature_Matrix.csv"
     data_frame.to_csv(path_of_Feature_Matrix)
     print("Saved slice of feature matrix to " + path_of_Feature_Matrix)
