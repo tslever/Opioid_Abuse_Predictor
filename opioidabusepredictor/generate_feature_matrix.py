@@ -379,16 +379,17 @@ query_that_results_in_table_of_positive_indicators_of_Opioids = """
 
 query_that_results_in_feature_matrix = """
 SELECT
-    person_id,
+    MAX(person_id),
     table_of_visit_occurrences.visit_occurrence_id,
-    visit_start_datetime,
-    has_Opioid_abuse,
-    is_exposed_to_Opioids
+    MAX(visit_start_datetime),
+    MAX(has_Opioid_abuse),
+    MAX(is_exposed_to_Opioids)
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioids + """) table_of_positive_indicators_of_Opioids
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioids.visit_occurrence_id
+GROUP BY visit_occurrences.visit_occurrence_id
 """
 
 if __name__ == "__main__":
