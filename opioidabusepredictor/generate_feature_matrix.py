@@ -379,11 +379,11 @@ query_that_results_in_table_of_positive_indicators_of_Opioids = """
 
 query_that_results_in_feature_matrix = """
 SELECT
-    MAX(person_id),
+    MAX(person_id) as person_id,
     table_of_visit_occurrences.visit_occurrence_id,
-    MAX(visit_start_datetime),
-    MAX(has_Opioid_abuse),
-    MAX(is_exposed_to_Opioids)
+    MAX(visit_start_datetime) as visit_start_datetime,
+    MAX(has_Opioid_abuse) as_has_Opioid_abuse,
+    MAX(is_exposed_to_Opioids) as is_exposed_to_Opioids
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
