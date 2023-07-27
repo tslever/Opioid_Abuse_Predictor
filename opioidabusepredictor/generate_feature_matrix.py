@@ -10,7 +10,7 @@ def get_data_frame(query):
     )
     return data_frame
 
-query_that_results_in_visit_occurrences_for_cohort = """
+query_that_results_in_table_of_visit_occurrences_for_cohort = """
         SELECT person_ID, visit_occurrence_id, visit_start_datetime
         FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence 
         WHERE (
@@ -88,7 +88,6 @@ query_that_results_in_visit_occurrences_for_cohort = """
 
 query_that_results_in_table_of_positive_indicators_of_Opioid_abuse = """
     SELECT
-        c_occurrence.person_id,
         c_occurrence.visit_occurrence_id,
         1 AS has_Opioid_abuse
     FROM (
@@ -203,7 +202,6 @@ query_that_results_in_table_of_positive_indicators_of_Opioid_abuse = """
 
 query_that_results_in_table_of_positive_indicators_of_Opioids = """
     SELECT
-        d_exposure.person_id,
         d_exposure.visit_occurrence_id,
         1 AS is_exposed_to_Opioids
     FROM
@@ -378,3 +376,21 @@ query_that_results_in_table_of_positive_indicators_of_Opioids = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+
+query_that_results_in_feature_matrix = """
+SELECT
+    person_id,
+    table_of_visit_occurrences.visit_occurrence_id,
+    visit_start_datetime,
+    has_Opioid_abuse,
+    is_exposed_to_Opioids
+FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioids + """) table_of_positive_indicators_of_Opioids
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioids.visit_occurrence_id
+"""
+
+if __name__ == "__main__":
+    feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
+    print(feature_matrix)
