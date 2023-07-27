@@ -389,7 +389,7 @@ LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_ab
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioids + """) table_of_positive_indicators_of_Opioids
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioids.visit_occurrence_id
-GROUP BY visit_occurrences.visit_occurrence_id
+GROUP BY table_of_visit_occurrences.visit_occurrence_id
 """
 
 if __name__ == "__main__":
