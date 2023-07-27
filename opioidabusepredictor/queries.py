@@ -313,11 +313,11 @@ query_that_results_in_table_of_positive_indicators_of_Opioids = """
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
 
-query_that_results_in_condition_occurrences_for_cohort = """
-        SELECT *
-        FROM `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence 
+query_that_results_in_visit_occurrences_for_cohort = """
+        SELECT person_ID, visit_occurrence_id, visit_start_datetime
+        FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence 
         WHERE (
-            c_occurrence.PERSON_ID IN (
+            visit_occurrence.PERSON_ID IN (
                 SELECT distinct person_id  
                 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
                 WHERE cb_search_person.person_id IN (
