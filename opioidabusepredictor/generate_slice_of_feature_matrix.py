@@ -1,6 +1,8 @@
+import math
 import numpy as np
 import os
 import pandas as pd
+import time
 
 def get_data_frame(query):
     data_frame = pd.read_gbq(
@@ -253,7 +255,8 @@ query_that_results_in_table_of_positive_indicators_of_Opioid_abuse = """
                                     ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id"""
+                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # A1
 query_that_results_in_table_of_positive_indicators_of_Opioids = """
@@ -431,7 +434,8 @@ query_that_results_in_table_of_positive_indicators_of_Opioids = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 # C0
 query_that_results_in_table_of_positive_indicators_of_Anxiety = """
@@ -599,7 +603,8 @@ query_that_results_in_table_of_positive_indicators_of_Anxiety = """
                                     ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id"""
+                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C1
 query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder = """
@@ -767,7 +772,8 @@ query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder = """
                                     ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id"""
+                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C2
 query_that_results_in_table_of_positive_indicators_of_Depression = """
@@ -935,7 +941,8 @@ query_that_results_in_table_of_positive_indicators_of_Depression = """
                                     ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id"""
+                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C3
 query_that_results_in_table_of_positive_indicators_of_Hypertension = """
@@ -1085,7 +1092,8 @@ query_that_results_in_table_of_positive_indicators_of_Hypertension = """
                                                     )
                                                 ) criteria 
                                             ) ))
-                                ) c_occurrence"""
+                                ) c_occurrence
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C4
 query_that_results_in_table_of_positive_indicators_of_Opioid_dependence = """
@@ -1253,7 +1261,8 @@ query_that_results_in_table_of_positive_indicators_of_Opioid_dependence = """
                                     ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id"""
+                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C5
 query_that_results_in_table_of_positive_indicators_of_Pain = """
@@ -1403,7 +1412,8 @@ query_that_results_in_table_of_positive_indicators_of_Pain = """
                                                     )
                                                 ) criteria 
                                             ) ))
-                                ) c_occurrence"""
+                                ) c_occurrence
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C6
 query_that_results_in_table_of_positive_indicators_of_Rhinitis = """
@@ -1553,7 +1563,8 @@ query_that_results_in_table_of_positive_indicators_of_Rhinitis = """
                                                     )
                                                 ) criteria 
                                             ) ))
-                                ) c_occurrence"""
+                                ) c_occurrence
+GROUP BY c_occurrence.visit_occurrence_id"""
 
 # C7
 query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse = """
@@ -1703,10 +1714,10 @@ query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
                                                     )
                                                 ) criteria 
                                             ) ))
-                                ) c_occurrence"""
+                                ) c_occurrence
+GROUP BY c_occurrence.visit_occurrence_id"""
 
-
-#D0
+# D0
 query_that_results_in_positive_indicators_of_ibuprofen = """
     SELECT
         d_exposure.visit_occurrence_id,
@@ -1882,7 +1893,8 @@ query_that_results_in_positive_indicators_of_ibuprofen = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D1
 query_that_results_in_positive_indicators_of_buprenorphine = """
@@ -2060,7 +2072,8 @@ query_that_results_in_positive_indicators_of_buprenorphine = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D2
 query_that_results_in_positive_indicators_of_fentanyl = """
@@ -2238,7 +2251,8 @@ query_that_results_in_positive_indicators_of_fentanyl = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D3
 query_that_results_in_positive_indicators_of_morphine = """
@@ -2416,7 +2430,8 @@ query_that_results_in_positive_indicators_of_morphine = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D4
 query_that_results_in_positive_indicators_of_oxycodone= """
@@ -2594,7 +2609,8 @@ query_that_results_in_positive_indicators_of_oxycodone= """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D5
 query_that_results_in_positive_indicators_of_hydromorphone = """
@@ -2772,7 +2788,8 @@ query_that_results_in_positive_indicators_of_hydromorphone = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D6
 query_that_results_in_positive_indicators_of_aspirin = """
@@ -2950,7 +2967,8 @@ query_that_results_in_positive_indicators_of_aspirin = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D7
 query_that_results_in_positive_indicators_of_codeine = """
@@ -3128,7 +3146,8 @@ query_that_results_in_positive_indicators_of_codeine = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D8
 query_that_results_in_positive_indicators_of_tramadol = """
@@ -3306,7 +3325,8 @@ query_that_results_in_positive_indicators_of_tramadol = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D9
 query_that_results_in_positive_indicators_of_nalbuphine = """
@@ -3484,10 +3504,11 @@ query_that_results_in_positive_indicators_of_nalbuphine = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D10
-query_that_results_in_positive_indicators_of_mepiridine = """
+query_that_results_in_positive_indicators_of_meperidine = """
     SELECT
         d_exposure.visit_occurrence_id,
         1 AS has_been_exposed_to_mepiridine 
@@ -3662,7 +3683,8 @@ query_that_results_in_positive_indicators_of_mepiridine = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D11
 query_that_results_in_positive_indicators_of_naltrexone = """
@@ -3840,7 +3862,8 @@ query_that_results_in_positive_indicators_of_naltrexone = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
 #D12
 query_that_results_in_positive_indicators_of_acetaminophen = """
@@ -4018,24 +4041,37 @@ query_that_results_in_positive_indicators_of_acetaminophen = """
                                         ON v.visit_concept_id = d_visit.concept_id 
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id"""
+                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id"""
 
-
-query_that_results_in_condition_feature_matrix = """
+query_that_results_in_feature_matrix = """
 SELECT
-    MAX(person_id) as person_id,
+    person_id,
     table_of_visit_occurrences.visit_occurrence_id,
-    MAX(visit_start_datetime) as visit_start_datetime,
-    MAX(has_Opioid_abuse) as has_Opioid_abuse,
-    MAX(is_exposed_to_Opioids) as is_exposed_to_Opioids,
-    MAX(has_Anxiety) as has_Anxiety,
-    MAX(has_Bipolar_disorder) as has_Bipolar_disorder,
-    MAX(has_Depression) as has_Depression,
-    MAX(has_Hypertension) as has_Hypertension,
-    MAX(has_Opioid_dependence) as has_Opioid_dependence,
-    MAX(has_Pain) as has_Pain,
-    MAX(has_Rhinitis) as has_Rhinitis,
-    MAX(has_Non_Opioid_Substance_Abuse) as Non_Opioid_Substance_Abuse,
+    visit_start_datetime,
+    has_Opioid_abuse,
+    is_exposed_to_Opioids,
+    has_Anxiety,
+    has_Bipolar_disorder,
+    has_Depression,
+    has_Hypertension,
+    has_Opioid_dependence,
+    has_Pain,
+    has_Rhinitis,
+    has_Non_Opioid_Substance_Abuse,
+    has_been_exposed_to_ibuprofen,
+    has_been_exposed_to_buprenorphine,
+    has_been_exposed_to_fentanyl,
+    has_been_exposed_to_morphine,
+    has_been_exposed_to_oxycodone,
+    has_been_exposed_to_hydromorphone,
+    has_been_exposed_to_aspirin,
+    has_been_exposed_to_codeine,
+    has_been_exposed_to_tramadol,
+    has_been_exposed_to_nalbuphine,
+    has_been_exposed_to_mepiridine,
+    has_been_exposed_to_naltrexone,
+    has_been_exposed_to_acetaminophen
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
@@ -4057,29 +4093,6 @@ LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Rhinitis 
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Rhinitis.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse + """) table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Non_Opioid_Substance_Abuse.visit_occurrence_id
-GROUP BY table_of_visit_occurrences.visit_occurrence_id
-"""
-
-query_that_results_in_drug_feature_matrix = """
-SELECT 
-    MAX(person_id) as person_id,
-    table_of_visit_occurrences.visit_occurrence_id,
-    MAX(visit_start_datetime) as visit_start_datetime,
-    MAX(has_been_exposed_to_ibuprofen) as has_been_exposed_to_ibuprofen,
-    MAX(has_been_exposed_to_buprenorphine) as has_been_exposed_to_buprenorphine,
-    MAX(has_been_exposed_to_fentanyl) as has_been_exposed_to_fentanyl,
-    MAX(has_been_exposed_to_morphine) as has_been_exposed_to_morphine,
-    MAX(has_been_exposed_to_oxycodone) as has_been_exposed_to_oxycodone,
-    MAX(has_been_exposed_to_hydromorphone) as has_been_exposed_to_hydromorphone,
-    MAX(has_been_exposed_to_aspirin) as has_been_exposed_to_aspirin,
-    MAX(has_been_exposed_to_codeine) as has_been_exposed_to_codeine,
-    MAX(has_been_exposed_to_tramadol) as has_been_exposed_to_tramadol,
-    MAX(has_been_exposed_to_nalbuphine) as has_been_exposed_to_nalbuphine,
-    MAX(has_been_exposed_to_mepiridine) as has_been_exposed_to_mepiridine,
-    MAX(has_been_exposed_to_naltrexone) as has_been_exposed_to_naltrexone,
-    MAX(has_been_exposed_to_acetaminophen) as has_been_exposed_to_acetaminophen,
-    
-FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
@@ -4100,62 +4113,28 @@ LEFT JOIN(""" + query_that_results_in_positive_indicators_of_tramadol + """) tab
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_tramadol.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_nalbuphine + """) table_of_positive_indicators_of_nalbuphine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_nalbuphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_mepiridine + """) table_of_positive_indicators_of_mepiridine
+LEFT JOIN(""" + query_that_results_in_positive_indicators_of_meperidine + """) table_of_positive_indicators_of_mepiridine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mepiridine.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_naltrexone + """) table_of_positive_indicators_of_naltrexone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
-GROUP BY table_of_visit_occurrences.visit_occurrence_id
 """
 
-query_that_results_in_feature_matrix = """
-SELECT *
-FROM (""" + query_that_results_in_condition_feature_matrix + """) condition_feature_matrix
-LEFT JOIN(""" + query_that_results_in_drug_feature_matrix + """) drug_feature_matrix
-ON
-condition_feature_matrix.visit_occurrence_id = drug_feature_matrix.visit_occurrence_id
-"""
+def calculate_time_interval_between_now_and_start_time(start_time):
+    now = time.time()
+    time_interval_in_seconds = now - start_time
+    time_interval_in_whole_minutes = math.floor(time_interval_in_seconds / 60)
+    time_interval_during_this_minute = time_interval_in_seconds - time_interval_in_whole_minutes * 60
+    return '%d %d' % (time_interval_in_whole_minutes, time_interval_during_this_minute)
 
-query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = """
-SELECT DISTINCT person_id
-FROM (""" + query_that_results_in_feature_matrix + """)
-WHERE has_Opioid_abuse = 1
-"""
-
-query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = """
-SELECT COUNT(person_id) as number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse
-FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
-"""
-
-query_that_results_in_table_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = """
-SELECT DISTINCT person_id
-FROM (""" + query_that_results_in_feature_matrix + """)
-WHERE person_id NOT IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
-"""
-
-query_that_results_in_table_of_person_IDs_of_patients_who_do_not_have_Opioids_with_equal_number = """
-SELECT person_id
-FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse + """)
-ORDER BY RAND()
-LIMIT 2631
-"""
-
-query_that_results_in_table_of_person_IDs_in_undersample = """
-SELECT person_id
-FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
-UNION ALL
-(""" + query_that_results_in_table_of_person_IDs_of_patients_who_do_not_have_Opioids_with_equal_number + """)
-"""
-
-query_that_results_in_slice_of_feature_matrix_for_undersample = """
-SELECT *
-FROM (""" + query_that_results_in_feature_matrix + """)
-WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs_in_undersample + """)
-"""
 
 if __name__ == "__main__":
+
+    start_time = time.time()
     feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
+    print(calculate_time_interval_between_now_and_start_time(start_time))
+
     IntegerArray_of_distinct_person_IDs_in_feature_matrix = pd.unique(feature_matrix["person_id"])
     number_of_distinct_person_IDs_in_feature_matrix = len(IntegerArray_of_distinct_person_IDs_in_feature_matrix)
     print("Number of distinct person IDs of:")
