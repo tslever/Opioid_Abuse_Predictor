@@ -4036,19 +4036,6 @@ SELECT
     MAX(has_Pain) as has_Pain,
     MAX(has_Rhinitis) as has_Rhinitis,
     MAX(has_Non_Opioid_Substance_Abuse) as Non_Opioid_Substance_Abuse,
-    MAX(has_been_exposed_to_ibuprofen) as has_been_exposed_to_ibuprofen,
-    MAX(has_been_exposed_to_buprenorphine) as has_been_exposed_to_buprenorphine,
-    MAX(has_been_exposed_to_fentanyl) as has_been_exposed_to_fentanyl,
-    MAX(has_been_exposed_to_morphine) as has_been_exposed_to_morphine,
-    MAX(has_been_exposed_to_oxycodone) as has_been_exposed_to_oxycodone,
-    MAX(has_been_exposed_to_hydromorphone) as has_been_exposed_to_hydromorphone,
-    MAX(has_been_exposed_to_aspirin) as has_been_exposed_to_aspirin,
-    MAX(has_been_exposed_to_codeine) as has_been_exposed_to_codeine,
-    MAX(has_been_exposed_to_tramadol) as has_been_exposed_to_tramadol,
-    MAX(has_been_exposed_to_nalbuphine) as has_been_exposed_to_nalbuphine,
-    MAX(has_been_exposed_to_mepiridine) as has_been_exposed_to_mepiridine,
-    MAX(has_been_exposed_to_naltrexone) as has_been_exposed_to_naltrexone,
-    MAX(has_been_exposed_to_acetaminophen) as has_been_exposed_to_acetaminophen,
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
@@ -4073,6 +4060,19 @@ ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators
 GROUP BY table_of_visit_occurrences.visit_occurrence_id
 """
 """
+    MAX(has_been_exposed_to_ibuprofen) as has_been_exposed_to_ibuprofen,
+    MAX(has_been_exposed_to_buprenorphine) as has_been_exposed_to_buprenorphine,
+    MAX(has_been_exposed_to_fentanyl) as has_been_exposed_to_fentanyl,
+    MAX(has_been_exposed_to_morphine) as has_been_exposed_to_morphine,
+    MAX(has_been_exposed_to_oxycodone) as has_been_exposed_to_oxycodone,
+    MAX(has_been_exposed_to_hydromorphone) as has_been_exposed_to_hydromorphone,
+    MAX(has_been_exposed_to_aspirin) as has_been_exposed_to_aspirin,
+    MAX(has_been_exposed_to_codeine) as has_been_exposed_to_codeine,
+    MAX(has_been_exposed_to_tramadol) as has_been_exposed_to_tramadol,
+    MAX(has_been_exposed_to_nalbuphine) as has_been_exposed_to_nalbuphine,
+    MAX(has_been_exposed_to_mepiridine) as has_been_exposed_to_mepiridine,
+    MAX(has_been_exposed_to_naltrexone) as has_been_exposed_to_naltrexone,
+    MAX(has_been_exposed_to_acetaminophen) as has_been_exposed_to_acetaminophen,
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
