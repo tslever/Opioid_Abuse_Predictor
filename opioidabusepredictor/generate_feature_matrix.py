@@ -1743,6 +1743,50 @@ ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators
 GROUP BY table_of_visit_occurrences.visit_occurrence_id
 """
 
+query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_feature_matrix + """)
+WHERE has_Opioid_abuse = 1
+"""
+
+query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = """
+SELECT COUNT(person_id)
+FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
+"""
+
+query_that_results_in_table_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_feature_matrix + """)
+WHERE person_id NOT IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
+"""
+
+query_that_results_in_table_of_person_IDs_of_patients_who_do_not_have_Opioids_with_equal_number = """
+SELECT person_id
+FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse + """)
+ORDER BY RAND()
+LIMIT 2631
+"""
+
+"""
+LIMIT (""" + query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
+"""
+
+query_that_results_in_table_of_person_IDs_in_undersample = """
+SELECT person_id
+FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
+UNION ALL
+(""" + query_that_results_in_table_of_person_IDs_of_patients_who_do_not_have_Opioids_with_equal_number + """)
+"""
+
+query_that_results_in_slice_of_feature_matrix_for_undersample = """
+SELECT *
+FROM (""" + query_that_results_in_feature_matrix + """)
+WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs_in_undersample + """)
+"""
+
+
 if __name__ == "__main__":
-    feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
-    print(feature_matrix)
+    print(get_data_frame(query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse))
+    slice_of_feature_matrix = get_data_frame(query_that_results_in_slice_of_feature_matrix_for_undersample)
+    print(slice_of_feature_matrix_for_undersample)
+    slice_of_feature_matrix_for_undersample.to_csv("Slice_Of_Feature_Matrix.csv")
