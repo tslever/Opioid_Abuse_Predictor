@@ -4065,22 +4065,6 @@ SELECT
     MAX(person_id) as person_id,
     table_of_visit_occurrences.visit_occurrence_id,
     MAX(visit_start_datetime) as visit_start_datetime,
-    MAX(has_been_exposed_to_ibuprofen) as has_been_exposed_to_ibuprofen,  
-FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
-GROUP BY table_of_visit_occurrences.visit_occurrence_id
-"""
-
-query_that_results_in_feature_matrix = """
-SELECT *
-FROM (""" + query_that_results_in_condition_feature_matrix + """) condition_feature_matrix
-LEFT JOIN(""" + query_that_results_in_drug_feature_matrix + """) drug_feature_matrix
-ON
-condition_feature_matrix.visit_occurrence_id = drug_feature_matrix.visit_occurrence_id
-"""
-
-"""
     MAX(has_been_exposed_to_ibuprofen) as has_been_exposed_to_ibuprofen,
     MAX(has_been_exposed_to_buprenorphine) as has_been_exposed_to_buprenorphine,
     MAX(has_been_exposed_to_fentanyl) as has_been_exposed_to_fentanyl,
@@ -4094,6 +4078,8 @@ condition_feature_matrix.visit_occurrence_id = drug_feature_matrix.visit_occurre
     MAX(has_been_exposed_to_mepiridine) as has_been_exposed_to_mepiridine,
     MAX(has_been_exposed_to_naltrexone) as has_been_exposed_to_naltrexone,
     MAX(has_been_exposed_to_acetaminophen) as has_been_exposed_to_acetaminophen,
+    
+FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
@@ -4121,6 +4107,14 @@ ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
 GROUP BY table_of_visit_occurrences.visit_occurrence_id
+"""
+
+query_that_results_in_feature_matrix = """
+SELECT *
+FROM (""" + query_that_results_in_condition_feature_matrix + """) condition_feature_matrix
+LEFT JOIN(""" + query_that_results_in_drug_feature_matrix + """) drug_feature_matrix
+ON
+condition_feature_matrix.visit_occurrence_id = drug_feature_matrix.visit_occurrence_id
 """
 
 query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = """
