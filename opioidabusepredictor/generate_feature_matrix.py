@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import pandas as pd
 
@@ -1750,7 +1751,7 @@ WHERE has_Opioid_abuse = 1
 """
 
 query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = """
-SELECT COUNT(person_id)
+SELECT COUNT(person_id) as number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse
 FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
 """
 
@@ -1765,10 +1766,6 @@ SELECT person_id
 FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse + """)
 ORDER BY RAND()
 LIMIT 2631
-"""
-
-"""
-LIMIT (""" + query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse + """)
 """
 
 query_that_results_in_table_of_person_IDs_in_undersample = """
@@ -1786,7 +1783,23 @@ WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs_in_undersamp
 
 
 if __name__ == "__main__":
-    print(get_data_frame(query_that_results_in_number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse))
-    slice_of_feature_matrix = get_data_frame(query_that_results_in_slice_of_feature_matrix_for_undersample)
-    print(slice_of_feature_matrix_for_undersample)
-    slice_of_feature_matrix_for_undersample.to_csv("Slice_Of_Feature_Matrix.csv")
+    feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
+    IntegerArray_of_distinct_person_IDs_in_feature_matrix = pd.unique(feature_matrix["person_id"])
+    number_of_distinct_person_IDs_in_feature_matrix = len(IntegerArray_of_distinct_person_IDs_in_feature_matrix)
+    slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix[feature_matrix["has_Opioid_abuse"] == 1]
+    IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])
+    number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = len(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)
+    slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse = feature_matrix[~feature_matrix["person_id"].isin(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)]
+    IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse["person_id"])
+    number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = len(IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse)
+    array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = np.array(IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse)
+    shuffled_array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = np.array(array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse)
+    np.random.shuffle(array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse)
+    array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_with_equal_number = shuffled_array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse[:number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse]
+    number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_with_equal_number = len(array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_with_equal_number)
+    array_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = np.array(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)
+    array_of_distinct_person_IDs = np.concatenate([array_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse, array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_with_equal_number])
+    number_of_distinct_person_IDs = len(array_of_distinct_person_IDs)
+    slice_of_feature_matrix = feature_matrix[feature_matrix["person_id"].isin(array_of_distinct_person_IDs)]
+    print(slice_of_feature_matrix)
+    slice_of_feature_matrix.to_csv("Slice_Of_Feature_Matrix.csv")
