@@ -4044,34 +4044,1534 @@ query_that_results_in_positive_indicators_of_acetaminophen = """
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
 GROUP BY d_exposure.visit_occurrence_id"""
 
+# P0
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography = """
+    SELECT
+       procedure.visit_occurrence_id,
+       1 AS had_mammography,
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    4324693
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+
+# P1
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_knee_procedure = """
+    SELECT
+         procedure.visit_occurrence_id,
+         1 AS had_knee_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    2617368, 4030239, 4042660, 4043028, 40482787, 40482788, 4078547, 4079526, 4106050, 4106397, 4147773, 4195136, 4197548, 4205229, 4241716, 4263550, 4268018, 4268896, 4298098, 4311039, 4343454, 4343455, 4343907, 43531648
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+
+# P2
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_tooth_procedure = """
+    SELECT
+     procedure.visit_occurrence_id,
+     1 AS had_tooth_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    40217364, 4040556, 40487004, 4050720, 4101094, 4120794, 4120795, 4123251, 4142228, 4208393, 4276519, 4287086
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+
+
+# P3
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_hip_procedure = """
+    SELECT
+        procedure.visit_occurrence_id,
+        1 AS had_hip_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    4010119, 4041270, 4042331, 4102292, 4134857, 4162099, 4165513, 4203771, 4266062, 4297365, 4327115
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+# P4
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_vascular_procedure = """
+    SELECT
+       procedure.visit_occurrence_id,
+       1 AS had_vascular_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    4020466, 4045839, 4050410, 4148948, 4159959, 4160912, 4181966, 4214091, 4284104, 4295278
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+
+# P5
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_brain_procedure = """
+    SELECT
+        procedure.visit_occurrence_id,
+        1 AS had_brain_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    4043201, 4045859, 4046832, 4120973, 4146487, 4175191, 4213313, 4214763, 42537289, 4323283, 44784260
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+# P6
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_heart_procedure = """
+    SELECT
+         procedure.visit_occurrence_id,
+         1 AS had_heart_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    4000889, 4000891, 4002405, 4012932, 4042673, 4042674, 4044369, 4046698, 4057804, 4094240, 4105593, 4137127, 4144921, 4145119, 4146733, 4148131, 4195852, 4197660, 4203779, 4223020, 4223626, 4225473, 4238716, 4249161, 4251776, 4275142, 4275564, 4284104, 42872715, 4312194, 4315396
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+# P7
+query_that_results_in_a_dataset_of_positive_indicators_of_procedural_ED_visits = """
+    SELECT
+        procedure.visit_occurrence_id,
+        1 AS had_ED_visits
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_source_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    2514433, 2514434, 2514435, 2514436, 2514437
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 0 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
+# P8
+query_that_results_in_a_dataset_of_positive_indicators_of_having_a_head_or_neck_procedure = """
+    SELECT
+        procedure.visit_occurrence_id,
+        1 AS had_head_or_neck_procedure
+    FROM
+        ( SELECT
+            * 
+        FROM
+            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+        WHERE
+            (
+                procedure_concept_id IN  (
+                    SELECT
+                        DISTINCT c.concept_id 
+                    FROM
+                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                    JOIN
+                        (
+                            select
+                                cast(cr.id as string) as id 
+                            FROM
+                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                            WHERE
+                                concept_id IN (
+                                    4003728, 4027414, 4040721, 4043175, 4119836, 4160266, 4161058, 4233388
+                                ) 
+                                AND full_text LIKE '%_rank1]%'
+                        ) a 
+                            ON (
+                                c.path LIKE CONCAT('%.',
+                            a.id,
+                            '.%') 
+                            OR c.path LIKE CONCAT('%.',
+                            a.id) 
+                            OR c.path LIKE CONCAT(a.id,
+                            '.%') 
+                            OR c.path = a.id) 
+                        WHERE
+                            is_standard = 1 
+                            AND is_selectable = 1
+                        )
+                )  
+                AND (
+                    procedure.PERSON_ID IN (
+                        SELECT
+                            distinct person_id  
+                        FROM
+                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_person` cb_search_person  
+                        WHERE
+                            cb_search_person.person_id IN (
+                                SELECT
+                                    criteria.person_id 
+                                FROM
+                                    (SELECT
+                                        DISTINCT person_id,
+                                        entry_date,
+                                        concept_id 
+                                    FROM
+                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                    WHERE
+                                        (
+                                            concept_id IN (
+                                                SELECT
+                                                    DISTINCT ca.descendant_id 
+                                                FROM
+                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+                                                JOIN
+                                                    (
+                                                        select
+                                                            distinct c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (21604254) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) b 
+                                                                ON (
+                                                                    ca.ancestor_id = b.concept_id
+                                                                )
+                                                        ) 
+                                                        AND is_standard = 1
+                                                    )
+                                            ) criteria 
+                                        ) 
+                                        AND cb_search_person.person_id NOT IN (
+                                            SELECT
+                                                criteria.person_id 
+                                        FROM
+                                            (SELECT
+                                                DISTINCT person_id,
+                                                entry_date,
+                                                concept_id 
+                                            FROM
+                                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_search_all_events` 
+                                            WHERE
+                                                (
+                                                    concept_id IN (
+                                                        SELECT
+                                                            DISTINCT c.concept_id 
+                                                        FROM
+                                                            `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                                                        JOIN
+                                                            (
+                                                                select
+                                                                    cast(cr.id as string) as id 
+                                                                FROM
+                                                                    `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                                                                WHERE
+                                                                    concept_id IN (40493428, 252840, 4092524, 4178964, 76349, 4177243, 4313083, 4241905, 46273652, 196925, 4180791, 436045, 200962, 4091466, 4162860, 4294416, 4092212, 444411, 4154630, 442139, 4309225, 4298032, 40650479, 197807, 4091465, 40490994, 4216273, 133424, 4247726, 4247822, 4181483, 4162994, 4309851, 436671, 4180780, 4300555, 4160780, 4180910, 4247238, 4155297, 4178971, 443568, 75210, 442183, 40492021, 78987, 443388, 195483, 4155285, 4181488, 25189, 4180902, 36676291, 376918, 4297666, 4157332, 40488919, 380661, 256633, 133711, 200348, 4174593, 433143, 4178977, 4178959, 443387, 40480128, 432263, 4312698, 4315805, 4112853, 4297185, 4181333, 442181, 46270738, 4178974, 4246450, 442131, 443391, 444410, 137809, 4181330, 4313916, 40487047, 192581, 4314047, 4092217, 4181351, 37397344, 4112745, 257503, 438693, 139750, 4181338, 198091, 436357, 196359, 432257, 4246451, 258375, 200052, 40488964, 256646, 436353, 438094, 4312023, 31509, 201238, 37310458, 4095312, 138996, 4162253, 378087, 435484, 374874, 36684472, 4314071, 4312288, 261514, 4181332, 44806773, 196360, 4188544, 4298026, 443392, 4295624, 432845, 45769720, 197507, 4233629, 4241917, 199754, 4160276, 440649, 443588, 4089655, 4092511, 439751, 432837, 4095740, 197808, 4162251, 200051, 4310566, 4187850, 26052, 4187849, 4311637, 4246017, 440658, 4247719, 4312685, 4241904, 4181480, 4311342, 4116084, 4111921, 36683531, 441805, 4298028, 437498, 4054503, 4298033, 192568, 4246127, 4312022, 4081044, 197500, 373425, 4338758, 443398, 376647, 4308621, 198988, 40491001, 40492037, 40490993, 4180793, 4181484, 4247338, 4297665, 441515, 74582, 442132, 261236, 4188545, 4180790, 4247331, 133726, 433716, 258369, 136917, 440345, 200959, 320342, 434298, 4334322, 4181350, 40492932, 4178968, 198700, 380055, 440956, 4111776, 4311619, 4247836, 4155171, 432833, 4111805, 433435, 201519, 438386, 4178976, 192855, 4157457, 75512, 4311617, 4157456, 24897, 45770892, 4187848, 80045, 4116241, 45768522, 4311499, 72266, 255507, 193144, 30346, 4315806, 443561, 28083, 4001666, 4089665, 4089756, 439404, 435755, 42536893, 4312944, 443390, 40493020, 4187851, 441233, 4248061, 4247357, 4157454, 4313482, 438699, 318096, 4112974, 432254, 4158563, 4091464, 436635, 198985, 40482750, 254591, 4181343, 197804, 4151250, 40487143, 443386, 46270513, 4157449, 4181354, 4181339, 133147, 443389, 4092382, 45757101, 4313634, 4307263, 4092512, 194589, 253717, 136354, 764225, 195513, 4153882, 4157331, 4214901, 4181477) 
+                                                                    AND full_text LIKE '%_rank1]%'
+                                                            ) a 
+                                                                ON (
+                                                                    c.path LIKE CONCAT('%.',
+                                                                a.id,
+                                                                '.%') 
+                                                                OR c.path LIKE CONCAT('%.',
+                                                                a.id) 
+                                                                OR c.path LIKE CONCAT(a.id,
+                                                                '.%') 
+                                                                OR c.path = a.id) 
+                                                            WHERE
+                                                                is_standard = 1 
+                                                                AND is_selectable = 1
+                                                            ) 
+                                                            AND is_standard = 1 
+                                                    )
+                                                ) criteria 
+                                            ) ))
+                                ) procedure 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
+                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
+                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
+                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
+                                    ON v.visit_concept_id = p_visit.concept_id 
+                            LEFT JOIN
+                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
+                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+GROUP BY procedure.visit_occurrence_id"""
+
 query_that_results_in_feature_matrix = """
-SELECT
-    person_id,
-    table_of_visit_occurrences.visit_occurrence_id,
-    visit_start_datetime,
-    has_Opioid_abuse,
-    is_exposed_to_Opioids,
-    has_Anxiety,
-    has_Bipolar_disorder,
-    has_Depression,
-    has_Hypertension,
-    has_Opioid_dependence,
-    has_Pain,
-    has_Rhinitis,
-    has_Non_Opioid_Substance_Abuse,
-    has_been_exposed_to_ibuprofen,
-    has_been_exposed_to_buprenorphine,
-    has_been_exposed_to_fentanyl,
-    has_been_exposed_to_morphine,
-    has_been_exposed_to_oxycodone,
-    has_been_exposed_to_hydromorphone,
-    has_been_exposed_to_aspirin,
-    has_been_exposed_to_codeine,
-    has_been_exposed_to_tramadol,
-    has_been_exposed_to_nalbuphine,
-    has_been_exposed_to_mepiridine,
-    has_been_exposed_to_naltrexone,
-    has_been_exposed_to_acetaminophen
+SELECT *
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
@@ -4119,6 +5619,24 @@ LEFT JOIN(""" + query_that_results_in_positive_indicators_of_naltrexone + """) t
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography + """) table_of_positive_indicators_of_mammography
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mammography.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_knee_procedure + """) table_of_positive_indicators_of_knee_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_knee_procedure.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_tooth_procedure + """) table_of_positive_indicators_of_tooth_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_tooth_procedure.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_hip_procedure + """) table_of_positive_indicators_of_hip_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_hip_procedure.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_vascular_procedure + """) table_of_positive_indicators_of_vascular_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_vascular_procedure.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_brain_procedure + """) table_of_positive_indicators_of_brain_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_brain_procedure.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_heart_procedure + """) table_of_positive_indicators_of_heart_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_heart_procedure.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_procedural_ED_visits + """) table_of_positive_indicators_of_ED_visits
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ED_visits.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_head_or_neck_procedure + """) table_of_positive_indicators_of_head_or_neck_procedure
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_head_or_neck_procedure.visit_occurrence_id
 """
 
 def calculate_time_interval_between_now_and_start_time(start_time):
