@@ -121,20 +121,7 @@ FROM (
             )
         )  
         AND c_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
-    ) c_occurrence 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept 
-ON c_occurrence.condition_concept_id = c_standard_concept.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_type 
-ON c_occurrence.condition_type_concept_id = c_type.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-ON c_occurrence.visit_occurrence_id = v.visit_occurrence_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` visit 
-ON v.visit_concept_id = visit.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_source_concept 
-ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-ON c_occurrence.condition_status_concept_id = c_status.concept_id
-GROUP BY c_occurrence.visit_occurrence_id
+    ) c_occurrence
     """
     return query_that_results_in_table_of_positive_indicators
 
@@ -148,7 +135,7 @@ def generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of
     query_that_results_in_table_of_positive_indicators = """
 SELECT
     d_exposure.visit_occurrence_id,
-    1 AS is_exposed_to_Opioids
+    1 AS """ + name_of_column + """
 FROM (
     SELECT * 
     FROM `""" + os.environ["WORKSPACE_CDR"] + """.drug_exposure` d_exposure 
@@ -163,7 +150,7 @@ FROM (
                     select cast(cr.id as string) as id 
                     FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
                     WHERE
-                        concept_id IN (1123896, 21600593, 21604200, 21604254, 21604291, 21604296, 21604825) 
+                        concept_id IN """ + tuple_of_concept_IDs + """
                         AND full_text LIKE '%_rank1]%'
                 ) a 
                 ON (
@@ -181,20 +168,7 @@ FROM (
             )
         )  
         AND d_exposure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
-) d_exposure 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept 
-ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_type 
-ON d_exposure.drug_type_concept_id = d_type.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_route 
-ON d_exposure.route_concept_id = d_route.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-ON d_exposure.visit_occurrence_id = v.visit_occurrence_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_visit 
-ON v.visit_concept_id = d_visit.concept_id 
-LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id
+) d_exposure
     """
     return(query_that_results_in_table_of_positive_indicators)
 
