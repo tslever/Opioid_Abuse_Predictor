@@ -486,6 +486,9 @@ LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Rhinitis 
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Rhinitis.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse + """) table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Non_Opioid_Substance_Abuse.visit_occurrence_id
+"""
+
+"""
 LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
