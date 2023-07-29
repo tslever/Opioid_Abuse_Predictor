@@ -512,23 +512,23 @@ LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_naltrexone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography + """) table_of_positive_indicators_of_mammography
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Mammography + """) table_of_positive_indicators_of_mammography
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mammography.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_knee_procedure + """) table_of_positive_indicators_of_knee_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Knee_procedure + """) table_of_positive_indicators_of_knee_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_knee_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_tooth_procedure + """) table_of_positive_indicators_of_tooth_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Tooth_procedure + """) table_of_positive_indicators_of_tooth_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_tooth_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_hip_procedure + """) table_of_positive_indicators_of_hip_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Hip_procedure + """) table_of_positive_indicators_of_hip_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_hip_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_vascular_procedure + """) table_of_positive_indicators_of_vascular_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Vascular_procedure + """) table_of_positive_indicators_of_vascular_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_vascular_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_brain_procedure + """) table_of_positive_indicators_of_brain_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Brain_procedure + """) table_of_positive_indicators_of_brain_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_brain_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_heart_procedure + """) table_of_positive_indicators_of_heart_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Heart_procedure + """) table_of_positive_indicators_of_heart_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_heart_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_procedural_ED_visits + """) table_of_positive_indicators_of_ED_visits
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_procedural_ED_visits + """) table_of_positive_indicators_of_ED_visits
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ED_visits.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_head_or_neck_procedure + """) table_of_positive_indicators_of_head_or_neck_procedure
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure + """) table_of_positive_indicators_of_head_or_neck_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_head_or_neck_procedure.visit_occurrence_id
 """
 
