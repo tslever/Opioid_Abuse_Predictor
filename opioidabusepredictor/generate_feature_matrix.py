@@ -546,6 +546,7 @@ LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_procedura
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ED_visits.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure + """) table_of_positive_indicators_of_head_or_neck_procedure
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_head_or_neck_procedure.visit_occurrence_id
+
 """
 
 def calculate_time_interval_between_now_and_start_time(start_time):
@@ -569,6 +570,30 @@ if __name__ == "__main__":
     table_of_positive_indicators_of_Rhinitis = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Rhinitis)
     table_of_positive_indicators_of_Non_Opioid_Substance_Abuse = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse)
 
+    table_of_positive_indicators_of_ibuprofen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_ibuprofen)
+    table_of_positive_indicators_of_buprenorphine = get_data_frame(table_of_positive_indicators_of_buprenorphine)
+    table_of_positive_indicators_of_fentanyl = get_data_frame(table_of_positive_indicators_of_fentanyl)
+    table_of_positive_indicators_of_morphine = get_data_frame(table_of_positive_indicators_of_morphine)
+    table_of_positive_indicators_of_oxycodone = get_data_frame(table_of_positive_indicators_of_oxycodone)
+    table_of_positive_indicators_of_hydromorphone = get_data_frame(table_of_positive_indicators_of_hydromorphone)
+    table_of_positive_indicators_of_aspirin = get_data_frame(table_of_positive_indicators_of_aspirin)
+    table_of_positive_indicators_of_codeine = get_data_frame(table_of_positive_indicators_of_codeine)
+    table_of_positive_indicators_of_tramadol = get_data_frame(table_of_positive_indicators_of_tramadol)
+    table_of_positive_indicators_of_nalbuphine = get_data_frame(table_of_positive_indicators_of_nalbuphine)
+    table_of_positive_indicators_of_mepiridine = get_data_frame(table_of_positive_indicators_of_mepiridine)
+    table_of_positive_indicators_of_naltrexone = get_data_frame(table_of_positive_indicators_of_naltrexone)
+    table_of_positive_indicators_of_acetaminophen = get_data_frame(table_of_positive_indicators_of_acetaminophen)
+
+    table_of_positive_indicators_of_mammography = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Mammography)
+    table_of_positive_indicators_of_knee_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Knee_procedure)
+    table_of_positive_indicators_of_tooth_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Tooth_procedure)
+    table_of_positive_indicators_of_hip_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Hip_procedure)
+    table_of_positive_indicators_of_vascular_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Vascular_procedure)
+    table_of_positive_indicators_of_brain_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Brain_procedure)
+    table_of_positive_indicators_of_heart_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Heart_procedure)
+    table_of_positive_indicators_of_ED_visits = get_data_frame(query_that_results_in_table_of_positive_indicators_of_procedural_ED_visits)
+    table_of_positive_indicators_of_head_or_neck_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure)
+
     feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Anxiety, how='left')
     feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Bipolar_disorder, how='left')
     feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Depression, how='left')
@@ -577,6 +602,31 @@ if __name__ == "__main__":
     feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Pain, how='left')
     feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Rhinitis, how='left')
     feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Non_Opioid_Substance_Abuse, how='left')
+
+
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_ibuprofen, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_buprenorphine, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_fentanyl, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_morphine, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_oxycodone, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_hydromorphone, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_aspirin, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_codeine, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_tramadol, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_nalbuphine, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_mepiridine, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_naltrexone, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_acetaminophen, how='left')
+
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_mammography, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_knee_procedure, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_tooth_procedure, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_hip_procedure, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_vascular_procedure, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_brain_procedure, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_heart_procedure, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_ED_visits, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_head_or_neck_procedure, how='left')
 
     print(feature_matrix)
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
