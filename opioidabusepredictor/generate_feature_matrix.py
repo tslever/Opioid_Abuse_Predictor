@@ -559,10 +559,32 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 if __name__ == "__main__":
 
     feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
+
+    table_of_positive_indicators_of_Anxiety = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Anxiety)
+    table_of_positive_indicators_of_Bipolar_disorder = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder)
+    table_of_positive_indicators_of_Depression = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Depression)
+    table_of_positive_indicators_of_Hypertension = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Hypertension)
+    table_of_positive_indicators_of_Opioid_dependence = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Opioid_dependence)
+    table_of_positive_indicators_of_Pain = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Pain)
+    table_of_positive_indicators_of_Rhinitis = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Rhinitis)
+    table_of_positive_indicators_of_Non_Opioid_Substance_Abuse = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse)
+
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Anxiety, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Bipolar_disorder, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Depression, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Hypertension, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Opioid_dependence, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Pain, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Rhinitis, how='left')
+    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Non_Opioid_Substance_Abuse, how='left')
+
     print(feature_matrix)
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
     print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
 
+
+
+    """
     data_frame_of_positive_indicators_of_Anxiety = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Anxiety)
     print(data_frame_of_positive_indicators_of_Anxiety)
     number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Anxiety = len(pd.unique(data_frame_of_positive_indicators_of_Anxiety["condition_occurrence_person_id"]))
@@ -577,3 +599,4 @@ if __name__ == "__main__":
     print(data_frame_of_positive_indicators_of_Mammography)
     number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Mammography = len(pd.unique(data_frame_of_positive_indicators_of_Mammography["procedure_person_id"]))
     print("Number of distinct patient IDs in data frame of positive indicators of Mammography: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Mammography))
+    """
