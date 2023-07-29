@@ -1035,31 +1035,31 @@ LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Rhinitis 
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Rhinitis.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse + """) table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Non_Opioid_Substance_Abuse.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_buprenorphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_fentanyl + """) table_of_positive_indicators_of_fentanyl
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_fentanyl + """) table_of_positive_indicators_of_fentanyl
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_fentanyl.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_morphine + """) table_of_positive_indicators_of_morphine
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_morphine + """) table_of_positive_indicators_of_morphine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_morphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_oxycodone + """) table_of_positive_indicators_of_oxycodone
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_oxycodone + """) table_of_positive_indicators_of_oxycodone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_oxycodone.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_hydromorphone + """) table_of_positive_indicators_of_hydromorphone
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_hydromorphone + """) table_of_positive_indicators_of_hydromorphone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_hydromorphone.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_aspirin + """) table_of_positive_indicators_of_aspirin
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_aspirin + """) table_of_positive_indicators_of_aspirin
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_aspirin.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_codeine + """) table_of_positive_indicators_of_codeine
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_codeine + """) table_of_positive_indicators_of_codeine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_codeine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_tramadol + """) table_of_positive_indicators_of_tramadol
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_tramadol + """) table_of_positive_indicators_of_tramadol
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_tramadol.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_nalbuphine + """) table_of_positive_indicators_of_nalbuphine
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_nalbuphine + """) table_of_positive_indicators_of_nalbuphine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_nalbuphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_meperidine + """) table_of_positive_indicators_of_mepiridine
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_meperidine + """) table_of_positive_indicators_of_mepiridine
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mepiridine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_naltrexone + """) table_of_positive_indicators_of_naltrexone
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_naltrexone + """) table_of_positive_indicators_of_naltrexone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
+LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography + """) table_of_positive_indicators_of_mammography
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mammography.visit_occurrence_id
