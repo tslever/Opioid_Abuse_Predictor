@@ -525,6 +525,7 @@ LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_naltrexone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
+
 """
 
 """
@@ -571,18 +572,18 @@ if __name__ == "__main__":
     table_of_positive_indicators_of_Non_Opioid_Substance_Abuse = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse)
 
     table_of_positive_indicators_of_ibuprofen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_ibuprofen)
-    table_of_positive_indicators_of_buprenorphine = get_data_frame(table_of_positive_indicators_of_buprenorphine)
-    table_of_positive_indicators_of_fentanyl = get_data_frame(table_of_positive_indicators_of_fentanyl)
-    table_of_positive_indicators_of_morphine = get_data_frame(table_of_positive_indicators_of_morphine)
-    table_of_positive_indicators_of_oxycodone = get_data_frame(table_of_positive_indicators_of_oxycodone)
-    table_of_positive_indicators_of_hydromorphone = get_data_frame(table_of_positive_indicators_of_hydromorphone)
-    table_of_positive_indicators_of_aspirin = get_data_frame(table_of_positive_indicators_of_aspirin)
-    table_of_positive_indicators_of_codeine = get_data_frame(table_of_positive_indicators_of_codeine)
-    table_of_positive_indicators_of_tramadol = get_data_frame(table_of_positive_indicators_of_tramadol)
-    table_of_positive_indicators_of_nalbuphine = get_data_frame(table_of_positive_indicators_of_nalbuphine)
-    table_of_positive_indicators_of_mepiridine = get_data_frame(table_of_positive_indicators_of_mepiridine)
-    table_of_positive_indicators_of_naltrexone = get_data_frame(table_of_positive_indicators_of_naltrexone)
-    table_of_positive_indicators_of_acetaminophen = get_data_frame(table_of_positive_indicators_of_acetaminophen)
+    table_of_positive_indicators_of_buprenorphine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_buprenorphine)
+    table_of_positive_indicators_of_fentanyl = get_data_frame(query_that_results_in_table_of_positive_indicators_of_fentanyl)
+    table_of_positive_indicators_of_morphine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_morphine)
+    table_of_positive_indicators_of_oxycodone = get_data_frame(query_that_results_in_table_of_positive_indicators_of_oxycodone)
+    table_of_positive_indicators_of_hydromorphone = get_data_frame(query_that_results_in_table_of_positive_indicators_of_hydromorphone)
+    table_of_positive_indicators_of_aspirin = get_data_frame(query_that_results_in_table_of_positive_indicators_of_aspirin)
+    table_of_positive_indicators_of_codeine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_codeine)
+    table_of_positive_indicators_of_tramadol = get_data_frame(query_that_results_in_table_of_positive_indicators_of_tramadol)
+    table_of_positive_indicators_of_nalbuphine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_nalbuphine)
+    table_of_positive_indicators_of_mepiridine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_meperidine)
+    table_of_positive_indicators_of_naltrexone = get_data_frame(query_that_results_in_table_of_positive_indicators_of_naltrexone)
+    table_of_positive_indicators_of_acetaminophen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_acetaminophen)
 
     table_of_positive_indicators_of_mammography = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Mammography)
     table_of_positive_indicators_of_knee_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Knee_procedure)
