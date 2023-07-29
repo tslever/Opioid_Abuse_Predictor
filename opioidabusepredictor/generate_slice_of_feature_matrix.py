@@ -90,50 +90,54 @@ FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence
 WHERE visit_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
 """
 
-def generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs):
+def generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs):
     query_that_results_in_table_of_positive_indicators = """
 SELECT
+    MAX(c_occurrence.person_id) as condition_occurrence_person_id,
     c_occurrence.visit_occurrence_id,
     1 AS """ + name_of_column + """
 FROM (
-    SELECT * 
-    FROM `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence 
+    SELECT *
+    FROM `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence
     WHERE (
         condition_concept_id IN (
-            SELECT DISTINCT c.concept_id 
-            FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+            SELECT DISTINCT c.concept_id
+            FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c
             JOIN (
-                select cast(cr.id as string) as id 
-                FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                select cast(cr.id as string) as id
+                FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr
                 WHERE
-                    concept_id IN """ + str(tuple_of_concept_IDs) + """
+                    concept_id IN (""" + ", ".join([str(concept_ID) for concept_ID in tuple_of_concept_IDs]) + """)
                     AND full_text LIKE '%_rank1]%'
             ) a
             ON (
-                c.path LIKE CONCAT('%.', a.id, '.%') 
-                OR c.path LIKE CONCAT('%.', a.id) 
-                OR c.path LIKE CONCAT(a.id, '.%') 
+                c.path LIKE CONCAT('%.', a.id, '.%')
+                OR c.path LIKE CONCAT('%.', a.id)
+                OR c.path LIKE CONCAT(a.id, '.%')
                 OR c.path = a.id
-            ) 
+            )
             WHERE
-                is_standard = 1 
+                is_standard = 1
                 AND is_selectable = 1
             )
-        )  
-        AND c_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
+        )
+        AND c_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs + """)
     ) c_occurrence
+GROUP BY c_occurrence.visit_occurrence_id
     """
     return query_that_results_in_table_of_positive_indicators
 
 # A0
 query_that_results_in_table_of_positive_indicators_of_Opioid_abuse = generate_query_that_results_in_table_of_positive_indicators_for_condition(
     name_of_column = "has_Opioid_abuse",
-    tuple_of_concept_IDs = (37016268, 4099935, 438130)
+    tuple_of_concept_IDs = (37016268, 4099935, 438130),
+    query_that_results_in_table_of_distinct_person_IDs = query_that_results_in_table_of_distinct_person_IDs_for_cohort
 )
 
-def generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs):
+def generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs):
     query_that_results_in_table_of_positive_indicators = """
 SELECT
+    MAX(d_exposure.person_id) as drug_exposure_person_id,
     d_exposure.visit_occurrence_id,
     1 AS """ + name_of_column + """
 FROM (
@@ -150,7 +154,7 @@ FROM (
                     select cast(cr.id as string) as id 
                     FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
                     WHERE
-                        concept_id IN """ + str(tuple_of_concept_IDs) + """
+                        concept_id IN (""" + ", ".join([str(concept_ID) for concept_ID in tuple_of_concept_IDs]) + """)
                         AND full_text LIKE '%_rank1]%'
                 ) a 
                 ON (
@@ -167,8 +171,9 @@ FROM (
                 ca.ancestor_id = b.concept_id
             )
         )  
-        AND d_exposure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
+        AND d_exposure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs + """)
 ) d_exposure
+GROUP BY d_exposure.visit_occurrence_id
     """
     return(query_that_results_in_table_of_positive_indicators)
 
@@ -176,7 +181,8 @@ FROM (
 # A1
 query_that_results_in_table_of_positive_indicators_of_Opioids = generate_query_that_results_in_table_of_positive_indicators_for_drug(
     name_of_column = "is_exposed_to_Opioids",
-    tuple_of_concept_IDs = (1123896, 21600593, 21604200, 21604254, 21604291, 21604296, 21604825)
+    tuple_of_concept_IDs = (1123896, 21600593, 21604200, 21604254, 21604291, 21604296, 21604825),
+    query_that_results_in_table_of_distinct_person_IDs = query_that_results_in_table_of_distinct_person_IDs_for_cohort
 )
 
 query_that_results_in_table_of_visit_occurrences_has_Opioid_abuse_and_is_exposed_to_Opioids = """
@@ -227,7 +233,7 @@ ORDER BY RAND()
 LIMIT 2448
 """
 
-query_that_results_in_table_of_person_IDs_for_undersample = """(""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse_and_are_exposed_to_Opioids + """)
+query_that_results_in_table_of_distinct_person_IDs_for_undersample = """(""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse_and_are_exposed_to_Opioids + """)
 UNION DISTINCT
 (""" + query_that_results_in_table_of_person_IDs_of_cohort_who_do_not_have_Opioid_abuse_and_are_exposed_to_Opioids_with_equal_number + """)
 """
@@ -235,13 +241,11 @@ UNION DISTINCT
 query_that_results_in_table_of_visit_occurrences_for_undersample = """
 SELECT *
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """)
-WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
+WHERE person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_undersample + """)
 """
 
 def generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(name_of_column, tuple_of_concept_IDs):
-    query_that_results_in_table_of_positive_indicators_for_condition_and_undersample = generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs)
-    query_that_results_in_table_of_positive_indicators_for_condition_and_undersample += "WHERE person_id IN (" + query_that_results_in_table_of_person_IDs_for_undersample + ")"
-    return query_that_results_in_table_of_positive_indicators_for_condition_and_undersample
+    return generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
 # C0
 query_that_results_in_table_of_positive_indicators_of_Anxiety = generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(
@@ -292,91 +296,90 @@ query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
 )
 
 def generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(name_of_column, tuple_of_concept_IDs):
-    query_that_results_in_table_of_positive_indicators_for_drug_and_undersample = generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs)
-    query_that_results_in_table_of_positive_indicators_for_drug_and_undersample += "WHERE person_id IN (" + query_that_results_in_table_of_person_IDs_for_undersample + ")"
-    return query_that_results_in_table_of_positive_indicators_for_drug_and_undersample
+    return generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
 # D0
 query_that_results_in_table_of_positive_indicators_of_ibuprofen = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_ibuprofen",
-    tuple_of_concept_IDs = (1177480)
+    tuple_of_concept_IDs = (1177480,)
 )
 
 #D1
 query_that_results_in_table_of_positive_indicators_of_buprenorphine = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_buprenorphine",
-    tuple_of_concept_IDs = (1133201)
+    tuple_of_concept_IDs = (1133201,)
 )
 
 #D2
 query_that_results_in_table_of_positive_indicators_of_fentanyl = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_fentanyl",
-    tuple_of_concept_IDs = (1154029)
+    tuple_of_concept_IDs = (1154029,)
 )
 
 #D3
 query_that_results_in_table_of_positive_indicators_of_morphine = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_morphine",
-    tuple_of_concept_IDs = (1110410)
+    tuple_of_concept_IDs = (1110410,)
 )
 
 #D4
 query_that_results_in_table_of_positive_indicators_of_oxycodone = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_oxycodone",
-    tuple_of_concept_IDs = (1124957)
+    tuple_of_concept_IDs = (1124957,)
 )
 
 #D5
 query_that_results_in_table_of_positive_indicators_of_hydromorphone = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_hydromorphone",
-    tuple_of_concept_IDs = (1126658)
+    tuple_of_concept_IDs = (1126658,)
 )
 
 #D6
 query_that_results_in_table_of_positive_indicators_of_aspirin = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_aspirin",
-    tuple_of_concept_IDs = (1112807)
+    tuple_of_concept_IDs = (1112807,)
 )
 
 #D7
 query_that_results_in_table_of_positive_indicators_of_codeine = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_codeine",
-    tuple_of_concept_IDs = (1201620)
+    tuple_of_concept_IDs = (1201620,)
 )
 
 #D8
 query_that_results_in_table_of_positive_indicators_of_tramadol = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_tramadol",
-    tuple_of_concept_IDs = (1103314)
+    tuple_of_concept_IDs = (1103314,)
 )
 
 #D9
 query_that_results_in_table_of_positive_indicators_of_nalbuphine = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_nalbuphine",
-    tuple_of_concept_IDs = (1114122)
+    tuple_of_concept_IDs = (1114122,)
 )
 
 #D10
 query_that_results_in_table_of_positive_indicators_of_meperidine = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_meperidine",
-    tuple_of_concept_IDs = (1102527)
+    tuple_of_concept_IDs = (1102527,)
 )
 
 #D11
 query_that_results_in_table_of_positive_indicators_of_naltrexone = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_naltrexone",
-    tuple_of_concept_IDs = (1714319)
+    tuple_of_concept_IDs = (1714319,)
 )
 
 #D12
 query_that_results_in_table_of_positive_indicators_of_acetaminophen = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_acetaminophen",
-    tuple_of_concept_IDs = (1125315)
+    tuple_of_concept_IDs = (1125315,)
 )
 
 def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
     query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
 SELECT
+    MAX(procedure.person_id) as procedure_person_id,
     procedure.visit_occurrence_id,
     1 AS """ + name_of_column + """
 FROM (
@@ -389,7 +392,7 @@ FROM (
             JOIN (
                 select cast(cr.id as string) as id 
                 FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                WHERE concept_id IN """ + str(tuple_of_concept_IDs) + """
+                WHERE concept_id IN (""" + ", ".join([str(concept_ID) for concept_ID in tuple_of_concept_IDs]) + """)
                 AND full_text LIKE '%_rank1]%'
             ) a 
             ON (
@@ -402,17 +405,16 @@ FROM (
                 is_standard = 1 
                 AND is_selectable = 1
         )
-        AND procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
+        AND procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_undersample + """)
 ) procedure
 GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
     """
     return query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample
 
 # P0
 query_that_results_in_table_of_positive_indicators_of_Mammography = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
     name_of_column = "had_Mammography",
-    tuple_of_concept_IDs = (4324693)
+    tuple_of_concept_IDs = (4324693,)
 )
 
 # P1
@@ -465,7 +467,7 @@ query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure = g
 
 query_that_results_in_feature_matrix = """
 SELECT
-    person_id,
+    table_of_visit_occurrences.person_id,
     table_of_visit_occurrences.visit_occurrence_id,
     visit_start_datetime,
     has_Opioid_abuse,
@@ -561,3 +563,17 @@ if __name__ == "__main__":
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
     print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
 
+    data_frame_of_positive_indicators_of_Anxiety = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Anxiety)
+    print(data_frame_of_positive_indicators_of_Anxiety)
+    number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Anxiety = len(pd.unique(data_frame_of_positive_indicators_of_Anxiety["condition_occurrence_person_id"]))
+    print("Number of distinct patient IDs in data frame of positive indicators of Anxiety: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Anxiety))
+
+    data_frame_of_positive_indicators_of_ibuprofen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_ibuprofen)
+    print(data_frame_of_positive_indicators_of_ibuprofen)
+    number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_ibuprofen = len(pd.unique(data_frame_of_positive_indicators_of_ibuprofen["drug_exposure_person_id"]))
+    print("Number of distinct patient IDs in data frame of positive indicators of ibuprofen: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_ibuprofen))
+
+    data_frame_of_positive_indicators_of_Mammography = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Mammography)
+    print(data_frame_of_positive_indicators_of_Mammography)
+    number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Mammography = len(pd.unique(data_frame_of_positive_indicators_of_Mammography["procedure_person_id"]))
+    print("Number of distinct patient IDs in data frame of positive indicators of Mammography: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Mammography))
