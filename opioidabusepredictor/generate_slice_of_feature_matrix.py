@@ -85,7 +85,7 @@ WHERE
 """
 
 query_that_results_in_table_of_visit_occurrences_for_cohort = """
-SELECT person_ID, visit_occurrence_id, visit_start_datetime
+SELECT person_id, visit_occurrence_id, visit_start_datetime
 FROM `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` visit_occurrence 
 WHERE visit_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
 """
@@ -232,7 +232,7 @@ UNION DISTINCT
 (""" + query_that_results_in_table_of_person_IDs_of_cohort_who_do_not_have_Opioid_abuse_and_are_exposed_to_Opioids_with_equal_number + """)
 """
 
-query_that_results_in_table_of_visit_occurrences_of_undersample = """
+query_that_results_in_table_of_visit_occurrences_for_undersample = """
 SELECT *
 FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """)
 WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
@@ -464,12 +464,20 @@ query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure = g
 )
 
 query_that_results_in_feature_matrix = """
-SELECT *
-FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
+SELECT
+    person_id,
+    table_of_visit_occurrences.visit_occurrence_id,
+    visit_start_datetime,
+    has_Opioid_abuse,
+    is_exposed_to_Opioids
+FROM (""" + query_that_results_in_table_of_visit_occurrences_for_undersample + """) table_of_visit_occurrences
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_positive_indicators_of_Opioid_abuse
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_abuse.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioids + """) table_of_positive_indicators_of_Opioids
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioids.visit_occurrence_id
+"""
+
+"""
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Anxiety + """) table_of_positive_indicators_of_Anxiety
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Anxiety.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder + """) table_of_positive_indicators_of_Bipolar_disorder
@@ -515,6 +523,9 @@ LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_naltrexone
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
 LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
+"""
+
+"""
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Mammography + """) table_of_positive_indicators_of_mammography
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mammography.visit_occurrence_id
 LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Knee_procedure + """) table_of_positive_indicators_of_knee_procedure
@@ -545,52 +556,8 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 
 if __name__ == "__main__":
 
-    start_time = time.time()
     feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
-    print(calculate_time_interval_between_now_and_start_time(start_time))
+    print(feature_matrix)
+    number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
+    print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
 
-    IntegerArray_of_distinct_person_IDs_in_feature_matrix = pd.unique(feature_matrix["person_id"])
-    number_of_distinct_person_IDs_in_feature_matrix = len(IntegerArray_of_distinct_person_IDs_in_feature_matrix)
-    print("Number of distinct person IDs of:")
-    print("1) Feature matrix: " + str(number_of_distinct_person_IDs_in_feature_matrix))
-
-    slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix[feature_matrix["has_Opioid_abuse"] == 1]
-    IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])
-    number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = len(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)
-    print("2) Patients who have Opioid abuse: " + str(number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse))
-
-    slice_of_feature_matrix_corresponding_to_patients_who_have_Opioid_abuse = feature_matrix[feature_matrix["person_id"].isin(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)]
-    slice_of_feature_matrix_corresponding_to_patients_who_have_Opioid_abuse_and_where_is_exposed_to_Opioids_is_1 = slice_of_feature_matrix_corresponding_to_patients_who_have_Opioid_abuse[slice_of_feature_matrix_corresponding_to_patients_who_have_Opioid_abuse["is_exposed_to_Opioids"] == 1]
-    IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids = pd.unique(slice_of_feature_matrix_corresponding_to_patients_who_have_Opioid_abuse_and_where_is_exposed_to_Opioids_is_1["person_id"])
-    array_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids = np.array(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids)
-    number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids = len(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids)
-    print("3) Patients who have Opioid abuse and who are exposed to Opioids: " + str(number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids))
-
-    slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse = feature_matrix[~feature_matrix["person_id"].isin(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)]
-    IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse["person_id"])
-    number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = len(IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse)
-    print("4) Patients who do not have Opioid abuse: " + str(number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse))
-
-    slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse_and_where_is_exposed_to_Opioids_is_1 = slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse[slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse["is_exposed_to_Opioids"] == 1]
-    IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids = pd.unique(slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse_and_where_is_exposed_to_Opioids_is_1["person_id"])
-    number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids = len(IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids)
-    print("5) Patients who do not have Opioid abuse and who are exposed to Opioids: " + str(number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids))
-
-    array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids = np.array(IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids)
-    shuffled_array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids = np.array(array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids)
-    np.random.shuffle(array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids)
-    array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids_with_equal_number = shuffled_array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids[:number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids]
-    number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids_with_equal_number = len(array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids_with_equal_number)
-    print("6) Patients who do not have Opioid abuse and who are exposed to Opioids with equal number: " + str(number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids_with_equal_number))
-    print()
-
-    array_of_distinct_person_IDs = np.concatenate([array_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_who_are_exposed_to_Opioids, array_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse_and_who_are_exposed_to_Opioids_with_equal_number])
-    number_of_distinct_person_IDs = len(array_of_distinct_person_IDs)
-    slice_of_feature_matrix = feature_matrix[feature_matrix["person_id"].isin(array_of_distinct_person_IDs)]
-    print("Slice of feature matrix:")
-    print(slice_of_feature_matrix)
-
-    number_of_distinct_person_IDs_in_slice_of_feature_matrix = len(pd.unique(slice_of_feature_matrix["person_id"]))
-    print("Number of distinct person IDs of slice of feature matrix: " + str(number_of_distinct_person_IDs_in_slice_of_feature_matrix))
-
-    slice_of_feature_matrix.to_csv("Slice_Of_Feature_Matrix.csv")
