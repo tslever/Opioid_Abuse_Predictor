@@ -150,7 +150,7 @@ FROM (
                     select cast(cr.id as string) as id 
                     FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
                     WHERE
-                        concept_id IN """ + tuple_of_concept_IDs + """
+                        concept_id IN """ + str(tuple_of_concept_IDs) + """
                         AND full_text LIKE '%_rank1]%'
                 ) a 
                 ON (
