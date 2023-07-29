@@ -633,6 +633,7 @@ if __name__ == "__main__":
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
     print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
 
+    feature_matrix.to_csv("Feature_Matrix.csv")
 
 
     """
