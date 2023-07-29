@@ -374,617 +374,94 @@ query_that_results_in_table_of_positive_indicators_of_acetaminophen = generate_q
     tuple_of_concept_IDs = (1125315)
 )
 
-# P0
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography = """
-    SELECT
-       procedure.visit_occurrence_id,
-       1 AS had_mammography,
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    4324693
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
+def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
+    query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
+SELECT
+    procedure.visit_occurrence_id,
+    1 AS """ + name_of_column + """
+FROM (
+    SELECT * 
+    FROM `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
+    WHERE
+        procedure_concept_id IN (
+            SELECT DISTINCT c.concept_id 
+            FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+            JOIN (
+                select cast(cr.id as string) as id 
+                FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                WHERE concept_id IN """ + str(tuple_of_concept_IDs) + """
+                AND full_text LIKE '%_rank1]%'
+            ) a 
+            ON (
+                c.path LIKE CONCAT('%.', a.id, '.%') 
+                OR c.path LIKE CONCAT('%.', a.id)
+                OR c.path LIKE CONCAT(a.id, '.%')
+                OR c.path = a.id
+            )
+            WHERE
+                is_standard = 1 
+                AND is_selectable = 1
+        )
+        AND procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
+) procedure
 GROUP BY procedure.visit_occurrence_id
 WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+    """
+    return query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample
+
+# P0
+query_that_results_in_table_of_positive_indicators_of_Mammography = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Mammography",
+    tuple_of_concept_IDs = (4324693)
+)
 
 # P1
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_knee_procedure = """
-    SELECT
-         procedure.visit_occurrence_id,
-         1 AS had_knee_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    2617368, 4030239, 4042660, 4043028, 40482787, 40482788, 4078547, 4079526, 4106050, 4106397, 4147773, 4195136, 4197548, 4205229, 4241716, 4263550, 4268018, 4268896, 4298098, 4311039, 4343454, 4343455, 4343907, 43531648
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Knee_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Knee_procedure",
+    tuple_of_concept_IDs = (2617368, 4030239, 4042660, 4043028, 40482787, 40482788, 4078547, 4079526, 4106050, 4106397, 4147773, 4195136, 4197548, 4205229, 4241716, 4263550, 4268018, 4268896, 4298098, 4311039, 4343454, 4343455, 4343907, 43531648)
+)
 
 # P2
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_tooth_procedure = """
-    SELECT
-     procedure.visit_occurrence_id,
-     1 AS had_tooth_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    40217364, 4040556, 40487004, 4050720, 4101094, 4120794, 4120795, 4123251, 4142228, 4208393, 4276519, 4287086
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Tooth_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Tooth_procedure",
+    tuple_of_concept_IDs = (40217364, 4040556, 40487004, 4050720, 4101094, 4120794, 4120795, 4123251, 4142228, 4208393, 4276519, 4287086)
+)
 
 # P3
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_hip_procedure = """
-    SELECT
-        procedure.visit_occurrence_id,
-        1 AS had_hip_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    4010119, 4041270, 4042331, 4102292, 4134857, 4162099, 4165513, 4203771, 4266062, 4297365, 4327115
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Hip_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Hip_procedure",
+    tuple_of_concept_IDs = (4010119, 4041270, 4042331, 4102292, 4134857, 4162099, 4165513, 4203771, 4266062, 4297365, 4327115)
+)
 
 # P4
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_vascular_procedure = """
-    SELECT
-       procedure.visit_occurrence_id,
-       1 AS had_vascular_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    4020466, 4045839, 4050410, 4148948, 4159959, 4160912, 4181966, 4214091, 4284104, 4295278
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Vascular_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Vascular_procedure",
+    tuple_of_concept_IDs = (4020466, 4045839, 4050410, 4148948, 4159959, 4160912, 4181966, 4214091, 4284104, 4295278)
+)
 
 # P5
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_brain_procedure = """
-    SELECT
-        procedure.visit_occurrence_id,
-        1 AS had_brain_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    4043201, 4045859, 4046832, 4120973, 4146487, 4175191, 4213313, 4214763, 42537289, 4323283, 44784260
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Brain_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Brain_procedure",
+    tuple_of_concept_IDs = (4043201, 4045859, 4046832, 4120973, 4146487, 4175191, 4213313, 4214763, 42537289, 4323283, 44784260)
+)
 
 # P6
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_heart_procedure = """
-    SELECT
-         procedure.visit_occurrence_id,
-         1 AS had_heart_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    4000889, 4000891, 4002405, 4012932, 4042673, 4042674, 4044369, 4046698, 4057804, 4094240, 4105593, 4137127, 4144921, 4145119, 4146733, 4148131, 4195852, 4197660, 4203779, 4223020, 4223626, 4225473, 4238716, 4249161, 4251776, 4275142, 4275564, 4284104, 42872715, 4312194, 4315396
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Heart_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Heart_procedure",
+    tuple_of_concept_IDs = (4000889, 4000891, 4002405, 4012932, 4042673, 4042674, 4044369, 4046698, 4057804, 4094240, 4105593, 4137127, 4144921, 4145119, 4146733, 4148131, 4195852, 4197660, 4203779, 4223020, 4223626, 4225473, 4238716, 4249161, 4251776, 4275142, 4275564, 4284104, 42872715, 4312194, 4315396)
+)
 
 # P7
-query_that_results_in_a_dataset_of_positive_indicators_of_procedural_ED_visits = """
-    SELECT
-        procedure.visit_occurrence_id,
-        1 AS had_ED_visits
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_source_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    2514433, 2514434, 2514435, 2514436, 2514437
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 0 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_procedural_ED_visits = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_procedural_ED_visit",
+    tuple_of_concept_IDs = (2514433, 2514434, 2514435, 2514436, 2514437)
+)
 
 # P8
-query_that_results_in_a_dataset_of_positive_indicators_of_having_a_head_or_neck_procedure = """
-    SELECT
-        procedure.visit_occurrence_id,
-        1 AS had_head_or_neck_procedure
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.procedure_occurrence` procedure 
-        WHERE
-            (
-                procedure_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    4003728, 4027414, 4040721, 4043175, 4119836, 4160266, 4161058, 4233388
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    procedure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) procedure 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_standard_concept 
-                                    ON procedure.procedure_concept_id = p_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_type 
-                                    ON procedure.procedure_type_concept_id = p_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_modifier 
-                                    ON procedure.modifier_concept_id = p_modifier.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON procedure.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_visit 
-                                    ON v.visit_concept_id = p_visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
-                                    ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id
-WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs_for_undersample + """)
-"""
+query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
+    name_of_column = "had_Head_Or_Neck_procedure",
+    tuple_of_concept_IDs = (4003728, 4027414, 4040721, 4043175, 4119836, 4160266, 4161058, 4233388)
+)
 
 query_that_results_in_feature_matrix = """
 SELECT *
