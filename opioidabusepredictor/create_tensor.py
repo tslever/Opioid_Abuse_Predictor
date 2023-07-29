@@ -30,8 +30,8 @@ def calculate_time_interval_between_now_and_start_time(start_time):
     time_interval_during_this_minute = time_interval_in_seconds - time_interval_in_whole_minutes * 60
     return '%dtime_interval_in_whole_minutes %dtime_interval_during_this_minute' % (time_interval_in_whole_minutes, time_interval_during_this_minute)
 
-def create_indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs(slice_of_feature_matrix):
-    IntegerArray_of_distinct_person_IDs_in_slice_of_feature_matrix = pd.unique(slice_of_feature_matrix["person_id"])
+def create_indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs(feature_matrix):
+    IntegerArray_of_distinct_person_IDs_in_feature_matrix = pd.unique(slice_of_feature_matrix["person_id"])
     number_of_distinct_person_IDs_in_slice_of_feature_matrix = len(IntegerArray_of_distinct_person_IDs_in_slice_of_feature_matrix)
     slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = slice_of_feature_matrix[slice_of_feature_matrix["has_Opioid_abuse"] == 1]
     IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])
@@ -71,8 +71,8 @@ def get_tensor_for_person_ID(person_ID, slice_of_feature_matrix):
     """
 
 def get_tuple_of_random_indicator_random_patient_tensor_of_index_of_random_indicator_and_tensor_of_random_patient():
-    slice_of_feature_matrix = pd.read_csv("data/Slice_Of_Feature_Matrix.csv")
-    indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs = create_indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs()
+    feature_matrix = pd.read_csv("data/Feature_Matrix.csv")
+    indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs = create_indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs(feature_matrix)
     list_of_indicators = list(indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs.keys())
     random_indicator = get_random_element(list_of_indicators)
     IntegerArray_of_person_IDs = indicator_of_whether_patient_will_abuse_opioids_to_IntegerArray_of_person_IDs[random_indicator]
@@ -99,8 +99,8 @@ if __name__ == "__main__":
     """
 
     should_train = True
-    if (should_train):
-        start_time = time.time()
+    if should_train:
         number_of_iterations = 1
+        start_time = time.time()
         for iteration in range(1, number_of_iterations + 1):
             random_indicator, random_patient, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_random_patient_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
