@@ -663,7 +663,9 @@ query_that_results_in_table_of_positive_indicators_of_Anxiety = """
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
                                     ON c_occurrence.condition_status_concept_id = c_status.concept_id
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C1
 query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder = """
@@ -832,7 +834,9 @@ query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder = """
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
                                     ON c_occurrence.condition_status_concept_id = c_status.concept_id
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C2
 query_that_results_in_table_of_positive_indicators_of_Depression = """
@@ -1001,7 +1005,9 @@ query_that_results_in_table_of_positive_indicators_of_Depression = """
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
                                     ON c_occurrence.condition_status_concept_id = c_status.concept_id
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C3
 query_that_results_in_table_of_positive_indicators_of_Hypertension = """
@@ -1152,7 +1158,9 @@ query_that_results_in_table_of_positive_indicators_of_Hypertension = """
                                                 ) criteria 
                                             ) ))
                                 ) c_occurrence
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C4
 query_that_results_in_table_of_positive_indicators_of_Opioid_dependence = """
@@ -1321,7 +1329,9 @@ query_that_results_in_table_of_positive_indicators_of_Opioid_dependence = """
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
                                     ON c_occurrence.condition_status_concept_id = c_status.concept_id
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C5
 query_that_results_in_table_of_positive_indicators_of_Pain = """
@@ -1472,7 +1482,9 @@ query_that_results_in_table_of_positive_indicators_of_Pain = """
                                                 ) criteria 
                                             ) ))
                                 ) c_occurrence
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C6
 query_that_results_in_table_of_positive_indicators_of_Rhinitis = """
@@ -1623,7 +1635,9 @@ query_that_results_in_table_of_positive_indicators_of_Rhinitis = """
                                                 ) criteria 
                                             ) ))
                                 ) c_occurrence
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # C7
 query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse = """
@@ -1774,7 +1788,9 @@ query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
                                                 ) criteria 
                                             ) ))
                                 ) c_occurrence
-GROUP BY c_occurrence.visit_occurrence_id"""
+GROUP BY c_occurrence.visit_occurrence_id
+WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # D0
 query_that_results_in_positive_indicators_of_ibuprofen = """
@@ -1953,7 +1969,9 @@ query_that_results_in_positive_indicators_of_ibuprofen = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D1
 query_that_results_in_positive_indicators_of_buprenorphine = """
@@ -2132,7 +2150,9 @@ query_that_results_in_positive_indicators_of_buprenorphine = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D2
 query_that_results_in_positive_indicators_of_fentanyl = """
@@ -2311,7 +2331,9 @@ query_that_results_in_positive_indicators_of_fentanyl = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D3
 query_that_results_in_positive_indicators_of_morphine = """
@@ -2490,7 +2512,9 @@ query_that_results_in_positive_indicators_of_morphine = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D4
 query_that_results_in_positive_indicators_of_oxycodone= """
@@ -2669,7 +2693,9 @@ query_that_results_in_positive_indicators_of_oxycodone= """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D5
 query_that_results_in_positive_indicators_of_hydromorphone = """
@@ -2848,7 +2874,9 @@ query_that_results_in_positive_indicators_of_hydromorphone = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D6
 query_that_results_in_positive_indicators_of_aspirin = """
@@ -3027,7 +3055,9 @@ query_that_results_in_positive_indicators_of_aspirin = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D7
 query_that_results_in_positive_indicators_of_codeine = """
@@ -3206,7 +3236,9 @@ query_that_results_in_positive_indicators_of_codeine = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D8
 query_that_results_in_positive_indicators_of_tramadol = """
@@ -3385,7 +3417,9 @@ query_that_results_in_positive_indicators_of_tramadol = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D9
 query_that_results_in_positive_indicators_of_nalbuphine = """
@@ -3564,7 +3598,9 @@ query_that_results_in_positive_indicators_of_nalbuphine = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D10
 query_that_results_in_positive_indicators_of_meperidine = """
@@ -3743,7 +3779,9 @@ query_that_results_in_positive_indicators_of_meperidine = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D11
 query_that_results_in_positive_indicators_of_naltrexone = """
@@ -3922,7 +3960,9 @@ query_that_results_in_positive_indicators_of_naltrexone = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 #D12
 query_that_results_in_positive_indicators_of_acetaminophen = """
@@ -4101,7 +4141,9 @@ query_that_results_in_positive_indicators_of_acetaminophen = """
                                 LEFT JOIN
                                     `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+GROUP BY d_exposure.visit_occurrence_id
+WHERE d_exposure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P0
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography = """
@@ -4270,8 +4312,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_mammography =
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
-
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P1
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_knee_procedure = """
@@ -4440,8 +4483,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_knee_procedur
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
-
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P2
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_tooth_procedure = """
@@ -4610,9 +4654,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_tooth_procedu
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
-
-
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P3
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_hip_procedure = """
@@ -4781,7 +4825,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_hip_procedure
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P4
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_vascular_procedure = """
@@ -4950,8 +4996,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_vascular_proc
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
-
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P5
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_brain_procedure = """
@@ -5120,7 +5167,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_brain_procedu
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P6
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_heart_procedure = """
@@ -5289,7 +5338,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_heart_procedu
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P7
 query_that_results_in_a_dataset_of_positive_indicators_of_procedural_ED_visits = """
@@ -5458,7 +5509,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_procedural_ED_visits =
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 # P8
 query_that_results_in_a_dataset_of_positive_indicators_of_having_a_head_or_neck_procedure = """
@@ -5627,7 +5680,9 @@ query_that_results_in_a_dataset_of_positive_indicators_of_having_a_head_or_neck_
                             LEFT JOIN
                                 `""" + os.environ["WORKSPACE_CDR"] + """.concept` p_source_concept 
                                     ON procedure.procedure_source_concept_id = p_source_concept.concept_id
-GROUP BY procedure.visit_occurrence_id"""
+GROUP BY procedure.visit_occurrence_id
+WHERE procedure.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
 
 query_that_results_in_feature_matrix = """
 SELECT *
