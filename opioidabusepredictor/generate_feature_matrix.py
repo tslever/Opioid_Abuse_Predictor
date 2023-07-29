@@ -634,21 +634,3 @@ if __name__ == "__main__":
     print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
 
     feature_matrix.to_csv("Feature_Matrix.csv")
-
-
-    """
-    data_frame_of_positive_indicators_of_Anxiety = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Anxiety)
-    print(data_frame_of_positive_indicators_of_Anxiety)
-    number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Anxiety = len(pd.unique(data_frame_of_positive_indicators_of_Anxiety["condition_occurrence_person_id"]))
-    print("Number of distinct patient IDs in data frame of positive indicators of Anxiety: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Anxiety))
-
-    data_frame_of_positive_indicators_of_ibuprofen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_ibuprofen)
-    print(data_frame_of_positive_indicators_of_ibuprofen)
-    number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_ibuprofen = len(pd.unique(data_frame_of_positive_indicators_of_ibuprofen["drug_exposure_person_id"]))
-    print("Number of distinct patient IDs in data frame of positive indicators of ibuprofen: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_ibuprofen))
-
-    data_frame_of_positive_indicators_of_Mammography = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Mammography)
-    print(data_frame_of_positive_indicators_of_Mammography)
-    number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Mammography = len(pd.unique(data_frame_of_positive_indicators_of_Mammography["procedure_person_id"]))
-    print("Number of distinct patient IDs in data frame of positive indicators of Mammography: " + str(number_of_distinct_patient_IDs_in_data_frame_of_positive_indicators_of_Mammography))
-    """
