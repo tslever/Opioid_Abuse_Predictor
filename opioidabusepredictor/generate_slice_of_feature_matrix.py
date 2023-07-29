@@ -437,6 +437,65 @@ query_that_results_in_table_of_positive_indicators_of_Opioids = """
                                         ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
 GROUP BY d_exposure.visit_occurrence_id"""
 
+query_that_results_in_table_of_visit_occurrences_has_Opioid_abuse_and_is_exposed_to_Opioids = """
+SELECT
+    person_id,
+    table_of_visit_occurrences.visit_occurrence_id,
+    visit_start_datetime,
+    has_Opioid_abuse,
+    is_exposed_to_Opioids
+FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """) table_of_visit_occurrences
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_abuse + """) table_of_Opioid_abuse
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_Opioid_abuse.visit_occurrence_id
+LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioids + """) table_of_Opioids
+ON table_of_visit_occurrences.visit_occurrence_id = table_of_Opioids.visit_occurrence_id
+"""
+
+query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_table_of_visit_occurrences_has_Opioid_abuse_and_is_exposed_to_Opioids + """)
+WHERE has_Opioid_abuse = 1
+"""
+
+query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse_and_are_exposed_to_Opioids = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_table_of_visit_occurrences_has_Opioid_abuse_and_is_exposed_to_Opioids + """)
+WHERE
+    person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse + """)
+    AND is_exposed_to_Opioids = 1
+"""
+
+query_that_results_in_number_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse_and_are_exposed_to_Opioids = """
+SELECT COUNT(person_id) as number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse_and_are_exposed_to_Opioids
+FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse_and_are_exposed_to_Opioids + """)
+"""
+
+query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_do_not_have_Opioid_abuse_and_are_exposed_to_Opioids = """
+SELECT DISTINCT person_id
+FROM (""" + query_that_results_in_table_of_visit_occurrences_has_Opioid_abuse_and_is_exposed_to_Opioids + """)
+WHERE
+    person_id NOT IN (""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse + """)
+    AND is_exposed_to_Opioids = 1
+"""
+
+query_that_results_in_table_of_person_IDs_of_cohort_who_do_not_have_Opioid_abuse_and_are_exposed_to_Opioids_with_equal_number = """
+SELECT person_id
+FROM (""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_do_not_have_Opioid_abuse_and_are_exposed_to_Opioids + """)
+ORDER BY RAND()
+LIMIT 2448
+"""
+
+query_that_results_in_table_of_person_IDs = """(""" + query_that_results_in_table_of_distinct_person_IDs_of_cohort_who_have_Opioid_abuse_and_are_exposed_to_Opioids + """)
+UNION DISTINCT
+(""" + query_that_results_in_table_of_person_IDs_of_cohort_who_do_not_have_Opioid_abuse_and_are_exposed_to_Opioids_with_equal_number + """)
+"""
+
+query_that_results_in_table_of_visit_occurrences_of_undersample = """
+SELECT *
+FROM (""" + query_that_results_in_table_of_visit_occurrences_for_cohort + """)
+WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
+"""
+
 # C0
 query_that_results_in_table_of_positive_indicators_of_Anxiety = """
     SELECT
