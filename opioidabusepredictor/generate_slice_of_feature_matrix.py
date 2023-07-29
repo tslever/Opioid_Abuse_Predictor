@@ -139,79 +139,56 @@ GROUP BY c_occurrence.visit_occurrence_id
 
 # A1
 query_that_results_in_table_of_positive_indicators_of_Opioids = """
-    SELECT
-        d_exposure.visit_occurrence_id,
-        1 AS is_exposed_to_Opioids
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.drug_exposure` d_exposure 
-        WHERE
-            (
-                drug_concept_id IN  (
-                    SELECT
-                        DISTINCT ca.descendant_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
-                    JOIN
-                        (
-                            select
-                                distinct c.concept_id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                            JOIN
-                                (
-                                    select
-                                        cast(cr.id as string) as id 
-                                    FROM
-                                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                                    WHERE
-                                        concept_id IN (
-                                            1123896, 21600593, 21604200, 21604254, 21604291, 21604296, 21604825
-                                        ) 
-                                        AND full_text LIKE '%_rank1]%'
-                                ) a 
-                                    ON (
-                                        c.path LIKE CONCAT('%.',
-                                    a.id,
-                                    '.%') 
-                                    OR c.path LIKE CONCAT('%.',
-                                    a.id) 
-                                    OR c.path LIKE CONCAT(a.id,
-                                    '.%') 
-                                    OR c.path = a.id) 
-                                WHERE
-                                    is_standard = 1 
-                                    AND is_selectable = 1
-                                ) b 
-                                    ON (
-                                        ca.ancestor_id = b.concept_id
-                                    )
-                            )
-                        )  
-                        AND (
-                            d_exposure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                    ) d_exposure 
-                                LEFT JOIN
-                                    `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept 
-                                        ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
-                                LEFT JOIN
-                                    `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_type 
-                                        ON d_exposure.drug_type_concept_id = d_type.concept_id 
-                                LEFT JOIN
-                                    `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_route 
-                                        ON d_exposure.route_concept_id = d_route.concept_id 
-                                LEFT JOIN
-                                    `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                        ON d_exposure.visit_occurrence_id = v.visit_occurrence_id 
-                                LEFT JOIN
-                                    `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_visit 
-                                        ON v.visit_concept_id = d_visit.concept_id 
-                                LEFT JOIN
-                                    `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
-                                        ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
-GROUP BY d_exposure.visit_occurrence_id"""
+SELECT
+    d_exposure.visit_occurrence_id,
+    1 AS is_exposed_to_Opioids
+FROM (
+    SELECT * 
+    FROM `""" + os.environ["WORKSPACE_CDR"] + """.drug_exposure` d_exposure 
+    WHERE
+        drug_concept_id IN (
+            SELECT DISTINCT ca.descendant_id 
+            FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria_ancestor` ca 
+            JOIN (
+                select distinct c.concept_id 
+                FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+                JOIN (
+                    select cast(cr.id as string) as id 
+                    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                    WHERE
+                        concept_id IN (1123896, 21600593, 21604200, 21604254, 21604291, 21604296, 21604825) 
+                        AND full_text LIKE '%_rank1]%'
+                ) a 
+                ON (
+                    c.path LIKE CONCAT('%.', a.id, '.%') 
+                    OR c.path LIKE CONCAT('%.', a.id) 
+                    OR c.path LIKE CONCAT(a.id, '.%') 
+                    OR c.path = a.id
+                ) 
+                WHERE
+                    is_standard = 1 
+                    AND is_selectable = 1
+            ) b 
+            ON (
+                ca.ancestor_id = b.concept_id
+            )
+        )  
+        AND d_exposure.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
+) d_exposure 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_standard_concept 
+ON d_exposure.drug_concept_id = d_standard_concept.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_type 
+ON d_exposure.drug_type_concept_id = d_type.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_route 
+ON d_exposure.route_concept_id = d_route.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+ON d_exposure.visit_occurrence_id = v.visit_occurrence_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_visit 
+ON v.visit_concept_id = d_visit.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` d_source_concept 
+ON d_exposure.drug_source_concept_id = d_source_concept.concept_id
+GROUP BY d_exposure.visit_occurrence_id
+"""
 
 query_that_results_in_table_of_visit_occurrences_has_Opioid_abuse_and_is_exposed_to_Opioids = """
 SELECT
@@ -274,68 +251,48 @@ WHERE person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
 
 # C0
 query_that_results_in_table_of_positive_indicators_of_Anxiety = """
-    SELECT
-        c_occurrence.visit_occurrence_id,
-        1 AS has_Anxiety
-    FROM
-        ( SELECT
-            * 
-        FROM
-            `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence 
-        WHERE
-            (
-                condition_concept_id IN  (
-                    SELECT
-                        DISTINCT c.concept_id 
-                    FROM
-                        `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
-                    JOIN
-                        (
-                            select
-                                cast(cr.id as string) as id 
-                            FROM
-                                `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
-                            WHERE
-                                concept_id IN (
-                                    35615152, 35615153, 35615155, 36684319, 37109206, 37117155, 381537, 4009184, 4021501, 4035299, 4039212, 4056690, 4084699, 4085058, 4087190, 4098314, 4113821, 4115221, 4117364, 4146660, 4178114, 4193634, 4198826, 4199892, 4203449, 4214746, 4216670, 4221077, 4242095, 42538592, 42538968, 4261239, 4263429, 4288011, 4304010, 4322025, 4328276, 433178, 4338031, 434613, 434628, 436074, 436075, 440690, 441542, 442077, 44784526, 763092
-                                ) 
-                                AND full_text LIKE '%_rank1]%'
-                        ) a 
-                            ON (
-                                c.path LIKE CONCAT('%.',
-                            a.id,
-                            '.%') 
-                            OR c.path LIKE CONCAT('%.',
-                            a.id) 
-                            OR c.path LIKE CONCAT(a.id,
-                            '.%') 
-                            OR c.path = a.id) 
-                        WHERE
-                            is_standard = 1 
-                            AND is_selectable = 1
-                        )
-                )  
-                AND (
-                    c_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """))
-                                ) c_occurrence 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept 
-                                    ON c_occurrence.condition_concept_id = c_standard_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_type 
-                                    ON c_occurrence.condition_type_concept_id = c_type.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
-                                    ON c_occurrence.visit_occurrence_id = v.visit_occurrence_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` visit 
-                                    ON v.visit_concept_id = visit.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_source_concept 
-                                    ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
-                            LEFT JOIN
-                                `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
-                                    ON c_occurrence.condition_status_concept_id = c_status.concept_id
+SELECT
+    c_occurrence.visit_occurrence_id,
+    1 AS has_Anxiety
+FROM (
+    SELECT * 
+    FROM `""" + os.environ["WORKSPACE_CDR"] + """.condition_occurrence` c_occurrence 
+    WHERE (
+        condition_concept_id IN (
+            SELECT DISTINCT c.concept_id 
+            FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` c 
+            JOIN (
+                    select cast(cr.id as string) as id 
+                    FROM `""" + os.environ["WORKSPACE_CDR"] + """.cb_criteria` cr 
+                    WHERE
+                        concept_id IN (35615152, 35615153, 35615155, 36684319, 37109206, 37117155, 381537, 4009184, 4021501, 4035299, 4039212, 4056690, 4084699, 4085058, 4087190, 4098314, 4113821, 4115221, 4117364, 4146660, 4178114, 4193634, 4198826, 4199892, 4203449, 4214746, 4216670, 4221077, 4242095, 42538592, 42538968, 4261239, 4263429, 4288011, 4304010, 4322025, 4328276, 433178, 4338031, 434613, 434628, 436074, 436075, 440690, 441542, 442077, 44784526, 763092) 
+                        AND full_text LIKE '%_rank1]%'
+                ) a
+            ON (
+                c.path LIKE CONCAT('%.', a.id, '.%') 
+                OR c.path LIKE CONCAT('%.', a.id) 
+                OR c.path LIKE CONCAT(a.id, '.%') 
+                OR c.path = a.id
+            ) 
+            WHERE
+                is_standard = 1 
+                AND is_selectable = 1
+            )
+        )  
+        AND c_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distinct_person_IDs_for_cohort + """)
+    ) c_occurrence 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_standard_concept 
+ON c_occurrence.condition_concept_id = c_standard_concept.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_type 
+ON c_occurrence.condition_type_concept_id = c_type.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.visit_occurrence` v 
+ON c_occurrence.visit_occurrence_id = v.visit_occurrence_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` visit 
+ON v.visit_concept_id = visit.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_source_concept 
+ON c_occurrence.condition_source_concept_id = c_source_concept.concept_id 
+LEFT JOIN `""" + os.environ["WORKSPACE_CDR"] + """.concept` c_status 
+ON c_occurrence.condition_status_concept_id = c_status.concept_id
 GROUP BY c_occurrence.visit_occurrence_id
 WHERE c_occurrence.person_id IN (""" + query_that_results_in_table_of_person_IDs + """)
 """
