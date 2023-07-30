@@ -30,9 +30,11 @@ def get_random_element(iterable):
 
 def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
     slice_of_feature_matrix_corresponding_to_person_ID = feature_matrix[feature_matrix["person_id"] == person_ID]
+    slice_of_feature_matrix_corresponding_to_person_ID = slice_of_feature_matrix_corresponding_to_person_ID.drop(columns = ["person_id"])
     visit_start_datetime_of_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["is_exposed_to_Opioids"] == 1].at[0, "visit_start_datetime"]
-    slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["visit_start_datetime"] <= visit_start_datetime_of_reference_event]
-    slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event.drop(columns = ["person_id", "visit_occurrence_id", "visit_startdate"])    
+    slice_of_feature_matrix_corresponding_to_person_ID = slice_of_feature_matrix_corresponding_to_person_ID.drop(columns = ["is_exposed_to_Opioids"])
+    slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["visit_start_datetime"] < visit_start_datetime_of_reference_event]
+    slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event.drop(columns = ["visit_start_datetime"])
     tensor_corresponding_to_person_ID_prior_to_reference_event = torch.tensor(slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators)
     number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
     number_of_features = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[1]
@@ -118,12 +120,17 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 if __name__ == "__main__":
 
     feature_matrix = pd.read_csv("data/Feature_Matrix.csv")
+    feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id", "condition_occurrence_person_id", "drug_exposure_person_id", "procedure_person_id"])
+    feature_matrix = feature_matrix.dropna(subset = feature_matrix.columns.remove("person_id", "visit_start_datetime"), how = "all")
+    feature_matrix = feature_matrix.fillna(0)
     feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
     dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs(feature_matrix)
+    feature_matrix = feature_matrix.drop(columns = ["has_Opioid_abuse"])
     list_of_all_indicators = list(dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs.keys())
     number_of_features = feature_matrix.shape[1]
     number_of_elements_in_hidden_state = 128
     number_of_all_indicators = len(list_of_all_indicators)
+    print("We made it to before constructing the RNN!")
     rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
 
     should_train = True
