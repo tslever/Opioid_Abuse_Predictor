@@ -121,7 +121,9 @@ if __name__ == "__main__":
 
     feature_matrix = pd.read_csv("data/Feature_Matrix.csv")
     feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id", "condition_occurrence_person_id", "drug_exposure_person_id", "procedure_person_id"])
-    feature_matrix = feature_matrix.dropna(subset = feature_matrix.columns.remove("person_id", "visit_start_datetime"), how = "all")
+    list_of_feature_columns = feature_matrix.columns.tolist()
+    list_of_feature_columns = [feature_column for feature_column in list_of_feature_columns if feature_column not in ("person_id", "visit_start_datetime")]
+    feature_matrix = feature_matrix.dropna(subset = list_of_feature_columns, how = "all")
     feature_matrix = feature_matrix.fillna(0)
     feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
     dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs(feature_matrix)
