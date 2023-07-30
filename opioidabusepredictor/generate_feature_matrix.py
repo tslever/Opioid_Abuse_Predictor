@@ -93,7 +93,6 @@ WHERE visit_occurrence.PERSON_ID IN (""" + query_that_results_in_table_of_distin
 def generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs):
     query_that_results_in_table_of_positive_indicators = """
 SELECT
-    MAX(c_occurrence.person_id) as condition_occurrence_person_id,
     c_occurrence.visit_occurrence_id,
     1 AS """ + name_of_column + """
 FROM (
@@ -137,7 +136,6 @@ query_that_results_in_table_of_positive_indicators_of_Opioid_abuse = generate_qu
 def generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs):
     query_that_results_in_table_of_positive_indicators = """
 SELECT
-    MAX(d_exposure.person_id) as drug_exposure_person_id,
     d_exposure.visit_occurrence_id,
     1 AS """ + name_of_column + """
 FROM (
@@ -379,7 +377,6 @@ query_that_results_in_table_of_positive_indicators_of_acetaminophen = generate_q
 def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
     query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
 SELECT
-    MAX(procedure.person_id) as procedure_person_id,
     procedure.visit_occurrence_id,
     1 AS """ + name_of_column + """
 FROM (
@@ -479,77 +476,6 @@ LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioids +
 ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioids.visit_occurrence_id
 """
 
-"""
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Anxiety + """) table_of_positive_indicators_of_Anxiety
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Anxiety.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder + """) table_of_positive_indicators_of_Bipolar_disorder
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Bipolar_disorder.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Depression + """) table_of_positive_indicators_of_Depression
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Depression.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Hypertension + """) table_of_positive_indicators_of_Hypertension
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Hypertension.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Opioid_dependence + """) table_of_positive_indicators_of_Opioid_dependence
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Opioid_dependence.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Pain + """) table_of_positive_indicators_of_Pain
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Pain.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Rhinitis + """) table_of_positive_indicators_of_Rhinitis
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Rhinitis.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse + """) table_of_positive_indicators_of_Non_Opioid_Substance_Abuse
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_Non_Opioid_Substance_Abuse.visit_occurrence_id
-"""
-
-"""
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_ibuprofen + """) table_of_positive_indicators_of_ibuprofen
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ibuprofen.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_buprenorphine + """) table_of_positive_indicators_of_buprenorphine
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_buprenorphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_fentanyl + """) table_of_positive_indicators_of_fentanyl
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_fentanyl.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_morphine + """) table_of_positive_indicators_of_morphine
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_morphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_oxycodone + """) table_of_positive_indicators_of_oxycodone
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_oxycodone.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_hydromorphone + """) table_of_positive_indicators_of_hydromorphone
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_hydromorphone.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_aspirin + """) table_of_positive_indicators_of_aspirin
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_aspirin.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_codeine + """) table_of_positive_indicators_of_codeine
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_codeine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_tramadol + """) table_of_positive_indicators_of_tramadol
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_tramadol.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_nalbuphine + """) table_of_positive_indicators_of_nalbuphine
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_nalbuphine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_meperidine + """) table_of_positive_indicators_of_mepiridine
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mepiridine.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_naltrexone + """) table_of_positive_indicators_of_naltrexone
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_naltrexone.visit_occurrence_id
-LEFT JOIN(""" + query_that_results_in_table_of_positive_indicators_of_acetaminophen + """) table_of_positive_indicators_of_acetaminophen
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_acetaminophen.visit_occurrence_id
-
-"""
-
-"""
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Mammography + """) table_of_positive_indicators_of_mammography
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_mammography.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Knee_procedure + """) table_of_positive_indicators_of_knee_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_knee_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Tooth_procedure + """) table_of_positive_indicators_of_tooth_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_tooth_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Hip_procedure + """) table_of_positive_indicators_of_hip_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_hip_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Vascular_procedure + """) table_of_positive_indicators_of_vascular_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_vascular_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Brain_procedure + """) table_of_positive_indicators_of_brain_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_brain_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Heart_procedure + """) table_of_positive_indicators_of_heart_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_heart_procedure.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_procedural_ED_visits + """) table_of_positive_indicators_of_ED_visits
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_ED_visits.visit_occurrence_id
-LEFT JOIN (""" + query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure + """) table_of_positive_indicators_of_head_or_neck_procedure
-ON table_of_visit_occurrences.visit_occurrence_id = table_of_positive_indicators_of_head_or_neck_procedure.visit_occurrence_id
-
-"""
-
 def calculate_time_interval_between_now_and_start_time(start_time):
     now = time.time()
     time_interval_in_seconds = now - start_time
@@ -560,77 +486,114 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 
 if __name__ == "__main__":
 
+    print("Feature matrix")
     feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
 
+    print("Tables of positive indicators of condition")
+    print("Table of positive indicators of Anxiety")
     table_of_positive_indicators_of_Anxiety = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Anxiety)
+    print("Table of positive indicators of Bipolar disorder")
     table_of_positive_indicators_of_Bipolar_disorder = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Bipolar_disorder)
+    print("Table of positive indicators of Depression")
     table_of_positive_indicators_of_Depression = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Depression)
+    print("Table of positive indicators of Hypertension")
     table_of_positive_indicators_of_Hypertension = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Hypertension)
+    print("Table of positive indicators of Opioid dependence")
     table_of_positive_indicators_of_Opioid_dependence = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Opioid_dependence)
+    print("Table of positive indicators of Pain")
     table_of_positive_indicators_of_Pain = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Pain)
+    print("Table of positive indicators of Rhinitis")
     table_of_positive_indicators_of_Rhinitis = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Rhinitis)
+    print("Table of positive indicators of Non-Opioid Substance abuse")
     table_of_positive_indicators_of_Non_Opioid_Substance_Abuse = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Non_Opioid_Substance_Abuse)
 
+    print("Tables of positive indicators of drug")
+    print("Table of positive indicators of ibuprofen")
     table_of_positive_indicators_of_ibuprofen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_ibuprofen)
+    print("Table of positive indicators of buprenorphine")
     table_of_positive_indicators_of_buprenorphine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_buprenorphine)
+    print("Table of positive indicators of fentanyl")
     table_of_positive_indicators_of_fentanyl = get_data_frame(query_that_results_in_table_of_positive_indicators_of_fentanyl)
+    print("Table of positive indicators of morphine")
     table_of_positive_indicators_of_morphine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_morphine)
+    print("Table of positive indicators of oxycodone")
     table_of_positive_indicators_of_oxycodone = get_data_frame(query_that_results_in_table_of_positive_indicators_of_oxycodone)
+    print("Table of positive indicators of hydromorphone")
     table_of_positive_indicators_of_hydromorphone = get_data_frame(query_that_results_in_table_of_positive_indicators_of_hydromorphone)
+    print("Table of positive indicators of aspirin")
     table_of_positive_indicators_of_aspirin = get_data_frame(query_that_results_in_table_of_positive_indicators_of_aspirin)
+    print("Table of positive indicators of codeine")
     table_of_positive_indicators_of_codeine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_codeine)
+    print("Table of positive indicators of tramadol")
     table_of_positive_indicators_of_tramadol = get_data_frame(query_that_results_in_table_of_positive_indicators_of_tramadol)
+    print("Table of positive indicators of nalbuphine")
     table_of_positive_indicators_of_nalbuphine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_nalbuphine)
+    print("Table of positive indicators of meperidine")
     table_of_positive_indicators_of_mepiridine = get_data_frame(query_that_results_in_table_of_positive_indicators_of_meperidine)
+    print("Table of positive indicators of naltrexone")
     table_of_positive_indicators_of_naltrexone = get_data_frame(query_that_results_in_table_of_positive_indicators_of_naltrexone)
+    print("Table of positive indicators of acetaminophen")
     table_of_positive_indicators_of_acetaminophen = get_data_frame(query_that_results_in_table_of_positive_indicators_of_acetaminophen)
 
+    print("Table of positive indicators of procedure")
+    print("Table of positive indicators of Mammography")
     table_of_positive_indicators_of_mammography = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Mammography)
+    print("Table of positive indicators of Knee procedure")
     table_of_positive_indicators_of_knee_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Knee_procedure)
+    print("Table of positive indicators of Tooth procedure")
     table_of_positive_indicators_of_tooth_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Tooth_procedure)
+    print("Table of positive indicators of Hip procedure")
     table_of_positive_indicators_of_hip_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Hip_procedure)
+    print("Table of positive indicators of Vascular procedure")
     table_of_positive_indicators_of_vascular_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Vascular_procedure)
+    print("Table of positive indicators of Brain procedure")
     table_of_positive_indicators_of_brain_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Brain_procedure)
+    print("Table of positive indicators of Heart procedure")
     table_of_positive_indicators_of_heart_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Heart_procedure)
+    print("Table of positive indicators of procedural ED visit")
     table_of_positive_indicators_of_ED_visits = get_data_frame(query_that_results_in_table_of_positive_indicators_of_procedural_ED_visits)
+    print("Table of positive indicators of Head Or Neck procedure")
     table_of_positive_indicators_of_head_or_neck_procedure = get_data_frame(query_that_results_in_table_of_positive_indicators_of_Head_Or_Neck_procedure)
 
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Anxiety, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Bipolar_disorder, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Depression, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Hypertension, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Opioid_dependence, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Pain, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Rhinitis, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_Non_Opioid_Substance_Abuse, how='left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Anxiety, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Bipolar_disorder, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Depression, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Hypertension, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Opioid_dependence, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Pain, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Rhinitis, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_Non_Opioid_Substance_Abuse, how = 'left')
 
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_ibuprofen, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_buprenorphine, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_fentanyl, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_morphine, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_oxycodone, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_hydromorphone, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_aspirin, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_codeine, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_tramadol, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_nalbuphine, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_mepiridine, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_naltrexone, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_acetaminophen, how = 'left')
 
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_ibuprofen, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_buprenorphine, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_fentanyl, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_morphine, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_oxycodone, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_hydromorphone, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_aspirin, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_codeine, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_tramadol, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_nalbuphine, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_mepiridine, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_naltrexone, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_acetaminophen, how='left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_mammography, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_knee_procedure, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_tooth_procedure, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_hip_procedure, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_vascular_procedure, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_brain_procedure, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_heart_procedure, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_ED_visits, how = 'left')
+    feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_head_or_neck_procedure, how = 'left')
 
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_mammography, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_knee_procedure, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_tooth_procedure, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_hip_procedure, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_vascular_procedure, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_brain_procedure, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_heart_procedure, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_ED_visits, how='left')
-    feature_matrix = pd.merge(feature_matrix,table_of_positive_indicators_of_head_or_neck_procedure, how='left')
+    feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id"])
 
     print(feature_matrix)
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
     print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
+    print("Columns of feature matrix:")
+    print(feature_matrix.columns.tolist())
 
     feature_matrix.to_csv("Feature_Matrix.csv")
