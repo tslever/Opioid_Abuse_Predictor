@@ -8,9 +8,11 @@ import torch
 # Level 3
 # -------
 
-def get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events(feature_matrix):
+def get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events():
     slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1 = feature_matrix[feature_matrix["is_exposed_to_Opioids"] == 1]
-    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1.drop_duplicates(subset = ["person_id"])[["person_id", "visit_start_datetime_of_reference_event"]]
+    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1.drop_duplicates(subset = ["person_id"])
+    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events[["person_id", "visit_start_datetime"]]
+    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events.rename(columns = {'person_id': 'person_id', 'visit_start_datetime': 'visit_start_datetime_of_reference_event'})
     return table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events
 
 # -------
@@ -19,9 +21,11 @@ def get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_even
 
 # For example, this dictionary looks like {0: IntegerArray(0, 1000, 2000), 1: IntegerArray(3000, 4000, 5000)}
 def create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs():
-    
-    feature_matrix_with_column_of_visit_start_datetimes_of_reference_event = pd.merge(feature_matrix, get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events(), on = "person_id", how = "left")
-    feature_matrix_of_events_after_reference_events = feature_matrix_with_column_of_visit_start_datetimes_of_reference_event[feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime"] > feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime_of_reference_event"]].drop(columns = ["visit_start_datetime_of_reference_event"])    
+    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events()
+    feature_matrix_with_column_of_visit_start_datetimes_of_reference_event = pd.merge(feature_matrix, table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events, on = "person_id", how = "left")
+    print(feature_matrix_with_column_of_visit_start_datetimes_of_reference_event.columns)
+    feature_matrix_of_events_after_reference_events = feature_matrix_with_column_of_visit_start_datetimes_of_reference_event[feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime"] > feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime_of_reference_event"]]
+    feature_matrix_of_events_after_reference_events = feature_matrix_of_events_after_reference_events.drop(columns = ["visit_start_datetime_of_reference_event"])
     slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix_of_events_after_reference_events[feature_matrix_of_events_after_reference_events["has_Opioid_abuse"] == 1]
     IntegerArray_of_distinct_person_IDs_of_patients_who_will_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])    
     slice_of_feature_matrix_of_patients_who_will_not_have_Opioid_abuse = feature_matrix[~feature_matrix["person_id"].isin(IntegerArray_of_distinct_person_IDs_of_patients_who_will_have_Opioid_abuse)]
@@ -127,7 +131,7 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 
 if __name__ == "__main__":
 
-    feature_matrix = pd.read_csv("data/Feature_Matrix.csv")
+    feature_matrix = pd.read_csv("data/Feature_Matrix.csv", index_col = 0)
     list_of_feature_columns = [feature_column for feature_column in feature_matrix.columns if feature_column not in ("person_id", "visit_start_datetime")]
     feature_matrix = feature_matrix.dropna(subset = list_of_feature_columns, how = "all")
     feature_matrix = feature_matrix.fillna(0)
@@ -156,6 +160,8 @@ if __name__ == "__main__":
 
         for iteration in range(1, number_of_iterations + 1):
             random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
+            print(tensor_of_index_of_random_indicator)
+            print(tensor_of_random_patient)
             tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_indicator, tensor_of_random_patient)
             sum_of_losses += loss
             if iteration % number_of_iterations_after_which_to_print == 0:
