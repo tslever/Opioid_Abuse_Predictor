@@ -1,3 +1,4 @@
+import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import random
@@ -46,7 +47,7 @@ def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
     slice_of_feature_matrix_corresponding_to_person_ID = slice_of_feature_matrix_corresponding_to_person_ID.drop(columns = ["is_exposed_to_Opioids"])
     slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["visit_start_datetime"] < visit_start_datetime_of_reference_event]
     slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event.drop(columns = ["visit_start_datetime"])
-    tensor_corresponding_to_person_ID_prior_to_reference_event = torch.tensor(slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.values)
+    tensor_corresponding_to_person_ID_prior_to_reference_event = torch.tensor(slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.values, dtype = torch.float32)
     number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
     number_of_features = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[1]
     tensor_corresponding_to_person_ID_prior_to_reference_event = tensor_corresponding_to_person_ID_prior_to_reference_event.resize_(number_of_visits_for_patient, 1, number_of_features) # TODO: consider swapping num_visits_for_person and 1tensor_corresponding_to_person_ID_prior_to_reference_event
@@ -90,14 +91,18 @@ def get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor
     tensor_of_random_patient = get_tensor_corresponding_to_person_ID(random_person_ID, feature_matrix)
     return (random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient)
 
+def get_value_of_dimension(tensor, dimension):
+    size_of_tensor = tensor.size()
+    value_of_dimension = size_of_tensor[dimension]
+    return value_of_dimension
+
 def train(tensor_of_index_of_random_indicator, tensor_of_random_patient):
     hidden_state = rnn.initialize_hidden_state()
     # A hidden state is a repository of information from previous events.
     # A hidden state is a vector that is computed with input information.
     # TODO: Why does a hidden state have 128 elements?
     rnn.zero_grad()
-    size_of_3D_tensor_of_2D_random_patient = tensor_of_random_patient.size()
-    number_of_events_for_random_patient = size_of_3D_tensor_of_2D_random_patient[0]
+    number_of_events_for_random_patient = get_value_of_dimension(tensor_of_random_patient, 0)
     for i in range(0, number_of_events_for_random_patient):
         event = tensor_of_random_patient[i]
         tensor_of_probabilities_that_patient_corresponds_to_indicator, hidden_state = rnn(event, hidden_state)
@@ -124,40 +129,15 @@ def calculate_time_interval_between_now_and_start_time(start_time):
     time_interval_during_this_minute = time_interval_in_seconds - time_interval_in_whole_minutes * 60
     return '%dtime_interval_in_whole_minutes %dtime_interval_during_this_minute' % (time_interval_in_whole_minutes, time_interval_during_this_minute)
 
-# -------
-# Level 0
-# -------
-
-if __name__ == "__main__":
-
-    feature_matrix = pd.read_csv("data/Feature_Matrix.csv", index_col = 0)
-    feature_matrix = feature_matrix.fillna(0)
-    feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
-    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs()
-    feature_matrix = feature_matrix.drop(columns = ["has_Opioid_abuse"])
-    list_of_all_indicators = list(dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs.keys())
-    number_of_features = feature_matrix.shape[1]
-    number_of_elements_in_hidden_state = 128
-    number_of_all_indicators = len(list_of_all_indicators)
-    rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
-
-    should_train = True
+def train_RNN():
     if should_train:
-        number_of_iterations = 1
-        start_time = time.time()
-
-        # TODO: Consider making the following variables more global or passing them into get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient.
-        criterion = torch.nn.NLLLoss()
-        learning_rate = 0.005
         sum_of_losses = 0
-        number_of_iterations_after_which_to_print = 5000
-        number_of_iterations_after_which_to_plot = 1000
-        list_of_average_losses = []
-
+        start_time = time.time()
         for iteration in range(1, number_of_iterations + 1):
             random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
-            print(tensor_of_index_of_random_indicator)
-            print(tensor_of_random_patient)
+            if get_value_of_dimension(tensor_of_random_patient, 0) == 0:
+                iteration -= 1
+                continue
             tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_indicator, tensor_of_random_patient)
             sum_of_losses += loss
             if iteration % number_of_iterations_after_which_to_print == 0:
@@ -165,14 +145,40 @@ if __name__ == "__main__":
                 indicator_of_whether_prediction_is_correct = '✓' if predicted_indicator == random_indicator else '✗ (%s)' % random_indicator
                 progress = iteration / number_of_iterations * 100
                 elapsed_time = calculate_time_interval_between_now_and_start_time(start_time)
-                print('%d %d%% (%s) %.4f %s / %s %s' % (iteration, progress, elapsed_time, loss, predicted_indicator, indicator_of_whether_prediction_is_correct))
+                print('%d %d%% (%s) %.4f / %s %s' % (iteration, progress, elapsed_time, loss, predicted_indicator, indicator_of_whether_prediction_is_correct))
             if iteration % number_of_iterations_after_which_to_plot == 0:
                 average_loss = sum_of_losses / number_of_iterations_after_which_to_plot
                 list_of_average_losses.append(average_loss)
                 sum_of_losses = 0
-        torch.save(rnn.state_dict(), 'Opioid_Abuse_Predictor.pt')
+        torch.save(rnn.state_dict(), 'data/Opioid_Abuse_Predictor.pt')
         plt.figure()
         plt.plot(list_of_average_losses)
         plt.show()
     else:
-        rnn.load_state_dict(torch.load('Opioid_Abuse_Predictor.pt'))
+        rnn.load_state_dict(torch.load('data/Opioid_Abuse_Predictor.pt'))
+
+# -------
+# Level 0
+# -------
+
+feature_matrix = pd.read_csv("data/Feature_Matrix.csv", index_col = 0)
+feature_matrix = feature_matrix.fillna(0)
+feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
+dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs()
+feature_matrix = feature_matrix.drop(columns = ["has_Opioid_abuse"])
+list_of_all_indicators = list(dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs.keys())
+number_of_features = feature_matrix.drop(columns = ["person_id", "visit_start_datetime", "is_exposed_to_Opioids"]).shape[1]
+number_of_elements_in_hidden_state = 128
+number_of_all_indicators = len(list_of_all_indicators)
+rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
+
+should_train = True
+number_of_iterations = 10
+criterion = torch.nn.NLLLoss()
+learning_rate = 0.005
+number_of_iterations_after_which_to_print = 1 #5000
+number_of_iterations_after_which_to_plot = 1 #1000
+list_of_average_losses = []
+
+if __name__ == "__main__":
+    train_RNN()
