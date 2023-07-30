@@ -129,7 +129,7 @@ tensor_representing_name = convert_name_to_tensor('Jones')
 # This RNN module
 # (mostly copied from the PyTorch for Torch users tutorial at
 # https://pytorch.org/tutorials/beginner/former_torchies/nnft_tutorial.html)
-# is just 2 linear layers which operate an an input and hidden state,
+# is just 2 linear layers which operate on an input and hidden state,
 # with a LogSoftmax layer after the output.
 
 class RNN(torch.nn.Module):
@@ -275,10 +275,10 @@ if (should_train):
     start_time = time.time()
     for iteration in range(1, number_of_iterations + 1):
         random_language, random_name, tensor_of_index_of_random_language, tensor_of_random_name = get_tuple_of_random_language_random_name_tensor_of_index_of_random_language_and_tensor_of_index_of_random_name()
-        tuple_of_most_likely_language_and_its_index_in_list_of_all_languages, loss = train(tensor_of_index_of_random_language, tensor_of_random_name)
+        tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_language, tensor_of_random_name)
         sum_of_losses += loss
         if iteration % number_of_iterations_after_which_to_print == 0:
-            predicted_language, index_of_predicted_language = get_tuple_of_most_likely_language_and_its_index_in_list_of_all_languages(tuple_of_most_likely_language_and_its_index_in_list_of_all_languages)
+            predicted_language, index_of_predicted_language = get_tuple_of_most_likely_language_and_its_index_in_list_of_all_languages(tensor_of_probabilities_that_name_corresponds_to_indicator)
             indicator_of_whether_prediction_is_correct = '✓' if predicted_language == random_language else '✗ (%s)' % random_language
             print('%d %d%% (%s) %.4f %s / %s %s' % (iteration, iteration / number_of_iterations * 100, calculate_time_interval_between_now_and_start_time(start_time), loss, random_name, predicted_language, indicator_of_whether_prediction_is_correct))
         if iteration % number_of_iterations_after_which_to_plot == 0:
