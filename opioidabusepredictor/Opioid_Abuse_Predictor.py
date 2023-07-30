@@ -131,8 +131,6 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 if __name__ == "__main__":
 
     feature_matrix = pd.read_csv("data/Feature_Matrix.csv", index_col = 0)
-    list_of_feature_columns = [feature_column for feature_column in feature_matrix.columns if feature_column not in ("person_id", "visit_start_datetime")]
-    feature_matrix = feature_matrix.dropna(subset = list_of_feature_columns, how = "all")
     feature_matrix = feature_matrix.fillna(0)
     feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
     dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs()
