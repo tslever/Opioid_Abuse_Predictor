@@ -9,18 +9,18 @@ import torch
 # -------
 
 # For example, this dictionary looks like {0: IntegerArray(0, 1000, 2000), 1: IntegerArray(3000, 4000, 5000)}
-def create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs(feature_matrix):
-    IntegerArray_of_distinct_person_IDs_in_feature_matrix = pd.unique(feature_matrix["person_id"])
-    number_of_distinct_person_IDs_in_feature_matrix = len(IntegerArray_of_distinct_person_IDs_in_feature_matrix)
-    slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix[feature_matrix["has_Opioid_abuse"] == 1]
-    IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])
-    number_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse = len(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)
-    slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse = feature_matrix[~feature_matrix["person_id"].isin(IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse)]
-    IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_of_patients_who_do_not_have_Opioid_abuse["person_id"])
-    number_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse = len(IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse)
+def create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs():
+    slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1 = feature_matrix[feature_matrix["is_exposed_to_Opioids"] == 1]
+    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1.drop_duplicates(subset = ["person_id"])[["person_id", "visit_start_datetime_of_reference_event"]]    
+    feature_matrix_with_column_of_visit_start_datetimes_of_reference_event = pd.merge(feature_matrix, table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events, on = "person_id", how = "left")
+    feature_matrix_of_events_after_reference_events = feature_matrix_with_column_of_visit_start_datetimes_of_reference_event[feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime"] > feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime_of_reference_event"]].drop(columns = ["visit_start_datetime_of_reference_event"])    
+    slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix_of_events_after_reference_events[feature_matrix_of_events_after_reference_events["has_Opioid_abuse"] == 1]
+    IntegerArray_of_distinct_person_IDs_of_patients_who_will_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])    
+    slice_of_feature_matrix_of_patients_who_will_not_have_Opioid_abuse = feature_matrix[~feature_matrix["person_id"].isin(IntegerArray_of_distinct_person_IDs_of_patients_who_will_have_Opioid_abuse)]
+    IntegerArray_of_distinct_person_IDs_of_patients_who_will_not_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_of_patients_who_will_not_have_Opioid_abuse["person_id"])
     dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs = {}
-    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs[0] = IntegerArray_of_distinct_person_IDs_of_patients_who_do_not_have_Opioid_abuse
-    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs[1] = IntegerArray_of_distinct_person_IDs_of_patients_who_have_Opioid_abuse
+    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs[0] = IntegerArray_of_distinct_person_IDs_of_patients_who_will_not_have_Opioid_abuse
+    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs[1] = IntegerArray_of_distinct_person_IDs_of_patients_who_will_have_Opioid_abuse
     return dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs
 
 def get_random_element(iterable):
@@ -120,13 +120,11 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 if __name__ == "__main__":
 
     feature_matrix = pd.read_csv("data/Feature_Matrix.csv")
-    feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id", "condition_occurrence_person_id", "drug_exposure_person_id", "procedure_person_id"])
-    list_of_feature_columns = feature_matrix.columns.tolist()
-    list_of_feature_columns = [feature_column for feature_column in list_of_feature_columns if feature_column not in ("person_id", "visit_start_datetime")]
+    list_of_feature_columns = [feature_column for feature_column in feature_matrix.columns if feature_column not in ("person_id", "visit_start_datetime")]
     feature_matrix = feature_matrix.dropna(subset = list_of_feature_columns, how = "all")
     feature_matrix = feature_matrix.fillna(0)
     feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
-    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs(feature_matrix)
+    dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs()
     feature_matrix = feature_matrix.drop(columns = ["has_Opioid_abuse"])
     list_of_all_indicators = list(dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs.keys())
     number_of_features = feature_matrix.shape[1]
