@@ -31,11 +31,11 @@ def get_random_element(iterable):
 def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
     slice_of_feature_matrix_corresponding_to_person_ID = feature_matrix[feature_matrix["person_id"] == person_ID]
     slice_of_feature_matrix_corresponding_to_person_ID = slice_of_feature_matrix_corresponding_to_person_ID.drop(columns = ["person_id"])
-    visit_start_datetime_of_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["is_exposed_to_Opioids"] == 1].at[0, "visit_start_datetime"]
+    visit_start_datetime_of_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["is_exposed_to_Opioids"] == 1].reset_index(drop = True).at[0, "visit_start_datetime"]
     slice_of_feature_matrix_corresponding_to_person_ID = slice_of_feature_matrix_corresponding_to_person_ID.drop(columns = ["is_exposed_to_Opioids"])
     slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event = slice_of_feature_matrix_corresponding_to_person_ID[slice_of_feature_matrix_corresponding_to_person_ID["visit_start_datetime"] < visit_start_datetime_of_reference_event]
     slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event.drop(columns = ["visit_start_datetime"])
-    tensor_corresponding_to_person_ID_prior_to_reference_event = torch.tensor(slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators)
+    tensor_corresponding_to_person_ID_prior_to_reference_event = torch.tensor(slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.values)
     number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
     number_of_features = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[1]
     tensor_corresponding_to_person_ID_prior_to_reference_event = tensor_corresponding_to_person_ID_prior_to_reference_event.resize_(number_of_visits_for_patient, 1, number_of_features) # TODO: consider swapping num_visits_for_person and 1tensor_corresponding_to_person_ID_prior_to_reference_event
@@ -120,9 +120,7 @@ def calculate_time_interval_between_now_and_start_time(start_time):
 if __name__ == "__main__":
 
     feature_matrix = pd.read_csv("data/Feature_Matrix.csv")
-    feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id", "condition_occurrence_person_id", "drug_exposure_person_id", "procedure_person_id"])
-    list_of_feature_columns = feature_matrix.columns.tolist()
-    list_of_feature_columns = [feature_column for feature_column in list_of_feature_columns if feature_column not in ("person_id", "visit_start_datetime")]
+    list_of_feature_columns = [feature_column for feature_column in feature_matrix.columns if feature_column not in ("person_id", "visit_start_datetime")]
     feature_matrix = feature_matrix.dropna(subset = list_of_feature_columns, how = "all")
     feature_matrix = feature_matrix.fillna(0)
     feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
@@ -149,7 +147,7 @@ if __name__ == "__main__":
         list_of_average_losses = []
 
         for iteration in range(1, number_of_iterations + 1):
-            random_indicator, random_patient, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
+            random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
             tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_indicator, tensor_of_random_patient)
             sum_of_losses += loss
             if iteration % number_of_iterations_after_which_to_print == 0:
