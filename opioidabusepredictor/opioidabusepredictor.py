@@ -136,7 +136,8 @@ def train_RNN():
         for iteration in range(1, number_of_iterations + 1):
             random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
             if get_value_of_dimension(tensor_of_random_patient, 0) == 0:
-                iteration -= 1
+                print("FOUND TENSOR WITH ZERO INFO")
+                break
                 continue
             tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_indicator, tensor_of_random_patient)
             sum_of_losses += loss
