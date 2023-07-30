@@ -23,7 +23,6 @@ def get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_even
 def create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs():
     table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events()
     feature_matrix_with_column_of_visit_start_datetimes_of_reference_event = pd.merge(feature_matrix, table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events, on = "person_id", how = "left")
-    print(feature_matrix_with_column_of_visit_start_datetimes_of_reference_event.columns)
     feature_matrix_of_events_after_reference_events = feature_matrix_with_column_of_visit_start_datetimes_of_reference_event[feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime"] > feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime_of_reference_event"]]
     feature_matrix_of_events_after_reference_events = feature_matrix_of_events_after_reference_events.drop(columns = ["visit_start_datetime_of_reference_event"])
     slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix_of_events_after_reference_events[feature_matrix_of_events_after_reference_events["has_Opioid_abuse"] == 1]
@@ -142,7 +141,6 @@ if __name__ == "__main__":
     number_of_features = feature_matrix.shape[1]
     number_of_elements_in_hidden_state = 128
     number_of_all_indicators = len(list_of_all_indicators)
-    print("We made it to before constructing the RNN!")
     rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
 
     should_train = True
