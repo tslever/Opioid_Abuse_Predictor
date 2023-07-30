@@ -5,14 +5,22 @@ import time
 import torch
 
 # -------
+# Level 3
+# -------
+
+def get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events(feature_matrix):
+    slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1 = feature_matrix[feature_matrix["is_exposed_to_Opioids"] == 1]
+    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1.drop_duplicates(subset = ["person_id"])[["person_id", "visit_start_datetime_of_reference_event"]]
+    return table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events
+
+# -------
 # Level 2
 # -------
 
 # For example, this dictionary looks like {0: IntegerArray(0, 1000, 2000), 1: IntegerArray(3000, 4000, 5000)}
 def create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs():
-    slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1 = feature_matrix[feature_matrix["is_exposed_to_Opioids"] == 1]
-    table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events = slice_of_feature_matrix_where_is_exposed_to_Opioids_is_1.drop_duplicates(subset = ["person_id"])[["person_id", "visit_start_datetime_of_reference_event"]]    
-    feature_matrix_with_column_of_visit_start_datetimes_of_reference_event = pd.merge(feature_matrix, table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events, on = "person_id", how = "left")
+    
+    feature_matrix_with_column_of_visit_start_datetimes_of_reference_event = pd.merge(feature_matrix, get_table_of_distinct_person_IDs_and_visit_start_datetimes_of_reference_events(), on = "person_id", how = "left")
     feature_matrix_of_events_after_reference_events = feature_matrix_with_column_of_visit_start_datetimes_of_reference_event[feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime"] > feature_matrix_with_column_of_visit_start_datetimes_of_reference_event["visit_start_datetime_of_reference_event"]].drop(columns = ["visit_start_datetime_of_reference_event"])    
     slice_of_feature_matrix_where_has_Opioid_abuse_is_1 = feature_matrix_of_events_after_reference_events[feature_matrix_of_events_after_reference_events["has_Opioid_abuse"] == 1]
     IntegerArray_of_distinct_person_IDs_of_patients_who_will_have_Opioid_abuse = pd.unique(slice_of_feature_matrix_where_has_Opioid_abuse_is_1["person_id"])    
