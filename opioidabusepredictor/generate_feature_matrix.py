@@ -606,4 +606,15 @@ if __name__ == "__main__":
     print(feature_matrix.columns.tolist())
     print(list_of_positive_indicator_counts_for_each_feature)
 
+    feature_matrix = feature_matrix.fillna(0)
+    my_dataframe_columns = [column for column in feature_matrix.columns.tolist() if column not in ("person_id", "visit_start_datetime", "has_Opioid_abuse", "is_exposed_to_Opioids")]
+    zero_count = 0
+    one_count = 0
+    for column in my_dataframe_columns:
+        zero_count += sum(feature_matrix[column] == 0.0)
+        one_count += sum(feature_matrix[column] == 1.0)
+    
+    print(zero_count, one_count)
+    print(zero_count / (one_count + zero_count))
+
     feature_matrix.to_csv("Feature_Matrix.csv")
