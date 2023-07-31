@@ -54,7 +54,7 @@ def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
         number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
         number_of_features = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[1]
         tensor_corresponding_to_person_ID_prior_to_reference_event = tensor_corresponding_to_person_ID_prior_to_reference_event.resize_(number_of_visits_for_patient, 1, number_of_features) # TODO: consider swapping num_visits_for_person and 1tensor_corresponding_to_person_ID_prior_to_reference_event
-        print("THIS IS ZERO TENSOR", tensor_corresponding_to_person_ID_prior_to_reference_event)
+        #print("THIS IS ZERO TENSOR", tensor_corresponding_to_person_ID_prior_to_reference_event)
         return tensor_corresponding_to_person_ID_prior_to_reference_event
     else:
         X = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.values
@@ -64,7 +64,7 @@ def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
         number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
         number_of_features = pca.n_components_
         tensor_corresponding_to_person_ID_prior_to_reference_event = tensor_corresponding_to_person_ID_prior_to_reference_event.resize_(number_of_visits_for_patient, 1, number_of_features) # TODO: consider swapping num_visits_for_person and 1tensor_corresponding_to_person_ID_prior_to_reference_event
-        print("THIS IS NOT A ZERO TENSOR", tensor_corresponding_to_person_ID_prior_to_reference_event)
+        #print("THIS IS NOT A ZERO TENSOR", tensor_corresponding_to_person_ID_prior_to_reference_event)
         return tensor_corresponding_to_person_ID_prior_to_reference_event
 
 class RNN(torch.nn.Module):
@@ -148,14 +148,11 @@ def train_RNN():
         sum_of_losses = 0
         start_time = time.time()
         for iteration in range(1, number_of_iterations + 1):
-            print(iteration)
             random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
             if get_value_of_dimension(tensor_of_random_patient, 0) == 0:
                 #print("FOUND TENSOR WITH ZERO INFO")
                 continue
-            else:
-                print(tensor_of_random_patient)
-            break
+
             tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_indicator, tensor_of_random_patient)
             sum_of_losses += loss
             if iteration % number_of_iterations_after_which_to_print == 0:
