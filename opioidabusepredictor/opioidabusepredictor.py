@@ -147,6 +147,7 @@ def train_RNN():
         sum_of_losses = 0
         start_time = time.time()
         for iteration in range(1, number_of_iterations + 1):
+            print(i)
             random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
             if get_value_of_dimension(tensor_of_random_patient, 0) == 0:
                 #print("FOUND TENSOR WITH ZERO INFO")
