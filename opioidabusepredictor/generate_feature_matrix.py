@@ -245,7 +245,7 @@ WHERE person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_for
 def generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(name_of_column, tuple_of_concept_IDs):
     return generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
-"""
+
 # C0
 query_that_results_in_table_of_positive_indicators_of_psychiatric_condition = generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(
     name_of_column = "has_psychiatric_condition",
@@ -264,11 +264,11 @@ query_that_results_in_table_of_positive_indicators_of_symptoms_associated_with_o
     tuple_of_concept_IDs = (193493, 195556, 201313, 312938, 313502, 314369, 314378, 316866, 316994, 319034, 37208172, 376965, 377551, 4013643, 40481896, 4057978, 4062552, 4116347, 4173820, 4183981, 4207534, 4263504, 42709887, 4298200, 43020424, 43020455, 43020457, 43021835, 43021852, 4322893, 4342636, 439694, 439695, 439696, 439698, 442603, 442604, 442626, 442766, 443919, 444101, 44782728, 44784439, 44784621, 44784638, 44784639, 45757137, 45757139, 45757140, 45757356, 45768449,     134159, 134736, 137856, 138525, 138845, 192239, 193322, 194133, 194175, 194696, 195083, 197381, 197684, 197988, 198263, 200219, 201347, 201418, 201626, 24134, 259153, 312998, 315832, 35611566, 36674979, 36684444, 36684573, 36684575, 36686912, 36686913, 36712805, 36712807, 37017182, 37108940, 37108941, 37118025, 37204166, 37209603, 37209605, 373852, 375825, 378253, 379031, 380733, 4002014, 4002956, 4008102, 4009391, 4009890, 4010016, 4010017, 4010025, 4010361, 4012075, 4012198, 4012199, 4012222, 4012223, 4012234, 4012690, 4021670, 4024243, 4024561, 4046660, 40481180, 40481920, 40485490, 4048710, 4058670, 4071874, 4077895, 4079724, 4082798, 4083297, 4083769, 4083770, 4083779, 4090433, 4090553, 4090564, 4092930, 4099171, 4099176, 4103476, 4109083, 4109084, 4109085, 4111231, 4115169, 4115170, 4115171, 4115367, 4115368, 4115406, 4115408, 4115409, 4115410, 4115411, 4116166, 4116809, 4116810, 4116811, 4116987, 4116988, 4117695, 4127066, 4128083, 4129418, 4132891, 4132892, 4132926, 4132929, 4132931, 4133037, 4133039, 4133040, 4133638, 4133643, 4134577, 4137674, 4139512, 4144753, 4145372, 4147441, 4147829, 4149024, 4150062, 4150125, 4150129, 4150759, 4160062, 4160900, 4166666, 4167250, 4168213, 4168216, 4168686, 4169580, 4169905, 4170554, 4170962, 4176923, 4182327, 4182562, 4200298, 4201930, 4204199, 4208857, 4218101, 4218793, 4237198, 4237315, 4237595, 4241033, 4244072, 4253797, 42538688, 42539051, 42539474, 4256912, 4260916, 4263576, 4264107, 4264144, 4270932, 4279301, 4297894, 4302739, 4306292, 4308696, 4317968, 4322528, 4322871, 4329041, 4330445, 4331953, 4333227, 433456, 43530621, 43530622, 43530661, 43531612, 436096, 438867, 439080, 439502, 440704, 441334, 442287, 442555, 442752, 443464, 444391, 44782778, 44784631, 45757565, 45763561, 45768450, 45769207, 45771676, 45773181, 46273207, 73819, 75863, 759905, 759906, 759907, 759908, 759909, 759911, 759912, 760837, 760912, 760919, 761157, 761158, 761159, 761703, 761704, 762287, 762288, 762289, 762290, 762291, 762292, 762293, 762294, 762296, 762297, 762298, 762299, 762361, 762377, 762941, 76388, 76458, 765060, 765061, 765131, 765268, 765384, 765422, 765423, 765933, 77074, 77670, 78232, 78234, 78508, 78517,     252936, 256439, 257007, 259848, 260427, 40481374, 4048171, 40486433, 4049223, 4051476, 4101701, 4110489, 4177553, 4270705, 42709857, 4280726, 42872416, 42873159, 4305500, 4309214, 4316066, 4320791, 4327870, 443558, 45757082, 45766684, 45766713, 46269743, 46269744, 46269789, 46270028, 46270030, 46270156, 46273452, 46273454)
 )
 
-"""
+
 def generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(name_of_column, tuple_of_concept_IDs):
     return generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
-"""
+
 # D0
 query_that_results_in_table_of_weak_pain_killers = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_weak_pain_killers",
@@ -280,7 +280,6 @@ query_that_results_in_table_of_strong_pain_killers = generate_query_that_results
     name_of_column = "is_exposed_to_strong_pain_killers",
     tuple_of_concept_IDs = (1133201, 1154029, 1110410, 1124957, 1126658, 1201620, 1103314, 1114122, 1102527)
 )
-"""
 
 #D2
 query_that_results_in_table_of_substance_abuse_treatments = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
@@ -322,7 +321,7 @@ FROM (
 GROUP BY procedure.visit_occurrence_id
     """
     return query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample
-"""
+
 # P0
 query_that_results_in_table_of_procedures_associated_with_opioid_abuse = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
     name_of_column = "had_procedures_associated_with_opioid_abuse",
@@ -334,7 +333,7 @@ query_that_results_in_table_of_invasive_procedures = generate_query_that_results
     name_of_column = "had_invasive_procedure",
     tuple_of_concept_IDs = (2617368, 4030239, 4042660, 4043028, 40482787, 40482788, 4078547, 4079526, 4106050, 4106397, 4147773, 4195136, 4197548, 4205229, 4241716, 4263550, 4268018, 4268896, 4298098, 4311039, 4343454, 4343455, 4343907, 43531648, 40217364, 4040556, 40487004, 4050720, 4101094, 4120794, 4120795, 4123251, 4142228, 4208393, 4276519, 4287086, 4010119, 4041270, 4042331, 4102292, 4134857, 4162099, 4165513, 4203771, 4266062, 4297365, 4327115, 4020466, 4045839, 4050410, 4148948, 4159959, 4160912, 4181966, 4214091, 4284104, 4295278, 4043201, 4045859, 4046832, 4120973, 4146487, 4175191, 4213313, 4214763, 42537289, 4323283, 44784260, 4000889, 4000891, 4002405, 4012932, 4042673, 4042674, 4044369, 4046698, 4057804, 4094240, 4105593, 4137127, 4144921, 4145119, 4146733, 4148131, 4195852, 4197660, 4203779, 4223020, 4223626, 4225473, 4238716, 4249161, 4251776, 4275142, 4275564, 4284104, 42872715, 4312194, 4315396, 4003728, 4027414, 4040721, 4043175, 4119836, 4160266, 4161058, 4233388)
 )
-"""
+
 query_that_results_in_feature_matrix = """
 SELECT
     table_of_visit_occurrences.person_id,
@@ -361,7 +360,7 @@ if __name__ == "__main__":
 
     print("Feature matrix")
     feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
-    """
+
     print("Tables of positive indicators of condition")
     table_of_positive_indicators_of_psychiatric_condition = get_data_frame(query_that_results_in_table_of_positive_indicators_of_psychiatric_condition)
     table_of_positive_indicators_of_substance_related_issues = get_data_frame(query_that_results_in_table_of_positive_indicators_of_substance_related_issues)
@@ -404,7 +403,7 @@ if __name__ == "__main__":
                                                           len(table_of_weak_pain_killers), len(table_of_strong_pain_killers), len(table_of_substance_abuse_treatments), len(table_of_procedures_associated_with_opioid_abuse), len(table_of_invasive_procedures)]
 
     feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id"])
-    """
+
 
     print(feature_matrix)
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
