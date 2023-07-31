@@ -588,6 +588,15 @@ if __name__ == "__main__":
     feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_ED_visits, how = 'left')
     feature_matrix = pd.merge(feature_matrix, table_of_positive_indicators_of_head_or_neck_procedure, how = 'left')
 
+    list_of_positive_indicator_counts_for_each_feature = [len(table_of_positive_indicators_of_Anxiety), len(table_of_positive_indicators_of_Bipolar_disorder), len(table_of_positive_indicators_of_Depression), len(table_of_positive_indicators_of_Hypertension), 
+                                                          len(table_of_positive_indicators_of_Opioid_dependence), len(table_of_positive_indicators_of_Pain), len(table_of_positive_indicators_of_Rhinitis), len(table_of_positive_indicators_of_Non_Opioid_Substance_Abuse),
+                                                          len(table_of_positive_indicators_of_ibuprofen), len(table_of_positive_indicators_of_buprenorphine), len(table_of_positive_indicators_of_fentanyl), len(table_of_positive_indicators_of_morphine),
+                                                          len(table_of_positive_indicators_of_oxycodone), len(table_of_positive_indicators_of_hydromorphone), len(table_of_positive_indicators_of_aspirin), len(table_of_positive_indicators_of_codeine),
+                                                          len(table_of_positive_indicators_of_tramadol), len(table_of_positive_indicators_of_nalbuphine), len(table_of_positive_indicators_of_mepiridine), 
+                                                          len(table_of_positive_indicators_of_naltrexone), len(table_of_positive_indicators_of_acetaminophen), len(table_of_positive_indicators_of_mammography), len(table_of_positive_indicators_of_knee_procedure),
+                                                          len(table_of_positive_indicators_of_tooth_procedure), len(table_of_positive_indicators_of_hip_procedure), len(table_of_positive_indicators_of_vascular_procedure), len(table_of_positive_indicators_of_brain_procedure),
+                                                          len(table_of_positive_indicators_of_heart_procedure), len(table_of_positive_indicators_of_ED_visits), len(table_of_positive_indicators_of_head_or_neck_procedure)]
+
     feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id"])
 
     print(feature_matrix)
@@ -595,5 +604,6 @@ if __name__ == "__main__":
     print("Number of distinct patient IDs in feature matrix: " + str(number_of_distinct_patient_IDs_in_feature_matrix))
     print("Columns of feature matrix:")
     print(feature_matrix.columns.tolist())
+    print(list_of_positive_indicator_counts_for_each_feature)
 
     feature_matrix.to_csv("Feature_Matrix.csv")
