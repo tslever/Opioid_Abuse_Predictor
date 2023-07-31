@@ -54,16 +54,17 @@ def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
         number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
         number_of_features = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[1]
         tensor_corresponding_to_person_ID_prior_to_reference_event = tensor_corresponding_to_person_ID_prior_to_reference_event.resize_(number_of_visits_for_patient, 1, number_of_features) # TODO: consider swapping num_visits_for_person and 1tensor_corresponding_to_person_ID_prior_to_reference_event
+        print("THIS IS ZERO TENSOR", tensor_corresponding_to_person_ID_prior_to_reference_event)
         return tensor_corresponding_to_person_ID_prior_to_reference_event
     else:
         X = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.values
         pca = PCA(n_components = 0.99) # Consider making this a constant number
         X_pca = pca.fit_transform(X)
-
         tensor_corresponding_to_person_ID_prior_to_reference_event = torch.tensor(X_pca, dtype = torch.float32)
         number_of_visits_for_patient = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.shape[0]
         number_of_features = pca.n_components_
         tensor_corresponding_to_person_ID_prior_to_reference_event = tensor_corresponding_to_person_ID_prior_to_reference_event.resize_(number_of_visits_for_patient, 1, number_of_features) # TODO: consider swapping num_visits_for_person and 1tensor_corresponding_to_person_ID_prior_to_reference_event
+        print("THIS IS NOT A ZERO TENSOR", tensor_corresponding_to_person_ID_prior_to_reference_event)
         return tensor_corresponding_to_person_ID_prior_to_reference_event
 
 class RNN(torch.nn.Module):
