@@ -285,7 +285,7 @@ query_that_results_in_table_of_strong_pain_killers = generate_query_that_results
 #D2
 query_that_results_in_table_of_substance_abuse_treatments = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_substance_abuse_treatments",
-    tuple_of_concept_IDs = (1714319)
+    tuple_of_concept_IDs = (1714319, 1714319)
 )
 
 
