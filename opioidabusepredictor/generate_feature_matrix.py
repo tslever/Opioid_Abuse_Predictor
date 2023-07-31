@@ -280,12 +280,13 @@ query_that_results_in_table_of_strong_pain_killers = generate_query_that_results
     tuple_of_concept_IDs = (1133201, 1154029, 1110410, 1124957, 1126658, 1201620, 1103314, 1114122, 1102527)
 )
 
+"""
 #D2
 query_that_results_in_table_of_substance_abuse_treatments = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_substance_abuse_treatments",
     tuple_of_concept_IDs = (1714319)
 )
-
+"""
 
 def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
     query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
