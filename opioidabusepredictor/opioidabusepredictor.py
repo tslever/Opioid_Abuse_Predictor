@@ -147,7 +147,7 @@ def train_RNN():
         sum_of_losses = 0
         start_time = time.time()
         for iteration in range(1, number_of_iterations + 1):
-            print(i)
+            print(iteration)
             random_indicator, tensor_of_index_of_random_indicator, tensor_of_random_patient = get_tuple_of_random_indicator_tensor_of_index_of_random_indicator_and_tensor_of_random_patient()
             if get_value_of_dimension(tensor_of_random_patient, 0) == 0:
                 #print("FOUND TENSOR WITH ZERO INFO")
@@ -190,7 +190,7 @@ number_of_all_indicators = len(list_of_all_indicators)
 rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
 
 should_train = True
-number_of_iterations = 10000
+number_of_iterations = 100000
 criterion = torch.nn.NLLLoss()
 learning_rate = 0.005
 number_of_iterations_after_which_to_print = 100 #5000
