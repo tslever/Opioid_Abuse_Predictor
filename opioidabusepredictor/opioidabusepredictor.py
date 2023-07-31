@@ -162,7 +162,7 @@ def train_RNN():
 # Level 0
 # -------
 
-feature_matrix = pd.read_csv("data/Feature_Matrix.csv", index_col = 0)
+feature_matrix = pd.read_csv("Feature_Matrix.csv", index_col = 0)
 feature_matrix = feature_matrix.fillna(0)
 feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
 dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs = create_dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_distinct_person_IDs()
