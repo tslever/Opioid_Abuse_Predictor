@@ -268,6 +268,7 @@ query_that_results_in_table_of_positive_indicators_of_symptoms_associated_with_o
 def generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(name_of_column, tuple_of_concept_IDs):
     return generate_query_that_results_in_table_of_positive_indicators_for_drug(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
+"""
 # D0
 query_that_results_in_table_of_weak_pain_killers = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_weak_pain_killers",
@@ -279,14 +280,14 @@ query_that_results_in_table_of_strong_pain_killers = generate_query_that_results
     name_of_column = "is_exposed_to_strong_pain_killers",
     tuple_of_concept_IDs = (1133201, 1154029, 1110410, 1124957, 1126658, 1201620, 1103314, 1114122, 1102527)
 )
-
 """
+
 #D2
 query_that_results_in_table_of_substance_abuse_treatments = generate_query_that_results_in_table_of_positive_indicators_for_drug_and_undersample(
     name_of_column = "is_exposed_to_substance_abuse_treatments",
     tuple_of_concept_IDs = (1714319)
 )
-"""
+
 
 def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
     query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
