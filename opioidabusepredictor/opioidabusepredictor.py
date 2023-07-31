@@ -50,7 +50,7 @@ def get_tensor_corresponding_to_person_ID(person_ID, feature_matrix):
     slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event.drop(columns = ["visit_start_datetime"])
 
     if len(slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators) < 1:
-        return [[]
+        return [[]]
     X = slice_of_feature_matrix_corresponding_to_person_ID_prior_to_reference_event_with_only_columns_of_positive_indicators.values
     pca = PCA(n_components = 0.99) # Consider making this a constant number
     X_pca = pca.fit_transform(X)
