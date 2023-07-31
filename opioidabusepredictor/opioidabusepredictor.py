@@ -138,8 +138,6 @@ def train_RNN():
             if get_value_of_dimension(tensor_of_random_patient, 0) == 0:
                 #print("FOUND TENSOR WITH ZERO INFO")
                 continue
-            else:
-                print("FOUND NON EMPTY TESNOR")
             tensor_of_probabilities_that_name_corresponds_to_indicator, loss = train(tensor_of_index_of_random_indicator, tensor_of_random_patient)
             sum_of_losses += loss
             if iteration % number_of_iterations_after_which_to_print == 0:
@@ -152,7 +150,7 @@ def train_RNN():
                 average_loss = sum_of_losses / number_of_iterations_after_which_to_plot
                 list_of_average_losses.append(average_loss)
                 sum_of_losses = 0
-        torch.save(rnn.state_dict(), 'data/Opioid_Abuse_Predictor.pt')
+        #torch.save(rnn.state_dict(), 'data/Opioid_Abuse_Predictor.pt')
         plt.figure()
         plt.plot(list_of_average_losses)
         plt.show()
