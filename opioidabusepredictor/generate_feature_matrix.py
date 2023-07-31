@@ -245,7 +245,7 @@ WHERE person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_for
 def generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(name_of_column, tuple_of_concept_IDs):
     return generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
-
+"""
 # C0
 query_that_results_in_table_of_positive_indicators_of_psychiatric_condition = generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(
     name_of_column = "has_psychiatric_condition",
@@ -286,7 +286,7 @@ query_that_results_in_table_of_substance_abuse_treatments = generate_query_that_
     tuple_of_concept_IDs = (1714319)
 )
 
-"""
+
 def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
     query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
 SELECT
