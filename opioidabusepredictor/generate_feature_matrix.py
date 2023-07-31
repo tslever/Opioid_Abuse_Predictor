@@ -245,6 +245,7 @@ WHERE person_id IN (""" + query_that_results_in_table_of_distinct_person_IDs_for
 def generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(name_of_column, tuple_of_concept_IDs):
     return generate_query_that_results_in_table_of_positive_indicators_for_condition(name_of_column, tuple_of_concept_IDs, query_that_results_in_table_of_distinct_person_IDs_for_undersample)
 
+"""
 # C0
 query_that_results_in_table_of_positive_indicators_of_psychiatric_condition = generate_query_that_results_in_table_of_positive_indicators_for_condition_and_undersample(
     name_of_column = "has_psychiatric_condition",
@@ -284,6 +285,7 @@ query_that_results_in_table_of_substance_abuse_treatments = generate_query_that_
     name_of_column = "is_exposed_to_substance_abuse_treatments",
     tuple_of_concept_IDs = (1714319)
 )
+"""
 
 def generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(name_of_column, tuple_of_concept_IDs):
     query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample = """
@@ -318,7 +320,7 @@ FROM (
 GROUP BY procedure.visit_occurrence_id
     """
     return query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample
-
+"""
 # P0
 query_that_results_in_table_of_procedures_associated_with_opioid_abuse = generate_query_that_results_in_table_of_positive_indicators_for_procedure_and_undersample(
     name_of_column = "had_procedures_associated_with_opioid_abuse",
@@ -330,9 +332,7 @@ query_that_results_in_table_of_invasive_procedures = generate_query_that_results
     name_of_column = "had_invasive_procedure",
     tuple_of_concept_IDs = (2617368, 4030239, 4042660, 4043028, 40482787, 40482788, 4078547, 4079526, 4106050, 4106397, 4147773, 4195136, 4197548, 4205229, 4241716, 4263550, 4268018, 4268896, 4298098, 4311039, 4343454, 4343455, 4343907, 43531648, 40217364, 4040556, 40487004, 4050720, 4101094, 4120794, 4120795, 4123251, 4142228, 4208393, 4276519, 4287086, 4010119, 4041270, 4042331, 4102292, 4134857, 4162099, 4165513, 4203771, 4266062, 4297365, 4327115, 4020466, 4045839, 4050410, 4148948, 4159959, 4160912, 4181966, 4214091, 4284104, 4295278, 4043201, 4045859, 4046832, 4120973, 4146487, 4175191, 4213313, 4214763, 42537289, 4323283, 44784260, 4000889, 4000891, 4002405, 4012932, 4042673, 4042674, 4044369, 4046698, 4057804, 4094240, 4105593, 4137127, 4144921, 4145119, 4146733, 4148131, 4195852, 4197660, 4203779, 4223020, 4223626, 4225473, 4238716, 4249161, 4251776, 4275142, 4275564, 4284104, 42872715, 4312194, 4315396, 4003728, 4027414, 4040721, 4043175, 4119836, 4160266, 4161058, 4233388)
 )
-
-
-
+"""
 query_that_results_in_feature_matrix = """
 SELECT
     table_of_visit_occurrences.person_id,
@@ -359,7 +359,7 @@ if __name__ == "__main__":
 
     print("Feature matrix")
     feature_matrix = get_data_frame(query_that_results_in_feature_matrix)
-
+    """
     print("Tables of positive indicators of condition")
     table_of_positive_indicators_of_psychiatric_condition = get_data_frame(query_that_results_in_table_of_positive_indicators_of_psychiatric_condition)
     table_of_positive_indicators_of_substance_related_issues = get_data_frame(query_that_results_in_table_of_positive_indicators_of_substance_related_issues)
@@ -402,6 +402,7 @@ if __name__ == "__main__":
                                                           len(table_of_weak_pain_killers), len(table_of_strong_pain_killers), len(table_of_substance_abuse_treatments), len(table_of_procedures_associated_with_opioid_abuse), len(table_of_invasive_procedures)]
 
     feature_matrix = feature_matrix.drop(columns = ["visit_occurrence_id"])
+    """
 
     print(feature_matrix)
     number_of_distinct_patient_IDs_in_feature_matrix = len(pd.unique(feature_matrix["person_id"]))
