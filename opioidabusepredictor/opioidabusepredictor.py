@@ -151,10 +151,10 @@ def train_RNN():
                 average_loss = sum_of_losses / number_of_iterations_after_which_to_plot
                 list_of_average_losses.append(average_loss)
                 sum_of_losses = 0
-        torch.save(rnn.state_dict(), 'data/Opioid_Abuse_Predictor.pt')
-        plt.figure()
-        plt.plot(list_of_average_losses)
-        plt.show()
+        #torch.save(rnn.state_dict(), 'data/Opioid_Abuse_Predictor.pt')
+        #plt.figure()
+        #plt.plot(list_of_average_losses)
+        #plt.show()
     else:
         rnn.load_state_dict(torch.load('data/Opioid_Abuse_Predictor.pt'))
 
