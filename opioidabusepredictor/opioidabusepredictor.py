@@ -175,7 +175,7 @@ number_of_all_indicators = len(list_of_all_indicators)
 rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
 
 should_train = True
-number_of_iterations = 25000
+number_of_iterations = 50000
 criterion = torch.nn.NLLLoss()
 learning_rate = 0.0025
 number_of_iterations_after_which_to_print = 100 #5000
