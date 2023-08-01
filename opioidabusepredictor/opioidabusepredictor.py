@@ -170,7 +170,7 @@ dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays
 feature_matrix = feature_matrix.drop(columns = ["has_Opioid_abuse"])
 list_of_all_indicators = list(dictionary_of_indicators_of_whether_patient_will_abuse_opioids_and_IntegerArrays_of_person_IDs.keys())
 number_of_features = feature_matrix.drop(columns = ["person_id", "visit_start_datetime", "is_exposed_to_Opioids"]).shape[1]
-number_of_elements_in_hidden_state = 128
+number_of_elements_in_hidden_state = 32
 number_of_all_indicators = len(list_of_all_indicators)
 rnn = RNN(number_of_features, number_of_elements_in_hidden_state, number_of_all_indicators)
 
