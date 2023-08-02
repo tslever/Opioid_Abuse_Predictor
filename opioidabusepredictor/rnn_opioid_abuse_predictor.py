@@ -136,6 +136,8 @@ dictionary_of_person_IDs_and_reference_events = get_dictionary_of_person_IDs_and
 dictionary_of_labels_and_person_IDs = get_dictionary_of_labels_and_person_IDs(feature_matrix, dictionary_of_person_IDs_and_reference_events)
 
 def predict():
+    print("IS THIS WORKING?")
+    correct = 0
     for i in range(1, 1001):
         with torch.no_grad():
             random_category, _, person_tensor = random_training_example(all_categories, dictionary_of_labels_and_person_IDs, dictionary_of_person_IDs_and_reference_events, feature_matrix)
@@ -147,3 +149,6 @@ def predict():
             
             guess = category_from_output(output)
             print(guess, random_category, guess == random_category)
+            if guess == random_category:
+                correct += 1
+    print(correct / 1000)
