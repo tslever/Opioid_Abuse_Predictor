@@ -134,3 +134,16 @@ feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_date
 feature_matrix = feature_matrix.reset_index(drop = True)
 dictionary_of_person_IDs_and_reference_events = get_dictionary_of_person_IDs_and_reference_events(feature_matrix)
 dictionary_of_labels_and_person_IDs = get_dictionary_of_labels_and_person_IDs(feature_matrix, dictionary_of_person_IDs_and_reference_events)
+
+def predict():
+    for i in range(1, 1001):
+        with torch.no_grad():
+            random_category, _, person_tensor = random_training_example(all_categories, dictionary_of_labels_and_person_IDs, dictionary_of_person_IDs_and_reference_events, feature_matrix)
+            
+            hidden = rnn.init_hidden()
+        
+            for i in range(person_tensor.size()[0]):
+                output, hidden = rnn(person_tensor[i], hidden)
+            
+            guess = category_from_output(output)
+            print(guess, random_category, guess == random_category)
