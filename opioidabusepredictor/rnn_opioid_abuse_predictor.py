@@ -76,7 +76,7 @@ def random_training_example(all_categories, dict_of_labels_and_person_IDs, dict_
     random_category = random_choice(all_categories) # Gets category ground truth / label
     random_person = random_choice(dict_of_labels_and_person_IDs[random_category]) # Gets name / input
 
-    category_tensor = torch.tensor([all_categories.index(category)], dtype=torch.long) # Category gets placed into a tensor
+    category_tensor = torch.tensor([all_categories.index(random_category)], dtype=torch.long) # Category gets placed into a tensor
 
     data_frame_corresponding_to_person = df[df["person_id"] == random_person]
     reference_event_datetime = dict_of_person_IDs_and_reference_events[random_person]
