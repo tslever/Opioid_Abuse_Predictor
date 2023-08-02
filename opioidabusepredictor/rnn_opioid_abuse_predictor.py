@@ -91,25 +91,7 @@ def random_training_example(all_categories, dict_of_labels_and_person_IDs, dict_
 
     return random_category, category_tensor, person_tensor
 
-if __name__ == '__main__': # SORT FEATURE MATRIXXXXXXXXXXXXXX
-    #category_lines, all_categories = load_data()  
-    all_categories = [0, 1]
-    n_categories = len(all_categories)                  # CAN MAKE 2 OR 1, 2 since that seems to be standard, SUSPICIOUS ABOUT HOW THIS CHECKNG WORKS
-    n_hidden = 128
-    n_features = 8
-    rnn = RNN(n_features, n_hidden, n_categories)        # NUMBER OF FEATURES is N_LETTERS, in our case 8 with the aggregated
-    criterion = nn.NLLLoss()
-    learning_rate = 0.005
-    optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
-        
-    feature_matrix = pd.read_csv("~/workspaces/opioidabusepredictor/opioidabusepredictor/Feature_Matrix.csv", index_col = 0)
-    feature_matrix = feature_matrix.fillna(0)
-    feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
-    dictionary_of_person_IDs_and_reference_events = get_dictionary_of_person_IDs_and_reference_events(feature_matrix)
-    dictionary_of_labels_and_person_IDs = get_dictionary_of_labels_and_person_IDs(feature_matrix, dictionary_of_person_IDs_and_reference_events)
-
-########################################################## TRAINING BELOW
-
+def train_RNN():
     current_loss = 0
     all_losses = []
     plot_steps, print_steps = 1000, 5000
@@ -137,4 +119,17 @@ if __name__ == '__main__': # SORT FEATURE MATRIXXXXXXXXXXXXXX
     plt.show()
 
 
+all_categories = [0, 1]
+n_categories = len(all_categories)                  # CAN MAKE 2 OR 1, 2 since that seems to be standard, SUSPICIOUS ABOUT HOW THIS CHECKNG WORKS
+n_hidden = 128
+n_features = 8
+rnn = RNN(n_features, n_hidden, n_categories)        # NUMBER OF FEATURES is N_LETTERS, in our case 8 with the aggregated
+criterion = nn.NLLLoss()
+learning_rate = 0.005
+optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 
+feature_matrix = pd.read_csv("~/workspaces/opioidabusepredictor/opioidabusepredictor/Feature_Matrix.csv", index_col = 0)
+feature_matrix = feature_matrix.fillna(0)
+feature_matrix = feature_matrix.sort_values(by = ["person_id", "visit_start_datetime"])
+dictionary_of_person_IDs_and_reference_events = get_dictionary_of_person_IDs_and_reference_events(feature_matrix)
+dictionary_of_labels_and_person_IDs = get_dictionary_of_labels_and_person_IDs(feature_matrix, dictionary_of_person_IDs_and_reference_events)
