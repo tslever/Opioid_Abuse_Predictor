@@ -121,11 +121,11 @@ def train_RNN():
 
 all_categories = [0, 1]
 n_categories = len(all_categories)                  # CAN MAKE 2 OR 1, 2 since that seems to be standard, SUSPICIOUS ABOUT HOW THIS CHECKNG WORKS
-n_hidden = 128
+n_hidden = 16
 n_features = 8
 rnn = RNN(n_features, n_hidden, n_categories)        # NUMBER OF FEATURES is N_LETTERS, in our case 8 with the aggregated
 criterion = nn.NLLLoss()
-learning_rate = 0.005
+learning_rate = 0.00125
 optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 
 feature_matrix = pd.read_csv("~/workspaces/opioidabusepredictor/opioidabusepredictor/Feature_Matrix.csv", index_col = 0)
