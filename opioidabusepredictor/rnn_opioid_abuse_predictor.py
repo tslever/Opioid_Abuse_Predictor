@@ -55,7 +55,7 @@ def get_dictionary_of_person_IDs_and_reference_events(df):
     return dictionary_of_person_IDs_and_reference_events
 
 def get_dictionary_of_labels_and_person_IDs(df, dict_of_person_IDs_and_reference_events):
-    unique_person_IDs = list(pd.unqiue(df["person_id"]))
+    unique_person_IDs = list(pd.unique(df["person_id"]))
     dictionary_of_labels_and_person_IDs = {0: [], 1: []}
     for person_ID in unique_person_IDs:
         df_corresponding_to_person = df[df["person_id"] == person_ID]
